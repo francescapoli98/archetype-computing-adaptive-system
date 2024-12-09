@@ -15,6 +15,8 @@ from acds.archetypes import (
 )
 from acds.benchmarks import get_mnist_data
 
+from spiking_arch.snn_utils import *
+
 parser = argparse.ArgumentParser(description="training parameters")
 parser.add_argument("--dataroot", type=str)
 parser.add_argument("--resultroot", type=str)
@@ -178,19 +180,22 @@ for i in range(args.trials):
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
         output = model(images)[-1][0]
+        # print('output: ', output, output.size())
         activations.append(output.cpu())
         ys.append(labels)
     activations = torch.cat(activations, dim=0).numpy()
     ys = torch.cat(ys, dim=0).squeeze().numpy()
     scaler = preprocessing.StandardScaler().fit(activations)
     activations = scaler.transform(activations)
-    classifier = LogisticRegression(max_iter=1000).fit(activations, ys)
+    classifier = LogisticRegression(max_iter=5000).fit(activations, ys)
     train_acc = test(train_loader, classifier, scaler)
-    valid_acc = test(valid_loader, classifier, scaler) if not args.use_test else 0.0
-    test_acc = test(test_loader, classifier, scaler) if args.use_test else 0.0
+    valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
+    test_acc = test(test_loader, classifier, scaler) #if args.use_test else 0.0
     train_accs.append(train_acc)
     valid_accs.append(valid_acc)
     test_accs.append(test_acc)
+simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
+    
 
 if args.ron:
     f = open(os.path.join(args.resultroot, f"sMNIST_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")

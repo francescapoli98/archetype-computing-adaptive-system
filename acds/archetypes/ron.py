@@ -140,10 +140,10 @@ class RandomizedOscillatorsNetwork(nn.Module):
         hy = torch.zeros(x.size(0), self.n_hid).to(self.device)
         hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
         all_states = []
+        # print('x size: ', x.size())
         for t in range(x.size(1)):
             hy, hz = self.cell(x[:, t], hy, hz)
             all_states.append(hy)
-
         return torch.stack(all_states, dim=1), [
             hy
         ]  # list to be compatible with ESN implementation

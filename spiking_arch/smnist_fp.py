@@ -18,7 +18,7 @@ from acds.archetypes import (
 )
 
 from spiking_arch.liquid_ron import LiquidRON
-from spiking_arch.s_ron_ import SpikingRON
+from spiking_arch.s_ron import SpikingRON
 
 from acds.benchmarks import get_mnist_data
 

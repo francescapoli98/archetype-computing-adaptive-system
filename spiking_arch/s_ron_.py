@@ -96,12 +96,8 @@ class SpikingRON(nn.Module):
         self.threshold = 0.008
         self.R = 5.0
         self.C = 5e-3 
-        self.reset = 0 # initial membrane potential ## FINE TUNE THIS
-        
-        # self.hy_list = []  # Hidden state (y)
-        # self.hz_list = []  # Hidden state derivative (z)
-        # self.u_list = []  # Membrane potential (u)
-        # self.spike_list = []  # Spike train
+        self.reset = 0.001 # initial membrane potential ## FINE TUNE THIS
+    
         
 ## plot hy, hz, x, u and spikes to see the variation
     def cell(
@@ -161,8 +157,14 @@ class SpikingRON(nn.Module):
         #     print('NOT RESET!!')
         # print("new u value:", u)
         # tau = R * C
+        # print('first matmul: ', torch.matmul(hy, self.h2h), '\n second matmul: ', torch.matmul(x, self.x2h), 'sum of matmuls: ', (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)))
+        # sec = torch.matmul(x, self.x2h)
+        # print('CHECK SECOND MATMUL: ', torch.where(sec > 0))
+        # print('-u : ', -u)
         u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)) # u dot (update) 
-        u += (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
+        # if torch.all(u_dot == u):
+        #     print('NOT UPDATED!!')
+        u = u + (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
         
         return spike, u
         # u -= spike*self.threshold # soft reset the membrane potential after spike
@@ -193,25 +195,16 @@ class SpikingRON(nn.Module):
             torch.Tensor: Hidden states of the network shaped as (batch, time, n_hid).
             list: List containing the last hidden state of the network.
         """
-        # print('x size: ', x.size())
-        # print('tau: ', self.R * self.C)
         hy_list, hz_list, u_list, spike_list = [], [], [], []
         hy = torch.zeros(x.size(0), self.n_hid).to(self.device) #x.size(0)
         hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
         u = torch.zeros(x.size(0), self.n_hid).to(self.device)
-        # spk = torch.zeros(x.size(0), self.n_hid).to(self.device)
-        # print('x size: ', x.size())
         for t in range(x.size(1)):
             hy, hz, u, spk = self.cell(x[:, t], hy, hz, u)
-            # print('hy: ', hy.size())
-            # print('spike shape: ', spk_.shape, 'u shape: ', u.shape)
-
             hy_list.append(hy)#.clone().detach())
             hz_list.append(hz)#.clone().detach())
             u_list.append(u)#.clone().detach())
             spike_list.append(spk)
-        # resultroot = "spiking_arch/results/spiking_act"
-        # self.plot_u(u_list, resultroot)
-        return torch.stack(hy_list), torch.stack(hz_list), torch.stack(u_list), torch.stack(spike_list)
-        # return hy, hz, u, spk
-        
+        return hy_list, hz_list, u_list, spike_list
+        # print(hy_list[-1].size(), hz_list[-1].size(), u_list[-1].size(), spike_list[-1].size())            
+        # hy_list, hz_list, u_list, spike_list = torch.stack(hy_list, dim=1), torch.stack(hz_list, dim=1), torch.stack(u_list, dim=1), torch.stack(spike_list, dim=1)

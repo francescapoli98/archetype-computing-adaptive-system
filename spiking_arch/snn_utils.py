@@ -48,6 +48,7 @@ def plot_dynamics(
     velocity: torch.Tensor,
     membrane_potential: torch.Tensor,
     spikes: torch.Tensor,
+    x: torch.Tensor,
     resultroot: str
 ):
     print('Plotting dynamics of hidden state, derivative, membrane potential, and spikes.')
@@ -57,16 +58,24 @@ def plot_dynamics(
     velocity = velocity.detach().cpu().numpy() if isinstance(velocity, torch.Tensor) else velocity
     membrane_potential = membrane_potential.detach().cpu().numpy() if isinstance(membrane_potential, torch.Tensor) else membrane_potential
     spikes = spikes.detach().cpu().numpy() if isinstance(spikes, torch.Tensor) else spikes
-
+    # print('activations: ', activations.size(), ' velocity: ', velocity.size(), ' u: ', membrane_potential.size(), ' spikes: ', spikes.size())
     # Get the time steps (assuming they are aligned with the tensor shapes)
-    time_steps = np.arange(activations.shape[0])  # Number of time steps (length of time axis)
+    time_steps = np.arange(len(activations))#.shape[1])  # Number of time steps (length of time axis)
     print('Time steps shape: ', time_steps.shape)
 
     # Create a plot
     plt.figure(figsize=(10, 6))
+    
+    # Plot the images (x) 
+    plt.subplot(3, 2, 1)
+    plt.title('Hidden States (hy)')
+    # Plot the first hidden unit over time
+    plt.plot(time_steps, x[0, :, 0], label="Input data (x)", color="purple", linestyle='-', linewidth=1)
+    plt.xlabel('Time Step')
+    plt.ylabel('Value')
 
     # Plot the activations (hidden state hy) - Selecting the first unit (index 0)
-    plt.subplot(2, 2, 1)
+    plt.subplot(3, 2, 2)
     plt.title('Hidden States (hy)')
     # Plot the first hidden unit over time
     plt.plot(time_steps, activations[:, 0, 0], label="Hidden State (hy)", color="blue", linestyle='-', linewidth=1)
@@ -74,7 +83,7 @@ def plot_dynamics(
     plt.ylabel('Value')
 
     # Plot the velocity (hidden state derivative hz) - Selecting the first channel (layer) and first unit
-    plt.subplot(2, 2, 2)
+    plt.subplot(3, 2, 3)
     plt.title('Hidden States Derivatives (hz)')
     # Plot the first hidden unit of the first channel
     plt.plot(time_steps, velocity[:, 0, 0], label="Hidden State Derivative (hz)", color="orange", linestyle='-', linewidth=1)
@@ -82,7 +91,7 @@ def plot_dynamics(
     plt.ylabel('Value')
 
     # Plot the membrane potential (u) - Selecting the first channel (layer) and first unit
-    plt.subplot(2, 2, 3)
+    plt.subplot(3, 2, 4)
     plt.title('Membrane Potential (u)')
     # Plot the first hidden unit of the first channel
     plt.plot(time_steps, membrane_potential[:, 0, 0], label="Membrane Potential (u)", color="green", linestyle='-', linewidth=1)
@@ -90,7 +99,7 @@ def plot_dynamics(
     plt.ylabel('Value')
 
     # Plot the spikes (as vertical lines at spike times) - Selecting the first channel (layer) and first unit
-    plt.subplot(2, 2, 4)
+    plt.subplot(3, 2, 5)
     plt.title('Spikes')
     # Find the time steps where spikes occurred for the first unit of the first channel
     spike_times = time_steps[spikes[:, 0, 0] == 1]  # Identify the spike times

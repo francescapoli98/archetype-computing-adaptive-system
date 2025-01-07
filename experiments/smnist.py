@@ -180,11 +180,13 @@ for i in range(args.trials):
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
         output = model(images)[-1][0]
-        # print('output: ', output, output.size())
+        print('output: ', output.size())
         activations.append(output.cpu())
         ys.append(labels)
+        break
     activations = torch.cat(activations, dim=0).numpy()
     ys = torch.cat(ys, dim=0).squeeze().numpy()
+    print('activations:', activations.shape, type(activations), '\nys: ', ys.shape, type(ys))
     scaler = preprocessing.StandardScaler().fit(activations)
     activations = scaler.transform(activations)
     classifier = LogisticRegression(max_iter=5000).fit(activations, ys)

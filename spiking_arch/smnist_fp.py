@@ -17,10 +17,8 @@ from acds.archetypes import (
     MultistablePhysicallyImplementableRandomizedOscillatorsNetwork
 )
 
-from spiking_arch import (
-    SpikingRON,
-    LiquidRON
-)
+from spiking_arch.liquid_ron import LiquidRON
+from spiking_arch.s_ron_ import SpikingRON
 
 from acds.benchmarks import get_mnist_data
 
@@ -112,8 +110,8 @@ def test(data_loader, classifier, scaler):
     for images, labels in tqdm(data_loader):
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
-        output = model(images)[0]
-        activations.append(output.cpu())
+        output = model(images)[0][-1]
+        activations.append(output)
         ys.append(labels)
     activations = torch.cat(activations, dim=0).numpy()
     activations = scaler.transform(activations)
@@ -227,37 +225,46 @@ for i in range(args.trials):
         args.dataroot, args.batch, args.batch
     )
     
-    activations, ys, vel, mem, spikes = [], [], [], [], []
+    activations, ys, x = [], [], [] 
     for images, labels in tqdm(train_loader):
         images = images.to(device)
+        # print('original image shape: ', images.shape)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
+        # print('x (images) shape after unsqueeze: ', type(images), images.shape)
         output, velocity, u, spk = model(images)
-        activations.append(output.to(device))#.clone().detach())
-        vel.append(velocity.to(device))#.clone().detach())
-        mem.append(u.to(device))#.clone().detach())
-        spikes.append(spk.to(device))#.clone().detach())
-        ys.append(labels.to(device))
-        
-    
-    # Convert lists to tensors for plotting
-    act = torch.cat(activations, dim=0)
-    vel = torch.cat(vel, dim=0)
-    mem = torch.cat(mem, dim=0)
-    spikes = torch.cat(spikes, dim=0)
-    plot_dynamics(act, vel, mem, spikes, args.resultroot) 
-    
+        # print('mem pot 1: ', u[:,0,0],'\n mem pot 2: ', u[0,:,0], '\n mem pot 3: ', u[0,0,:] ) 
+        # print('output shape: ', output.size(), 'output[-1]: ', output[-1].size(), '\nvelocity shape: ', velocity.size(), '\nu shape: ', u.size(), '\nspk shape: ', spk.size())
+        # print('AFTER CALLING THE MODEL\noutput: ', output.size(), '\n velocity: ', velocity.size(), '\nu: ', u.size(), '\nspikes: ', spk.size())
+        activations.append(output[-1])
+        ys.append(labels) 
+        x.append(images)
+        break
+
+    output=torch.from_numpy(np.array(output, dtype=np.float32))    
+    velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))    
+    u=torch.from_numpy(np.array(u, dtype=np.float32))   
+    # print('torch mem pot 1: ', u[:,0,0],'\ntorch mem pot 2: ', u[0,:,0], '\ntorch mem pot 3: ', u[0,0,:] ) 
+    spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
+    # print('activations shape: ', activations.shape, '\nvel_p shape: ', vel_p.shape, '\nmem_p shape: ', mem_p.shape, '\nspk_p shape: ', spk_p.shape)
+    # print('datatypes and shapes: \n velocity: ', type(velocity), velocity,size(), '\n membrane potential: ', type(u), u.size(), '\n spikes: ', type(spk), spk.size())
+    plot_dynamics(output, velocity, u, spk, images, args.resultroot) 
     activations = torch.cat(activations, dim=0).numpy()
+    print('activations:', activations.shape, type(activations))
     ys = torch.cat(ys, dim=0).squeeze().numpy()
+    # print('activations shape: ', activations.shape,'activations items shape: ', activations[-1].size(), '\nys shape: ', ys.shape, 'ys items shape: ', ys[-1].size())
     scaler = preprocessing.StandardScaler().fit(activations)
-    activations = scaler.transform(activations) # Reshape into 2D array 
-    classifier = LogisticRegression(max_iter=1000).fit(activations, ys)
+    activations = scaler.transform(activations) 
+    classifier = LogisticRegression(max_iter=5000).fit(activations, ys)
     train_acc = test(train_loader, classifier, scaler)
-    valid_acc = test(valid_loader, classifier, scaler) if not args.use_test else 0.0
-    test_acc = test(test_loader, classifier, scaler) if args.use_test else 0.0
+    valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
+    test_acc = test(test_loader, classifier, scaler) #if args.use_test else 0.0
     train_accs.append(train_acc)
     valid_accs.append(valid_acc)
     test_accs.append(test_acc)
-    simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
+# print(f'membrane potential: {u[:, 0, 0]}')
+# print(f'membrane potential shape: {u.size()}')
+simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
+
 
 if args.ron:
     f = open(os.path.join(args.resultroot, f"sMNIST_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")

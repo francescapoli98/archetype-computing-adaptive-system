@@ -1,3 +1,4 @@
+from itertools import product
 import argparse
 import os
 import warnings
@@ -8,21 +9,13 @@ from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression
 from tqdm import tqdm
 
-from acds.archetypes import (
-    DeepReservoir,
-    RandomizedOscillatorsNetwork,
-    PhysicallyImplementableRandomizedOscillatorsNetwork,
-    MultistablePhysicallyImplementableRandomizedOscillatorsNetwork
-)
-
-# from spiking_arch.liquid_ron import LiquidRON
 from spiking_arch.s_ron import SpikingRON
 
 from acds.benchmarks import get_mnist_data
 
 from spiking_arch.snn_utils import *
 
-# Argument parsing and setting up initial arguments 
+
 parser = argparse.ArgumentParser(description="training parameters")
 parser.add_argument("--dataroot", type=str)
 parser.add_argument("--resultroot", type=str)
@@ -89,20 +82,22 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+# Define the parameter grid
+param_grid = {
+    "dt": [0.02, 0.04, 0.06],  # Example values for time step
+    "gamma": [2.5, 2.7, 2.9],  # Range of gamma values
+    "epsilon": [4.5, 4.7, 4.9],  # Range of epsilon values
+    "rho": [0.8, 0.9, 0.99],  # Spectral radius
+    "inp_scaling": [0.8, 1.0, 1.2]  # Input scaling
+}
 
-# Assertions and initializations 
-if args.dataroot is None:
-    warnings.warn("No dataroot provided. Using current location as default.")
-    args.dataroot = os.getcwd()
-if args.resultroot is None:
-    warnings.warn("No resultroot provided. Using current location as default.")
-    args.resultroot = os.getcwd()
-assert os.path.exists(args.resultroot), \
-    f"{args.resultroot} folder does not exist, please create it and run the script again."
+# Convert grid to list of combinations
+param_combinations = list(product(*param_grid.values()))
+param_names = list(param_grid.keys())
 
-assert 1.0 > args.sparsity >= 0.0, "Sparsity in [0, 1)"
+best_params = None
+best_valid_acc = 0.0
 
-# Define the device
 device = (
     torch.device("cuda")
     if torch.cuda.is_available() and not args.cpu
@@ -118,106 +113,70 @@ epsilon = (
     args.epsilon + args.epsilon_range / 2.0,
 )
 
-train_accs, valid_accs, test_accs = [], [], []
 
-# Iterate over the number of trials
-for i in range(args.trials):
-    # Model selection (same as before, based on args)
-    if args.sron:
-        model = SpikingRON(
-            n_inp,
-            args.n_hid,
-            args.dt,
-            gamma,
-            epsilon,
-            args.rho,
-            args.inp_scaling,
-            topology=args.topology,
-            sparsity=args.sparsity,
-            reservoir_scaler=args.reservoir_scaler,
-            device=device,
-        ).to(device)
-    elif args.liquidron:
-        model = LiquidRON(
-            n_inp,
-            args.n_hid,
-            args.dt,
-            gamma,
-            epsilon,
-            args.rho,
-            args.inp_scaling,
-            topology=args.topology,
-            sparsity=args.sparsity,
-            reservoir_scaler=args.reservoir_scaler,
-            device=device,
-            ### Fine-tune parameters added
-            win_e=2,
-            win_i=1,
-            w_e=0.5,
-            w_i=0.2,
-            reg=None,
-        ).to(device)
-    else:
-        # Other model choices to be developed
-        pass
-
-    # Data loading 
-    train_loader, valid_loader, test_loader = get_mnist_data(
-        args.dataroot, args.batch, args.batch
-    )
-    
-    activations, ys, x = [], [], [] 
-    for images, labels in tqdm(train_loader):
+@torch.no_grad()
+def test(data_loader, classifier, scaler):
+    activations, ys = [], []
+    for images, labels in tqdm(data_loader):
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
-        output, velocity, u, spk = model(images)
-        activations.append(output[-1])
-        ys.append(labels) 
-        x.append(images)
-        break
-
-    # fine-tuning: freezing layers, updating specific ones
-    # freeze all layers except the output layer:
-    for param in model.parameters():
-        param.requires_grad = False
-    for param in model.output_layer.parameters():  # last layer is the output layer
-        param.requires_grad = True
-    
-    # learning rates for different parts:
-    optimizer = torch.optim.Adam(
-        [
-            {"params": model.output_layer.parameters(), "lr": 1e-3},  # fine-tuning output layer
-            {"params": model.parameters(), "lr": 1e-5, "weight_decay": 1e-4},  # freezing other layers
-        ]
-    )
-
-    # Training loop
-    model.train()
-    for epoch in range(epochs):  
-        for images, labels in train_loader:
-            optimizer.zero_grad()
-            images = images.to(device)
-            output, _, _, _ = model(images)
-            loss = criterion(output, labels.to(device))  # criterion (e.g., cross-entropy)
-            loss.backward()
-            optimizer.step()
-
-    # Evaluate the model
+        output = model(images)[0][-1]
+        activations.append(output)
+        ys.append(labels)
     activations = torch.cat(activations, dim=0).numpy()
-    ys = torch.cat(ys, dim=0).squeeze().numpy()
+    activations = scaler.transform(activations)
+    ys = torch.cat(ys, dim=0).numpy()
+    return classifier.score(activations, ys)
+
+
+for param_set in tqdm(param_combinations, desc="Grid Search"):
+    # Unpack parameters
+    params = dict(zip(param_names, param_set))
+    print(f"Testing parameters: {params}")
+
+    # Create the model with current parameters
+    model = SpikingRON(
+        n_inp,
+        args.n_hid,
+        params["dt"],
+        (params["gamma"] - args.gamma_range / 2.0, params["gamma"] + args.gamma_range / 2.0),
+        (params["epsilon"] - args.epsilon_range / 2.0, params["epsilon"] + args.epsilon_range / 2.0),
+        params["rho"],
+        params["inp_scaling"],
+        topology=args.topology,
+        sparsity=args.sparsity,
+        reservoir_scaler=args.reservoir_scaler,
+        device=device,
+    ).to(device)
+
+    # Train and validate the model
+    train_loader, valid_loader, test_loader = get_mnist_data(args.dataroot, args.batch, args.batch)
+    activations, ys = [], []
+
+    for images, labels in train_loader:
+        images = images.to(device)
+        images = images.view(images.shape[0], -1).unsqueeze(-1)
+        output = model(images)[0][-1]
+        activations.append(output)
+        ys.append(labels)
+
+    activations = torch.cat(activations, dim=0).numpy()
     scaler = preprocessing.StandardScaler().fit(activations)
-    activations = scaler.transform(activations) 
+    activations = scaler.transform(activations)
+    ys = torch.cat(ys, dim=0).numpy()
     classifier = LogisticRegression(max_iter=5000).fit(activations, ys)
+
     train_acc = test(train_loader, classifier, scaler)
-    valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
-    test_acc = test(test_loader, classifier, scaler) #if args.use_test else 0.0
-    train_accs.append(train_acc)
-    valid_accs.append(valid_acc)
-    test_accs.append(test_acc)
+    valid_acc = test(valid_loader, classifier, scaler)
+    test_acc = test(test_loader, classifier, scaler)
 
-# Plotting and saving results 
-simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
+    print(f"Train Acc: {train_acc:.2f}, Valid Acc: {valid_acc:.2f}, Test Acc: {test_acc:.2f}")
 
-# Logging results 
-if args.sron:
-    f = open(os.path.join(args.resultroot, f"sMNIST_spikingRON{args.resultsuffix}.txt"), "a")
+    # Update best parameters if validation accuracy improves
+    if valid_acc > best_valid_acc:
+        best_valid_acc = valid_acc
+        best_params = params
+
+# Report best parameters and performance
+print(f"Best Parameters: {best_params}")
+print(f"Best Validation Accuracy: {best_valid_acc:.2f}")

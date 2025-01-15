@@ -28,11 +28,17 @@ class SpikingRON(nn.Module):
         self,
         n_inp: int,
         n_hid: int,
+        #grid search params
         dt: float,
         gamma: Union[float, Tuple[float, float]],
         epsilon: Union[float, Tuple[float, float]],
         rho: float,
         input_scaling: float,
+        threshold: float,
+        resistance: float,
+        capacity: float,
+        reset: float,
+        #no grid search
         topology: Literal[
             "full", "lower", "orthogonal", "band", "ring", "toeplitz"
         ] = "full",
@@ -85,6 +91,10 @@ class SpikingRON(nn.Module):
         else:
             self.epsilon = epsilon
             
+        self.threshold = threshold
+        self.R = resistance
+        self.C = capacity
+        self.reset = reset # initial membrane potential 
         #### to be changed to spiking dynamics
         h2h = get_hidden_topology(n_hid, topology, sparsity, reservoir_scaler)
         h2h = spectral_norm_scaling(h2h, rho)
@@ -92,12 +102,6 @@ class SpikingRON(nn.Module):
         
         x2h = torch.rand(n_inp, n_hid) * input_scaling
         self.x2h = nn.Parameter(x2h, requires_grad=False)
-        
-        self.threshold = 0.008
-        self.R = 5.0
-        self.C = 5e-3 
-        self.reset = 0.001 # initial membrane potential ## FINE TUNE THIS
-    
         
 ## plot hy, hz, x, u and spikes to see the variation
     def cell(
@@ -135,7 +139,6 @@ class SpikingRON(nn.Module):
     '''
     ##################### 
     
-    
     #### CHECK!!!
     ## I == W hy + V x where W and V need to be initialized at the beginning and are fixed (reservoir)
     ## u == member potential and is not correspondent to hy because it's an internal parameter to get spikes (don't forget to update!)
@@ -149,21 +152,11 @@ class SpikingRON(nn.Module):
         #### ADD THE PRINTS HERE TO A OUTPUT FILE
         spike = (u > self.threshold) * 1.0
         # hy was previously weighted with self.w and x was weighted with R --> now I use reservoir weights
-        # if torch.any(u > self.threshold):
-        #     print('u has been reset')
-        # old_u = u 
+  
         u[spike == 1] = self.reset  # Hard reset only for spikes
-        # if torch.all(old_u == u):
-        #     print('NOT RESET!!')
-        # print("new u value:", u)
+
         # tau = R * C
-        # print('first matmul: ', torch.matmul(hy, self.h2h), '\n second matmul: ', torch.matmul(x, self.x2h), 'sum of matmuls: ', (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)))
-        # sec = torch.matmul(x, self.x2h)
-        # print('CHECK SECOND MATMUL: ', torch.where(sec > 0))
-        # print('-u : ', -u)
         u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)) # u dot (update) 
-        # if torch.all(u_dot == u):
-        #     print('NOT UPDATED!!')
         u = u + (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
         
         return spike, u
@@ -171,19 +164,19 @@ class SpikingRON(nn.Module):
         ## plot membrane potential with thresholds and positive spikes
         # OLD CODE: u += ((- self.w * hy) + (self.R*x))*(self.R*self.C) - spike*self.threshold  
     
-    def plot_u(self, u_list: List[torch.Tensor], resultroot):
-        """Plot the membrane potential u over time for each neuron."""
-        u_array = torch.stack(u_list).cpu().numpy()  # Convert to numpy for plotting
-        plt.figure(figsize=(10, 6))
-        # for i in range(u_array.shape[2]):  # Loop through all hidden units
-        plt.plot([u_array[i, :, :] for i in range(u_array.shape[2])])
-        plt.title('Membrane Potential (u) Over Time')
-        plt.xlabel('Time Step')
-        plt.ylabel('Membrane Potential (u)')
-        plt.legend(loc='upper right')
-        plt.grid(True)
-        plt.savefig(f"{resultroot}/u_plot.png")
-        plt.show()
+    # def plot_u(self, u_list: List[torch.Tensor], resultroot):
+    #     """Plot the membrane potential u over time for each neuron."""
+    #     u_array = torch.stack(u_list).cpu().numpy()  # Convert to numpy for plotting
+    #     plt.figure(figsize=(10, 6))
+    #     # for i in range(u_array.shape[2]):  # Loop through all hidden units
+    #     plt.plot([u_array[i, :, :] for i in range(u_array.shape[2])])
+    #     plt.title('Membrane Potential (u) Over Time')
+    #     plt.xlabel('Time Step')
+    #     plt.ylabel('Membrane Potential (u)')
+    #     plt.legend(loc='upper right')
+    #     plt.grid(True)
+    #     plt.savefig(f"{resultroot}/u_plot.png")
+    #     plt.show()
         
     def forward(self, x: torch.Tensor):
         """Forward pass on a given input time-series.
@@ -201,10 +194,8 @@ class SpikingRON(nn.Module):
         u = torch.zeros(x.size(0), self.n_hid).to(self.device)
         for t in range(x.size(1)):
             hy, hz, u, spk = self.cell(x[:, t], hy, hz, u)
-            hy_list.append(hy)#.clone().detach())
-            hz_list.append(hz)#.clone().detach())
-            u_list.append(u)#.clone().detach())
+            hy_list.append(hy)
+            hz_list.append(hz)
+            u_list.append(u)
             spike_list.append(spk)
         return hy_list, hz_list, u_list, spike_list
-        # print(hy_list[-1].size(), hz_list[-1].size(), u_list[-1].size(), spike_list[-1].size())            
-        # hy_list, hz_list, u_list, spike_list = torch.stack(hy_list, dim=1), torch.stack(hz_list, dim=1), torch.stack(u_list, dim=1), torch.stack(spike_list, dim=1)

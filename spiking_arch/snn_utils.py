@@ -64,18 +64,18 @@ def plot_dynamics(
     print('Time steps shape: ', time_steps.shape)
 
     # Create a plot
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(8, 10))
     
     # Plot the images (x) 
-    plt.subplot(3, 2, 1)
-    plt.title('Hidden States (hy)')
+    plt.subplot(5, 1, 1)
+    plt.title('Input (x)')
     # Plot the first hidden unit over time
     plt.plot(time_steps, x[0, :, 0], label="Input data (x)", color="purple", linestyle='-', linewidth=1)
     plt.xlabel('Time Step')
     plt.ylabel('Value')
 
     # Plot the activations (hidden state hy) - Selecting the first unit (index 0)
-    plt.subplot(3, 2, 2)
+    plt.subplot(5, 1, 2)
     plt.title('Hidden States (hy)')
     # Plot the first hidden unit over time
     plt.plot(time_steps, activations[:, 0, 0], label="Hidden State (hy)", color="blue", linestyle='-', linewidth=1)
@@ -83,7 +83,7 @@ def plot_dynamics(
     plt.ylabel('Value')
 
     # Plot the velocity (hidden state derivative hz) - Selecting the first channel (layer) and first unit
-    plt.subplot(3, 2, 3)
+    plt.subplot(5, 1, 3)
     plt.title('Hidden States Derivatives (hz)')
     # Plot the first hidden unit of the first channel
     plt.plot(time_steps, velocity[:, 0, 0], label="Hidden State Derivative (hz)", color="orange", linestyle='-', linewidth=1)
@@ -91,7 +91,7 @@ def plot_dynamics(
     plt.ylabel('Value')
 
     # Plot the membrane potential (u) - Selecting the first channel (layer) and first unit
-    plt.subplot(3, 2, 4)
+    plt.subplot(5, 1, 4)
     plt.title('Membrane Potential (u)')
     # Plot the first hidden unit of the first channel
     plt.plot(time_steps, membrane_potential[:, 0, 0], label="Membrane Potential (u)", color="green", linestyle='-', linewidth=1)
@@ -99,15 +99,20 @@ def plot_dynamics(
     plt.ylabel('Value')
 
     # Plot the spikes (as vertical lines at spike times) - Selecting the first channel (layer) and first unit
-    plt.subplot(3, 2, 5)
+    plt.subplot(5, 1, 5)
     plt.title('Spikes')
     # Find the time steps where spikes occurred for the first unit of the first channel
-    spike_times = time_steps[spikes[:, 0, 0] == 1]  # Identify the spike times
-    print(f"Spike times: {spike_times}")
+    ##### SUBSTITUTE with basic scatter plot (time steps and 1-0 tensor of spikes)
+    # spike_times = time_steps[spikes[:, 0, 0] == 1]  # Identify the spike times
+    # print(f"Spike times: {spike_times}")
+    # # Plot spikes at those times
+    # plt.scatter(spike_times, membrane_potential[spike_times, 0, 0], color="red", label="Spikes", zorder=5, s=30)
+    # spike_times = time_steps[spikes[:, 0, 0] == 1]  # Identify the spike times
+    # print(f"Spike times: {spike_times}")
     # Plot spikes at those times
-    plt.scatter(spike_times, membrane_potential[spike_times, 0, 0], color="red", label="Spikes", zorder=5, s=30)
+    plt.scatter(time_steps, spikes[:, 0, 0] == 1, color="red", label="Spikes", zorder=5, s=30)
     plt.xlabel('Time Step')
-    plt.ylabel('Membrane Potential Value')
+    plt.ylabel('Spike')
 
     # Finalize the plot
     plt.tight_layout()
@@ -115,6 +120,40 @@ def plot_dynamics(
     plt.close()
     plt.show()
 
+
+
+import matplotlib.pyplot as plt
+
+def plot_accuracy_fluctuations(param_combinations, accuracies):
+    """
+    Plots accuracy fluctuations for each set of values in the grid search.
+
+    Args:
+        param_combinations (list of tuples): The parameter combinations tested in the grid search.
+        accuracies (list of floats): The validation accuracies corresponding to each parameter combination.
+    """
+    # Ensure the inputs are of the same length
+    assert len(param_combinations) == len(accuracies), "Parameter combinations and accuracies must have the same length"
+
+    # Create a unique identifier for each parameter combination
+    param_labels = [" | ".join(f"{k}={v}" for k, v in zip(param_names, params)) for params in param_combinations]
+
+    # Plot the accuracies
+    plt.figure(figsize=(10, 6))
+    plt.plot(range(len(accuracies)), accuracies, marker='o', linestyle='-', label='Validation Accuracy')
+
+    # Label the points with their parameter combinations (optional for small grids)
+    for i, label in enumerate(param_labels):
+        plt.annotate(label, (i, accuracies[i]), fontsize=8, rotation=45, alpha=0.7, ha='right')
+
+    plt.title("Accuracy Fluctuations Across Grid Search")
+    plt.xlabel("Parameter Set Index")
+    plt.ylabel("Validation Accuracy")
+    plt.xticks(range(len(accuracies)), labels=range(len(accuracies)), rotation=45)
+    plt.legend()
+    plt.grid(alpha=0.5)
+    plt.tight_layout()
+    plt.show()
 
 
 # def plot_dynamics(hy: torch.Tensor, hz: torch.Tensor, u: torch.Tensor, spikes: torch.Tensor, resultroot: str):

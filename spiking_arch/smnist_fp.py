@@ -1,4 +1,5 @@
 # $ python -m spiking_arch.smnist_fp --resultroot spiking_arch/results/ --sron
+# $ python -m spiking_arch.smnist_fp --dataroot "MNIST/" --resultroot "spiking_arch/results/spiking_act" --sron --batch 16
 
 import argparse
 import os
@@ -88,6 +89,12 @@ parser.add_argument(
     default=1.0,
     help="Scaler in case of ring/band/toeplitz reservoir",
 )
+
+# parser.add_argument("--threshold", type=float, default=0.008, help="")
+# parser.add_argument("--resistance", type=float, default=5.0, help="ESN input scaling")
+# parser.add_argument("--capacity", type=float, default=5.3, help="ESN input scaling")
+# parser.add_argument("--reset", type=float, default=1.0, help="ESN input scaling")
+
 
 args = parser.parse_args()
 
@@ -191,6 +198,8 @@ for i in range(args.trials):
             epsilon,
             args.rho,
             args.inp_scaling,
+            #add last things here
+            args.
             topology=args.topology,
             sparsity=args.sparsity,
             reservoir_scaler=args.reservoir_scaler,

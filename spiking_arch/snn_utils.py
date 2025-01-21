@@ -6,6 +6,8 @@ from torch import nn
 import matplotlib.pyplot as plt
 import os
 import numpy as np
+import pandas as pd
+
 
 
 def simple_plot(train_accs: np.ndarray, valid_accs: np.ndarray, test_accs: np.ndarray, resultroot: str):
@@ -122,8 +124,93 @@ def plot_dynamics(
 
 
 
-import matplotlib.pyplot as plt
+def acc_table(param_combinations, accuracies, resultroot):
+    """
+    Create a table to visualize parameter combinations and their corresponding accuracies.
 
+    Args:
+        param_combinations (list of tuples): List of parameter combinations.
+        accuracies (list of float): List of accuracies corresponding to the parameter combinations.
+    """
+    # Create a DataFrame from parameter combinations and accuracies
+    param_names = ["dt", "rho", "inp_scaling", "threshold", "resistance", "capacity", "reset"]
+    data = [list(comb) + [acc] for comb, acc in zip(param_combinations, accuracies)]
+    df = pd.DataFrame(data, columns=param_names + ["Accuracy"])
+
+    # Sort the DataFrame by accuracy (optional)
+    df = df.sort_values(by="Accuracy", ascending=False)
+
+    # Create a table plot
+    fig, ax = plt.subplots(figsize=(12, min(1 + len(df) * 0.3, 20)))  # Adjust height for the number of rows
+    ax.axis("off")
+    ax.axis("tight")
+
+    # Use the DataFrame as the table content
+    table = ax.table(
+        cellText=df.values,
+        colLabels=df.columns,
+        loc="center",
+        cellLoc="center",
+        colColours=["#add8e6"] * (len(param_names) + 1),  # Light background for column headers
+    )
+    table.auto_set_font_size(True)
+    # table.set_fontsize(10)
+    table.auto_set_column_width(range(len(df.columns)))
+    
+    for key, cell in table.get_celld().items():
+        if key[0] == 0:  # Header row
+            cell.set_text_props(weight="bold")  # Make header text bold
+        cell.set_edgecolor("gray")  # Add a border color
+        # cell.set_height(0.05)  # Adjust height
+        # cell.set_width(0.15)  # Adjust width
+
+
+    # Adjust layout
+    fig.tight_layout()
+    plt.savefig(f"{resultroot}/accuracies_gridsearch.png")
+    plt.show()
+
+def plot_hy(activations: torch.Tensor, x: torch.Tensor, resultroot: str):
+    print("Plotting dynamics of the hidden state in comparison with the input.")
+
+    # Convert tensors to numpy arrays if needed
+    if isinstance(activations, torch.Tensor):
+        activations = activations.detach().cpu().numpy()
+    if isinstance(x, torch.Tensor):
+        x = x.detach().cpu().numpy()
+
+    # Validate dimensions
+    assert activations.ndim == 3, f"Expected activations to be 3D, got {activations.ndim}D"
+    assert x.ndim == 3, f"Expected x to be 3D, got {x.ndim}D"
+
+    # Get time steps
+    time_steps = np.arange(activations.shape[1])  # Time dimension is the second axis
+
+    # Create plots
+    plt.figure(figsize=(8, 10))
+
+    # Plot input (x)
+    plt.subplot(2, 1, 1)
+    plt.title("Input (x)")
+    plt.plot(time_steps, x[0, :, 0], label="Input Data", color="purple", linestyle="-", linewidth=1)
+    plt.xlabel("Time Step")
+    plt.ylabel("Value")
+
+    # Plot hidden states (hy)
+    plt.subplot(2, 1, 2)
+    plt.title("Hidden States (hy)")
+    plt.plot(time_steps, activations[0, :, 0], label="Hidden State", color="blue", linestyle="-", linewidth=1)
+    plt.xlabel("Time Step")
+    plt.ylabel("Value")
+
+    # Finalize
+    plt.tight_layout()
+    os.makedirs(resultroot, exist_ok=True)
+    plt.savefig(f"{resultroot}/hy_plot.png")
+    plt.close()
+    print(f"Plot saved to {resultroot}/hy_plot.png")
+
+    
 def plot_accuracy_fluctuations(param_combinations, accuracies):
     """
     Plots accuracy fluctuations for each set of values in the grid search.
@@ -154,105 +241,3 @@ def plot_accuracy_fluctuations(param_combinations, accuracies):
     plt.grid(alpha=0.5)
     plt.tight_layout()
     plt.show()
-
-
-# def plot_dynamics(hy: torch.Tensor, hz: torch.Tensor, u: torch.Tensor, spikes: torch.Tensor, resultroot: str):
-#     print('this is the dynamics plot')
-#     """
-#     Plots the dynamics of the hidden state (hy), hidden state derivative (hz), 
-#     membrane potential (u), and spikes all in one plot.
-
-#     Args:
-#         hy (torch.Tensor): Hidden state over time (n_time_steps, n_hid).
-#         hz (torch.Tensor): Hidden state derivative over time (n_time_steps, n_hid).
-#         x (torch.Tensor): Input over time (n_time_steps, n_inp).
-#         u (torch.Tensor): Membrane potential over time (n_time_steps, n_hid).
-#         spikes (torch.Tensor): Spike train over time (n_time_steps, n_hid).
-#         resultroot (str): Path to save the plot.
-#     """
-#     # Convert tensors to numpy arrays
-#     hy = hy.detach().cpu().numpy() if isinstance(hy, torch.Tensor) else hy
-#     hz = hz.detach().cpu().numpy() if isinstance(hz, torch.Tensor) else hz
-#     u = u.detach().cpu().numpy() if isinstance(u, torch.Tensor) else u
-#     spikes = spikes.detach().cpu().numpy() if isinstance(spikes, torch.Tensor) else spikes
-#     # x = x.detach().cpu().numpy() if isinstance(x, torch.Tensor) else x
-#     time_steps = np.arange(hy.shape[0])
-#     plt.figure(figsize=(10, 6))
-
-#     # Plot hy (hidden state) and hz (derivative of hidden state)
-#     plt.plot(time_steps, hy[:, 0], label="Hidden State (hy)", color="blue", linestyle='-', linewidth=1)
-#     plt.plot(time_steps, hz[:, 0], label="Hidden State Derivative (hz)", color="orange", linestyle='-', linewidth=1)
-
-#     # Plot membrane potential u
-#     plt.plot(time_steps, u[:, 0], label="Membrane Potential (u)", color="green", linestyle='-', linewidth=1)
-
-#     # Plot spikes (as vertical lines at spike time points)
-#     spike_times = time_steps[spikes[:, 0] == 1]  # Identify the spike times
-#     plt.scatter(spike_times, u[spike_times, 0], color="red", label="Spikes", zorder=5, s=30)
-
-#     # Adding labels and title
-#     plt.xlabel('Time Step')
-#     plt.ylabel('Value')
-#     plt.title('Dynamics of hy, hz, u and Spikes')
-
-#     # Add legend
-#     plt.legend()
-
-#     # Save the plot
-#     plt.tight_layout()
-#     plt.savefig(f"{resultroot}/dynamics_plot.png")
-#     plt.show()
-
-
-
-# def plot_dynamics(hy: torch.Tensor, hz: torch.Tensor, x: torch.Tensor, u_mem: torch.Tensor, spikes: torch.Tensor, resultroot: str):
-#     """Plot hy, hz, membrane potential (u) and spike trains for 2D data."""
-    
-#     # Ensure data is 2D (batch_size, time_steps)
-#     if hy.ndimension() != 2:
-#         raise ValueError("Data must be 2D (batch_size, time_steps).")
-    
-#     # Number of samples in the batch
-#     batch_size = hy.size(0)
-    
-#     # Create a figure for plotting
-#     plt.figure(figsize=(15, 10))
-    
-#     # Plot hidden state (hy) for the first batch (or average across batches)
-#     plt.subplot(2, 2, 1)
-#     plt.plot([y for y in hy[0].cpu().numpy()])  # Plot first sample in the batch
-#     plt.title("Hidden State (hy) - Sample 0")
-#     plt.xlabel("Time Steps")
-#     plt.ylabel("hy (hidden state)")
-
-#     # Plot hidden state derivative (hz)
-#     plt.subplot(2, 2, 2)
-#     plt.plot([z for z in hz[0].cpu().numpy()])  # Plot first sample in the batch
-#     plt.title("Hidden State Derivative (hz) - Sample 0")
-#     plt.xlabel("Time Steps")
-#     plt.ylabel("hz (hidden state derivative)")
-    
-#     # Plot membrane potential (u) for the first batch (or average across batches)
-#     plt.subplot(2, 2, 3)
-#     plt.plot([u for u in u_mem[0].cpu().numpy()])  # Plot first sample in the batch
-#     plt.title("Membrane Potential (u) - Sample 0")
-#     plt.xlabel("Time Steps")
-#     plt.ylabel("u (membrane potential)")
-
-#     # Plot spike train
-#     plt.subplot(2, 2, 4)
-#     plt.plot([s for s in spikes[0].cpu().numpy()])  # Plot first sample in the batch
-#     plt.title("Spike Train - Sample 0")
-#     plt.xlabel("Time Steps")
-#     plt.ylabel("Spikes")
-
-#     # Tight layout for better spacing
-#     plt.tight_layout()
-
-#     # Save the plot to the result directory
-#     plot_filename = os.path.join(resultroot, f"dynamics_plot.png")
-#     plt.savefig(plot_filename)
-#     print(f"Plot saved as {plot_filename}")
-    
-#     # Display the plot
-#     plt.show()

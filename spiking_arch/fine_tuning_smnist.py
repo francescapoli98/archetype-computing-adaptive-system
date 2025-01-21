@@ -91,16 +91,15 @@ parser.add_argument("--reset", type=float, default=0.001, help="spiking ron mode
 args = parser.parse_args()
 # Define the parameter grid
 param_grid = {
-    "dt": [0.02, 0.04, 0.06],  # Example values for time step
+    "dt": [0.02, 0.05],  # Example values for time step
     # "gamma": [2.5, 2.9],  # Range of gamma values
     # "epsilon": [4.5, 4.9],  # Range of epsilon values
-    "rho": [0.9, 0.99],  # Spectral radius
-    "inp_scaling": [0.8, 1.2],  # Input scaling
+    # "rho": [0.9, 0.99],  # Spectral radius
+    # "inp_scaling": [0.8, 1.2],  # Input scaling
     "threshold": [0.008, 0.009, 0.01],
     "resistance": [3.0, 5.0, 7.0],
     "capacity": [3e-3, 5e-3, 7e-3],
     "reset": [0.001, 0.002, 0.005] # initial membrane potential 
-    
 }
 
 # Convert grid to list of combinations
@@ -109,6 +108,9 @@ param_names = list(param_grid.keys())
 
 best_params = None
 best_valid_acc = 0.0
+best_train_acc = 0.0
+best_test_acc = 0.0
+
 
 device = (
     torch.device("cuda")
@@ -156,8 +158,10 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         (args.gamma - args.gamma_range / 2.0, args.gamma + args.gamma_range / 2.0),
         (args.epsilon - args.epsilon_range / 2.0, args.epsilon + args.epsilon_range / 2.0),
         # (params["epsilon"] - args.epsilon_range / 2.0, params["epsilon"] + args.epsilon_range / 2.0),
-        params["rho"],
-        params["inp_scaling"],
+        # params["rho"],
+        # params["inp_scaling"],
+        rho=args.rho,
+        inp_scaling=args.inp_scaling,
         params["threshold"],
         params["resistance"],
         params["capacity"],        
@@ -195,9 +199,33 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
     # Update best parameters if validation accuracy improves
     if valid_acc > best_valid_acc:
         best_valid_acc = valid_acc
+        best_train_acc = train_acc
+        best_test_acc = test_acc
         best_params = params
         
-plot_accuracy_fluctuations(param_combinations, all_acc)
+acc_table(param_combinations, all_acc, args.resultroot)
+
+if args.sron:
+    f = open(os.path.join(args.resultroot, f"sMNIST_SRON{args.resultsuffix}.txt"), "a")
+elif args.mixedron:
+    f = open(os.path.join(args.resultroot, f"sMNIST_MixedRON{args.resultsuffix}.txt"), "a")
+else:
+    raise ValueError("Wrong model choice.")
+
+
+ar = ""
+for k, v in vars(args).items():
+    ar += f"{str(k)}: {str(v)}, "
+ar += (
+    f"Best Parameters: {best_params}"
+    f"Best Validation Accuracy: {best_valid_acc:.2f}"
+    f"Best Train Accuracy: {best_train_acc:.2f}"
+    f"Best Test Accuracy: {best_test_acc:.2f}"
+    
+)
+f.write(ar + "\n")
+f.close()
+
 # Report best parameters and performance
 print(f"Best Parameters: {best_params}")
 print(f"Best Validation Accuracy: {best_valid_acc:.2f}")

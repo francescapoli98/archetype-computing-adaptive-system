@@ -91,7 +91,7 @@ assert os.path.exists(args.resultroot), \
 
 assert 1.0 > args.sparsity >= 0.0, "Sparsity in [0, 1)"
 
-
+    
 @torch.no_grad()
 def test(data_loader, classifier, scaler):
     activations, ys = [], []
@@ -179,14 +179,23 @@ for i in range(args.trials):
     for images, labels in tqdm(train_loader):
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
+        result = model(images)[0]
         output = model(images)[-1][0]
-        print('output: ', output.size())
+        # print('output: ', output.size())
         activations.append(output.cpu())
         ys.append(labels)
-        break
+        
+      ### PLOT HY  
+    # print('activations[-1]', activations[-1].shape)
+    plot_hy(result, images, args.resultroot) 
+    
+    
     activations = torch.cat(activations, dim=0).numpy()
     ys = torch.cat(ys, dim=0).squeeze().numpy()
+    
     print('activations:', activations.shape, type(activations), '\nys: ', ys.shape, type(ys))
+    
+    
     scaler = preprocessing.StandardScaler().fit(activations)
     activations = scaler.transform(activations)
     classifier = LogisticRegression(max_iter=5000).fit(activations, ys)
@@ -196,6 +205,7 @@ for i in range(args.trials):
     train_accs.append(train_acc)
     valid_accs.append(valid_acc)
     test_accs.append(test_acc)
+## PLOT ACCURACIES
 simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
     
 

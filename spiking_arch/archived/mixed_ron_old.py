@@ -12,6 +12,7 @@ import snntorch as snn
 from snntorch import surrogate
 
 import numpy as np
+import random
 
 from acds.archetypes.utils import (
     get_hidden_topology,
@@ -22,13 +23,12 @@ from spiking_arch.snn_utils import *
 
 
 
-class SpikingRON(nn.Module):
+class MixedRON(nn.Module):
 
     def __init__(
         self,
         n_inp: int,
         n_hid: int,
-        #grid search params
         dt: float,
         gamma: Union[float, Tuple[float, float]],
         epsilon: Union[float, Tuple[float, float]],
@@ -38,13 +38,13 @@ class SpikingRON(nn.Module):
         resistance: float,
         capacity: float,
         reset: float,
-        #no grid search
         topology: Literal[
             "full", "lower", "orthogonal", "band", "ring", "toeplitz"
         ] = "full",
         reservoir_scaler=0.0,
         sparsity=0.0,
         device="cpu",
+        p=float,
     ):
         """Initialize the RON model.
 
@@ -91,55 +91,59 @@ class SpikingRON(nn.Module):
         else:
             self.epsilon = epsilon
             
-        self.threshold = threshold
-        self.R = resistance
-        self.C = capacity
-        self.reset = reset # initial membrane potential 
-        
-        #### to be changed to spiking dynamics
+        #### TO BE DIVIDED IN SPIKING AND HARMONIC
+        self.p = p ## FINE TUNE
+        self.harmonic = n_hid*p
+        # h2h_h = get_hidden_topology(harmonic, topology, sparsity, reservoir_scaler)
+        # self.h2h_h = spectral_norm_scaling(h2h_h, rho)
+        # self.h2h_h = nn.Parameter(h2h_h, requires_grad=False)
+        self.spiking = n_hid-harmonic
+        # h2h_s = get_hidden_topology(spiking, topology, sparsity, reservoir_scaler)
+        # self.h2h_s = spectral_norm_scaling(h2h_s, rho)
+        # self.h2h_s = nn.Parameter(h2h_s, requires_grad=False)
+        # Combine h2h_h and h2h_s into one parameter
+        # combined_h2h = torch.cat((self.h2h_h, self.h2h_s), dim=0)  # Adjust dim based on your desired concatenation axis
+        # self.h2h = nn.Parameter(combined_h2h, requires_grad=False)
         h2h = get_hidden_topology(n_hid, topology, sparsity, reservoir_scaler)
         h2h = spectral_norm_scaling(h2h, rho)
         self.h2h = nn.Parameter(h2h, requires_grad=False)
         
         x2h = torch.rand(n_inp, n_hid) * input_scaling
         self.x2h = nn.Parameter(x2h, requires_grad=False)
+
+        ## FINE TUNE
+        self.threshold = threshold 
+        self.R = resistance
+        self.C = capacity
+        self.reset = reset # initial membrane potential
+    
         
-## plot hy, hz, x, u and spikes to see the variation
+## what we could do is, create a second cell
     def cell(
-        self, x: torch.Tensor, hy: torch.Tensor, hz: torch.Tensor, u: torch.Tensor
+        self, x: torch.Tensor, hy: torch.Tensor, hz: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Compute the next hidden state and its derivative.
 
         Args:
-            x (torch.Tensor): Input tensor ---> u(t) == I(t) external current
-            hy (torch.Tensor): Current hidden state ----> position (y)
-            hz (torch.Tensor): Current hidden state derivative ----> velocity (y'=z)
-            u (torch.Tensor): Member potential 
+            x (torch.Tensor): Input tensor.
+            hy (torch.Tensor): Current hidden state.
+            hz (torch.Tensor): Current hidden state derivative.
         """
-        spike, u = self.spiking_layer(x, hy, u) 
-        hz = hz + self.dt * ( 
-            u 
-            - self.gamma * hy 
-            - self.epsilon * hz
+        spike, u = spiking_osc(x, hy, u)
+        
+        hz = hz + self.dt * ( # should this change?
+            torch.tanh(
+                torch.matmul(x, self.x2h) + torch.matmul(hy, self.h2h) + self.bias
+            )
+            ### this is the part that technically describes the mechanical oscillators
+            ## and that we'll now update with also spiking ones
+            - self.gamma * hy
+            - (self.epsilon * (hz*self.harmonic) + u*self.spiking)
         )
 
         hy = hy + self.dt * hz
         return hy, hz, u, spike
-    
-    ##################### 
-    '''
-    from the snntorch tutorial:
-    
-        # LIF w/Reset mechanism
-        
-        def leaky_integrate_and_fire(mem, cur=0, threshold=1, time_step=1e-3, R=5.1, C=5e-3):
-            tau_mem = R*C
-            spk = (mem > threshold)
-            mem = mem + (time_step/tau_mem)*(-mem + cur*R) - spk*threshold  # every time spk=1, subtract the threhsold
-            return mem, spk
-    '''
-    ##################### 
-    
+
     #### CHECK!!!
     ## I == W hy + V x where W and V need to be initialized at the beginning and are fixed (reservoir)
     ## u == member potential and is not correspondent to hy because it's an internal parameter to get spikes (don't forget to update!)
@@ -149,21 +153,17 @@ class SpikingRON(nn.Module):
     - spike = binary spikes (tensor)
     - u = membrane potential (tensor)
     '''
-    def spiking_layer(self, x, hy, u):
-        #### ADD THE PRINTS HERE TO A OUTPUT FILE
+    def spiking_osc(self, x, hy, u):
         spike = (u > self.threshold) * 1.0
-        # hy was previously weighted with self.w and x was weighted with R --> now I use reservoir weights
-  
+        # hy was previously weighted with self.w and x was weighted with R --> now I use reservoir weight
         u[spike == 1] = self.reset  # Hard reset only for spikes
-
         # tau = R * C
-        u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)) # u dot (update) 
-        u = u + (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
-        
+        # u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)) # u dot (update) 
+        # u = u + (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
+        u = u + ((self.R*self.C)*self.dt)*(-u)
         return spike, u
         # u -= spike*self.threshold # soft reset the membrane potential after spike
         ## plot membrane potential with thresholds and positive spikes
-        # OLD CODE: u += ((- self.w * hy) + (self.R*x))*(self.R*self.C) - spike*self.threshold  
     
     # def plot_u(self, u_list: List[torch.Tensor], resultroot):
     #     """Plot the membrane potential u over time for each neuron."""
@@ -190,13 +190,15 @@ class SpikingRON(nn.Module):
             list: List containing the last hidden state of the network.
         """
         hy_list, hz_list, u_list, spike_list = [], [], [], []
+        
         hy = torch.zeros(x.size(0), self.n_hid).to(self.device) #x.size(0)
         hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
         u = torch.zeros(x.size(0), self.n_hid).to(self.device)
-        for t in range(x.size(1)):
-            hy, hz, u, spk = self.cell(x[:, t], hy, hz, u)
-            hy_list.append(hy)
-            hz_list.append(hz)
-            u_list.append(u)
-            spike_list.append(spk)
+        
+        for t in range(x.size(1)):      
+                hy, hz, u, spk = self.cell(x[:, t], hy, hz, u)
+                hy_list.append(hy)
+                hz_list.append(hz)
+                u_list.append(u)
+                spike_list.append(spk)
         return hy_list, hz_list, u_list, spike_list

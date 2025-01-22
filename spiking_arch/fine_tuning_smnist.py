@@ -96,10 +96,10 @@ param_grid = {
     # "epsilon": [4.5, 4.9],  # Range of epsilon values
     # "rho": [0.9, 0.99],  # Spectral radius
     # "inp_scaling": [0.8, 1.2],  # Input scaling
-    "threshold": [0.008, 0.009, 0.01],
+    "threshold": [0.008, 0.009], #, 0.01
     "resistance": [3.0, 5.0, 7.0],
     "capacity": [3e-3, 5e-3, 7e-3],
-    "reset": [0.001, 0.002, 0.005] # initial membrane potential 
+    "reset": [0.001, 0.004] # initial membrane potential 
 }
 
 # Convert grid to list of combinations
@@ -160,8 +160,8 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         # (params["epsilon"] - args.epsilon_range / 2.0, params["epsilon"] + args.epsilon_range / 2.0),
         # params["rho"],
         # params["inp_scaling"],
-        rho=args.rho,
-        inp_scaling=args.inp_scaling,
+        args.rho,
+        args.inp_scaling,
         params["threshold"],
         params["resistance"],
         params["capacity"],        
@@ -169,7 +169,7 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         topology=args.topology,
         sparsity=args.sparsity,
         reservoir_scaler=args.reservoir_scaler,
-        device=device,
+        device=device
     ).to(device)
 
     # Train and validate the model

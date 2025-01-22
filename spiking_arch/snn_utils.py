@@ -133,7 +133,7 @@ def acc_table(param_combinations, accuracies, resultroot):
         accuracies (list of float): List of accuracies corresponding to the parameter combinations.
     """
     # Create a DataFrame from parameter combinations and accuracies
-    param_names = ["dt", "rho", "inp_scaling", "threshold", "resistance", "capacity", "reset"]
+    param_names = ["dt", "threshold", "resistance", "capacity", "reset"] #"rho", "inp_scaling",
     data = [list(comb) + [acc] for comb, acc in zip(param_combinations, accuracies)]
     df = pd.DataFrame(data, columns=param_names + ["Accuracy"])
 

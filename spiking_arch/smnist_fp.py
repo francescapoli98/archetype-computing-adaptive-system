@@ -237,7 +237,7 @@ for i in range(args.trials):
         args.dataroot, args.batch, args.batch
     )
     
-    activations, ys, x = [], [], [] 
+    activations, ys = [], []
     for images, labels in tqdm(train_loader):
         images = images.to(device)
         # print('original image shape: ', images.shape)
@@ -249,8 +249,7 @@ for i in range(args.trials):
         # print('AFTER CALLING THE MODEL\noutput: ', output.size(), '\n velocity: ', velocity.size(), '\nu: ', u.size(), '\nspikes: ', spk.size())
         activations.append(output[-1])
         ys.append(labels) 
-        x.append(images)
-        break
+        
 
     output=torch.from_numpy(np.array(output, dtype=np.float32))    
     velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))    

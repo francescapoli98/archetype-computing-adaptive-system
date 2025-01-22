@@ -189,6 +189,7 @@ class SpikingRON(nn.Module):
             torch.Tensor: Hidden states of the network shaped as (batch, time, n_hid).
             list: List containing the last hidden state of the network.
         """
+        # print('input dimensions:', x.size())
         hy_list, hz_list, u_list, spike_list = [], [], [], []
         hy = torch.zeros(x.size(0), self.n_hid).to(self.device) #x.size(0)
         hz = torch.zeros(x.size(0), self.n_hid).to(self.device)

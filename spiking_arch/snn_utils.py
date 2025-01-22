@@ -102,19 +102,17 @@ def plot_dynamics(
 
     # Plot the spikes (as vertical lines at spike times) - Selecting the first channel (layer) and first unit
     plt.subplot(5, 1, 5)
-    plt.title('Spikes')
-    # Find the time steps where spikes occurred for the first unit of the first channel
-    ##### SUBSTITUTE with basic scatter plot (time steps and 1-0 tensor of spikes)
-    # spike_times = time_steps[spikes[:, 0, 0] == 1]  # Identify the spike times
-    # print(f"Spike times: {spike_times}")
-    # # Plot spikes at those times
-    # plt.scatter(spike_times, membrane_potential[spike_times, 0, 0], color="red", label="Spikes", zorder=5, s=30)
-    # spike_times = time_steps[spikes[:, 0, 0] == 1]  # Identify the spike times
-    # print(f"Spike times: {spike_times}")
-    # Plot spikes at those times
-    plt.scatter(time_steps, spikes[:, 0, 0] == 1, color="red", label="Spikes", zorder=5, s=30)
-    plt.xlabel('Time Step')
+    plt.title('Spiking times')
+    # Filter time steps where spikes == 1
+    spike_times = time_steps[spikes[:, 0, 0] == 1]  # Time steps where spikes occur
+    spike_values = spikes[spikes[:, 0, 0] == 1, 0, 0]  # Spike values (should be all 1s)
+
+    # Scatter plot only the spikes == 1
+    plt.scatter(spike_times,spike_values, color="red", label="Spikes", zorder=5, s=30)
+    plt.xlim(0, len(time_steps))    
     plt.ylabel('Spike')
+    plt.legend()
+
 
     # Finalize the plot
     plt.tight_layout()

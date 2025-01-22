@@ -135,14 +135,12 @@ class MixedRON(nn.Module):
         hy_spiking, spikes = spiking_osc(spiking_hiddens)
         return hy_harmonic, hz, hy_spiking, spikes
     
-    def spiking_osc(self, u):
+    def spiking_osc(self, act, u):
         spike = (u > self.threshold) * 1.0
         # hy was previously weighted with self.w and x was weighted with R --> now I use reservoir weight
         u[spike == 1] = self.reset  # Hard reset only for spikes
         # tau = R * C
-        # u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)) # u dot (update) 
-        # u = u + (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
-        u = u + ((self.R*self.C)*self.dt)*(-u)
+        u = u + ((self.R*self.C)*self.dt)*(-u + act)
         return spike, u
         # u -= spike*self.threshold # soft reset the membrane potential after spike
         ## plot membrane potential with thresholds and positive spikes

@@ -14,8 +14,8 @@ from acds.archetypes import (
 )
 from acds.benchmarks import get_mackey_glass
 
-from spiking_arch.liquid_ron import LiquidRON
-from spiking_arch.s_ron_ import SpikingRON
+from spiking_arch.lsm_baseline import LiquidRON
+from spiking_arch.s_ron import SpikingRON
 
 from spiking_arch.snn_utils import *
 
@@ -136,17 +136,7 @@ epsilon = (
 
 train_mse, valid_mse, test_mse = [], [], []
 for i in range(args.trials):
-    if args.esn:
-        model = DeepReservoir(
-            n_inp,
-            tot_units=args.n_hid,
-            spectral_radius=args.rho,
-            input_scaling=args.inp_scaling,
-            connectivity_recurrent=int((1 - args.sparsity) * args.n_hid),
-            connectivity_input=args.n_hid,
-            leaky=args.leaky,
-        ).to(device)
-    elif args.ron:
+    if args.ron:
         model = RandomizedOscillatorsNetwork(
             n_inp,
             args.n_hid,
@@ -160,42 +150,6 @@ for i in range(args.trials):
             reservoir_scaler=args.reservoir_scaler,
             device=device,
         ).to(device)
-    elif args.pron:
-        model = PhysicallyImplementableRandomizedOscillatorsNetwork(
-            n_inp,
-            args.n_hid,
-            args.dt,
-            gamma,
-            epsilon,
-            args.inp_scaling,
-            device=device
-        ).to(device)
-    elif args.mspron:
-        model = MultistablePhysicallyImplementableRandomizedOscillatorsNetwork(
-            n_inp,
-            args.n_hid,
-            args.dt,
-            gamma,
-            epsilon,
-            args.inp_scaling,
-            device=device
-        ).to(device)
-    
-    elif args.sron:
-        model = SpikingRON(
-            n_inp,
-            args.n_hid,
-            args.dt,
-            gamma,
-            epsilon,
-            args.rho,
-            args.inp_scaling,
-            topology=args.topology,
-            sparsity=args.sparsity,
-            reservoir_scaler=args.reservoir_scaler,
-            device=device,
-        ).to(device)
-    
     elif args.liquidron:
         model = LiquidRON(
             n_inp,
@@ -216,7 +170,40 @@ for i in range(args.trials):
             w_i=0.2,
             reg=None,
         ).to(device)
+    elif args.sron:
+        model = SpikingRON(
+            n_inp,
+            args.n_hid,
+            args.dt,
+            gamma,
+            epsilon,
+            args.rho,
+            args.inp_scaling,
+            #add last things here
+            args.threshold,
+            args.resistance,
+            args.capacitance,
+            args.reset,
+            topology=args.topology,
+            sparsity=args.sparsity,
+            reservoir_scaler=args.reservoir_scaler,
+            device=device,
+        ).to(device)
         
+    elif args.mixron:
+        model = MixedRON(
+                n_inp,
+                args.n_hid,
+                args.dt,
+                gamma,
+                epsilon,
+                args.rho,
+                args.inp_scaling,
+                topology=args.topology,
+                sparsity=args.sparsity,
+                reservoir_scaler=args.reservoir_scaler,
+                device=device,
+            ).to(device) 
     else:
         raise ValueError("Wrong model name")
 
@@ -251,12 +238,12 @@ for i in range(args.trials):
 
 if args.ron:
     f = open(os.path.join(args.resultroot, f"MG_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")
-elif args.pron:
-    f = open(os.path.join(args.resultroot, f"MG_log_PRON{args.resultsuffix}.txt"), "a")
-elif args.mspron:
-    f = open(os.path.join(args.resultroot, f"MG_log_MSPRON{args.resultsuffix}.txt"), "a")
-elif args.esn:
-    f = open(os.path.join(args.resultroot, f"MG_log_ESN{args.resultsuffix}.txt"), "a")
+elif args.liquidron:
+    f = open(os.path.join(args.resultroot, f"MG_log_LiquidRON{args.resultsuffix}.txt"), "a")
+elif args.sron:
+    f = open(os.path.join(args.resultroot, f"MG_log_SRON{args.resultsuffix}.txt"), "a")
+elif args.mixron:
+    f = open(os.path.join(args.resultroot, f"MG_log_MixedRON{args.resultsuffix}.txt"), "a")
 else:
     raise ValueError("Wrong model choice.")
 

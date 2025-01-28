@@ -84,7 +84,7 @@ parser.add_argument(
 
 parser.add_argument("--threshold", type=float, default=0.008, help="spiking ron models threshold")
 parser.add_argument("--resistance", type=float, default=5.0, help="resistance (spiking n.)")
-parser.add_argument("--capacity", type=float, default=5.e-3, help="capacity (spiking n.)")
+parser.add_argument("--capacitance", type=float, default=5.e-3, help="capacitance (spiking n.)")
 parser.add_argument("--reset", type=float, default=0.001, help="spiking ron models reset")
 
 
@@ -98,7 +98,7 @@ param_grid = {
     # "inp_scaling": [0.8, 1.2],  # Input scaling
     "threshold": [0.008, 0.009], #, 0.01
     "resistance": [3.0, 5.0, 7.0],
-    "capacity": [3e-3, 5e-3, 7e-3],
+    "capacitance": [3e-3, 5e-3, 7e-3],
     "reset": [0.001, 0.004] # initial membrane potential 
 }
 
@@ -164,7 +164,7 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         args.inp_scaling,
         params["threshold"],
         params["resistance"],
-        params["capacity"],        
+        params["capacitance"],        
         params["reset"],
         topology=args.topology,
         sparsity=args.sparsity,

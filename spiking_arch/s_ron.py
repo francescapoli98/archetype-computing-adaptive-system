@@ -36,7 +36,7 @@ class SpikingRON(nn.Module):
         input_scaling: float,
         threshold: float,
         resistance: float,
-        capacity: float,
+        capacitance: float,
         reset: float,
         #no grid search
         topology: Literal[
@@ -93,7 +93,7 @@ class SpikingRON(nn.Module):
             
         self.threshold = threshold
         self.R = resistance
-        self.C = capacity
+        self.C = capacitance
         self.reset = reset # initial membrane potential 
         
         #### to be changed to spiking dynamics

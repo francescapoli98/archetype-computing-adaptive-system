@@ -11,6 +11,7 @@ from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression
 from tqdm import tqdm
 
+
 from acds.archetypes import (
     DeepReservoir,
     RandomizedOscillatorsNetwork,
@@ -22,10 +23,10 @@ from spiking_arch.lsm_baseline import LiquidRON
 from spiking_arch.s_ron import SpikingRON
 from spiking_arch.mixed_ron import MixedRON
 
-
-from acds.benchmarks import get_mnist_data
-
 from spiking_arch.snn_utils import *
+from spiking_arch.mnistloader import *
+
+
 
 parser = argparse.ArgumentParser(description="training parameters")
 parser.add_argument("--dataroot", type=str)
@@ -240,37 +241,31 @@ for i in range(args.trials):
     else:
         raise ValueError("Wrong model choice.")
     
-    train_loader, valid_loader, test_loader = get_mnist_data(
+    train_loader, valid_loader, test_loader = get_nmnist_data(
         args.dataroot, args.batch, args.batch
     )
     
     activations, ys = [], []
-    for images, labels in tqdm(train_loader):
+    for batch in next(iter(train_loader)):
+        images, labels = batch[0], batch[1]  # Access only the first two items
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
         if args.liquidron:
-            output, u, spk = model(images, labels)
+            output, velocity, u, spk = model(images, labels)
         else:
             output, velocity, u, spk = model(images)
-        print(output[-1])
         activations.append(output[-1])
         ys.append(labels) 
         
 
-    output=torch.from_numpy(np.array(output, dtype=np.float32))
-    # if velocity:
+    output=torch.from_numpy(np.array(output, dtype=np.float32))    
+    velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))    
     u=torch.from_numpy(np.array(u, dtype=np.float32))   
-    # print('torch mem pot 1: ', u[:,0,0],'\ntorch mem pot 2: ', u[0,:,0], '\ntorch mem pot 3: ', u[0,0,:] ) 
     spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
-    # print('activations shape: ', activations.shape, '\nvel_p shape: ', vel_p.shape, '\nmem_p shape: ', mem_p.shape, '\nspk_p shape: ', spk_p.shape)
-    # print('datatypes and shapes: \n velocity: ', type(velocity), velocity,size(), '\n membrane potential: ', type(u), u.size(), '\n spikes: ', type(spk), spk.size())
-    if not args.liquidron:
-        velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))  
-        plot_dynamics(output, velocity, u, spk, images, args.resultroot) 
+    plot_dynamics(output, velocity, u, spk, images, args.resultroot) 
     activations = torch.cat(activations, dim=0).numpy()
     print('activations:', activations.shape, type(activations))
     ys = torch.cat(ys, dim=0).squeeze().numpy()
-    # print('activations shape: ', activations.shape,'activations items shape: ', activations[-1].size(), '\nys shape: ', ys.shape, 'ys items shape: ', ys[-1].size())
     scaler = preprocessing.StandardScaler().fit(activations)
     activations = scaler.transform(activations) 
     classifier = LogisticRegression(max_iter=5000).fit(activations, ys)
@@ -280,8 +275,7 @@ for i in range(args.trials):
     train_accs.append(train_acc)
     valid_accs.append(valid_acc)
     test_accs.append(test_acc)
-# print(f'membrane potential: {u[:, 0, 0]}')
-# print(f'membrane potential shape: {u.size()}')
+
 simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
 
 

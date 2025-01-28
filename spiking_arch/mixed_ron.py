@@ -36,7 +36,7 @@ class MixedRON(nn.Module):
         input_scaling: float,
         threshold: float,
         resistance: float,
-        capacity: float,
+        capacitance: float,
         reset: float,
         topology: Literal[
             "full", "lower", "orthogonal", "band", "ring", "toeplitz"
@@ -114,7 +114,7 @@ class MixedRON(nn.Module):
         ## FINE TUNE
         self.threshold = threshold 
         self.R = resistance
-        self.C = capacity
+        self.C = capacitance
         self.reset = reset # initial membrane potential
     
         
@@ -145,18 +145,13 @@ class MixedRON(nn.Module):
         # u -= spike*self.threshold # soft reset the membrane potential after spike
         ## plot membrane potential with thresholds and positive spikes
     
-   def harmonic_osc(self, act, hy, hz):
-        hz = hz + 
-        self.dt * act  
-        - self.gamma * hy
-        - self.epsilon * hz
+    def harmonic_osc(self, act, hy, hz):
+        hz = hz + self.dt * act - self.gamma * hy - self.epsilon * hz
 
         hy = hy + self.dt * hz
         return hy, hz
 
        
- 
-        
     def forward(self, x: torch.Tensor):
         """Forward pass on a given input time-series.
 

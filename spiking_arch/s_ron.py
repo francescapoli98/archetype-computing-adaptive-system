@@ -164,20 +164,6 @@ class SpikingRON(nn.Module):
         # u -= spike*self.threshold # soft reset the membrane potential after spike
         ## plot membrane potential with thresholds and positive spikes
         # OLD CODE: u += ((- self.w * hy) + (self.R*x))*(self.R*self.C) - spike*self.threshold  
-    
-    # def plot_u(self, u_list: List[torch.Tensor], resultroot):
-    #     """Plot the membrane potential u over time for each neuron."""
-    #     u_array = torch.stack(u_list).cpu().numpy()  # Convert to numpy for plotting
-    #     plt.figure(figsize=(10, 6))
-    #     # for i in range(u_array.shape[2]):  # Loop through all hidden units
-    #     plt.plot([u_array[i, :, :] for i in range(u_array.shape[2])])
-    #     plt.title('Membrane Potential (u) Over Time')
-    #     plt.xlabel('Time Step')
-    #     plt.ylabel('Membrane Potential (u)')
-    #     plt.legend(loc='upper right')
-    #     plt.grid(True)
-    #     plt.savefig(f"{resultroot}/u_plot.png")
-    #     plt.show()
         
     def forward(self, x: torch.Tensor):
         """Forward pass on a given input time-series.

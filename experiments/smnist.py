@@ -34,19 +34,23 @@ parser.add_argument(
 parser.add_argument(
     "--epsilon",
     type=float,
-    default=4.7,
+    ## ORIGINAL
+    # default=4.7,
+    default = 0.51,
     help="z controle parameter <epsilon> of the coRNN",
 )
 parser.add_argument(
     "--gamma_range",
     type=float,
-    default=2.7,
+    # default=2.7,
+    default=1.0,
     help="y controle parameter <gamma> of the coRNN",
 )
 parser.add_argument(
     "--epsilon_range",
     type=float,
-    default=4.7,
+    # default=4.7,
+    default= 0.5,
     help="z controle parameter <epsilon> of the coRNN",
 )
 parser.add_argument("--cpu", action="store_true")
@@ -55,7 +59,9 @@ parser.add_argument("--ron", action="store_true")
 parser.add_argument("--pron", action="store_true")
 parser.add_argument("--mspron", action="store_true")
 parser.add_argument("--inp_scaling", type=float, default=1.0, help="ESN input scaling")
-parser.add_argument("--rho", type=float, default=0.99, help="ESN spectral radius")
+## ORIGINAL
+# parser.add_argument("--rho", type=float, default=0.99, help="ESN spectral radius") 
+parser.add_argument("--rho", type=float, default=9, help="ESN spectral radius") 
 parser.add_argument("--leaky", type=float, default=1.0, help="ESN spectral radius")
 parser.add_argument("--use_test", action="store_true")
 parser.add_argument(

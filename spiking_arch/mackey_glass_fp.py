@@ -87,8 +87,15 @@ parser.add_argument(
     help="Scaler in case of ring/band/toeplitz reservoir",
 )
 
+parser.add_argument("--threshold", type=float, default=0.1, help="threshold")
+# parser.add_argument("--resistance", type=float, default=5.0, help="resistance")
+# parser.add_argument("--capacitance", type=float, default=3.0, help="capacitance")
+parser.add_argument("--rc", type=float, default=5.0, help="tau")
+parser.add_argument("--reset", type=float, default=0.01, help="reset")
+
 
 args = parser.parse_args()
+
 
 assert args.dataroot is not None, "No dataroot provided"
 if args.resultroot is None:
@@ -119,12 +126,13 @@ def test(dataset, target, classifier, scaler):
     target = target.reshape(-1, 1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
     output, velocity, u, spk = model(dataset)
-    activations = output[:, washout:]
+    # activations = output[:, washout:]
+    activations = torch.stack(output, dim=1)[:, washout:]
     activations = activations.reshape(-1, args.n_hid)
     activations = scaler.transform(activations)
     predictions = classifier.predict(activations)
     error = criterion_eval(torch.from_numpy(predictions).float(), torch.from_numpy(target).float()).item()
-    return error
+    return error, predictions
 
 
 gamma = (args.gamma - args.gamma_range / 2.0, args.gamma + args.gamma_range / 2.0)
@@ -181,8 +189,9 @@ for i in range(args.trials):
             args.inp_scaling,
             #add last things here
             args.threshold,
-            args.resistance,
-            args.capacitance,
+            # args.resistance,
+            # args.capacitance,
+            args.rc,
             args.reset,
             topology=args.topology,
             sparsity=args.sparsity,
@@ -217,24 +226,40 @@ for i in range(args.trials):
     target = train_target.reshape(-1, 1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
     output, velocity, u, spk = model(dataset)
-    activations = output[:, washout:]
+    plot_dynamics(torch.from_numpy(np.array(output, dtype=np.float32)),
+                  torch.from_numpy(np.array(velocity, dtype=np.float32)),
+                  torch.from_numpy(np.array(u, dtype=np.float32)),
+                  torch.from_numpy(np.array(spk, dtype=np.float32)),    
+                  dataset,
+                  args.resultroot)
+    activations = torch.stack(output, dim=1)
     activations = activations[:, washout:]
     activations = activations.reshape(-1, args.n_hid)
     scaler = preprocessing.StandardScaler().fit(activations)
     activations = scaler.transform(activations)
     classifier = Ridge(max_iter=1000).fit(activations, target)
-    train_nmse = test(train_dataset, train_target, classifier, scaler)
-    valid_nmse = (
-        test(valid_dataset, valid_target, classifier, scaler)
-        if not args.use_test
-        else 0.0
-    )
-    test_nmse = (
+    train_nmse, train_pred = test(train_dataset, train_target, classifier, scaler)
+   
+    mg_results(train_target, train_pred, train_nmse, args.resultroot, 'MG_train_pred.png')
+    train_mse.append(train_nmse)
+    print('test dataset len: ', test_dataset.size())
+    test_nmse, test_pred = (
         test(test_dataset, test_target, classifier, scaler) if args.use_test else 0.0
     )
-    train_mse.append(train_nmse)
-    valid_mse.append(valid_nmse)
+    mg_results(test_target, test_pred, test_nmse, args.resultroot, 'MG_test_pred.png')
     test_mse.append(test_nmse)
+    
+     # valid_nmse = (
+    #     test(valid_dataset, valid_target, classifier, scaler)        
+    # if not args.use_test
+    #     else 0.0
+    # )
+    # mg_results(val_target, val_pred, args.resultroot, 'MG_val_pred.png')
+    # valid_mse.append(valid_nmse)
+
+    
+print('Train mse: ', [str(round(train_acc, 2)) for train_acc in train_mse],
+      '\nTest mse: ', [str(round(test_acc, 2)) for test_acc in test_mse])
 
 if args.ron:
     f = open(os.path.join(args.resultroot, f"MG_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")
@@ -252,10 +277,10 @@ for k, v in vars(args).items():
     ar += f"{str(k)}: {str(v)}, "
 ar += (
     f"train: {[str(round(train_acc, 2)) for train_acc in train_mse]} "
-    f"valid: {[str(round(valid_acc, 2)) for valid_acc in valid_mse]} "
+    # f"valid: {[str(round(valid_acc, 2)) for valid_acc in valid_mse]} "
     f"test: {[str(round(test_acc, 2)) for test_acc in test_mse]}"
     f"mean/std train: {np.mean(train_mse), np.std(train_mse)} "
-    f"mean/std valid: {np.mean(valid_mse), np.std(valid_mse)} "
+    # f"mean/std valid: {np.mean(valid_mse), np.std(valid_mse)} "
     f"mean/std test: {np.mean(test_mse), np.std(test_mse)}"
 )
 f.write(ar + "\n")

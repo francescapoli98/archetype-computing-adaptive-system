@@ -112,10 +112,10 @@ class LiquidRON(nn.Module):
         x2h = torch.tensor(x2h, dtype=torch.float32)  
         self.x2h = nn.Parameter(x2h, requires_grad=False)
         
-        self.threshold = 0.008
+        self.threshold = 0.1 
         self.R = 5.0
         self.C = 5e-3 
-        self.reset = 0 # initial membrane potential ## FINE TUNE THIS
+        self.reset = 0.1 # initial membrane potential ## FINE TUNE THIS
         
         self.reg = None  # Initialize regularization parameter.
         
@@ -132,22 +132,27 @@ class LiquidRON(nn.Module):
             hz (torch.Tensor): Current hidden state derivative ----> velocity (y'=z)
             u (torch.Tensor): Membrane potential 
         """
-        spike = (u > self.threshold) * 1.0
-        # hy was previously weighted with self.w and x was weighted with R --> now I use reservoir weights
-        u[spike == 1] = self.reset  # Hard reset only for spikes
+        spike = (u > self.threshold) * 1.0 
+        # u[spike == 1] = self.reset  # Hard reset only for spikes
+        
         # tau = R * C
         u_dot = - u + (torch.matmul(u, self.h2h) + torch.matmul(x, self.x2h)) # u dot (update) 
-        u += (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
+        # u += (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
+        u += (self.dt / (self.R * self.C)) * u_dot
+        u[spike == 1] = self.reset  # Hard reset only for spikes
+        # print(spike)
         return u, spike
     
-    def readout_layer(self, states, target):
-        if self.reg is not None:
-            self.readout = torch.linalg.pinv(states.T @ states + np.eye(states.shape[1]) * reg) @ states.T @ target
-        else:
-            self.readout = torch.linalg.pinv(states) @ target 
-            # print(self.readout)
-        # print(states @ self.readout)
-        return states @ self.readout
+    def readout_layer(self, states): #target
+        # if self.reg is not None:
+        #     self.readout = torch.linalg.pinv(states.T @ states + np.eye(states.shape[1]) * self.reg) @ states.T @ target
+        # else:
+        #     self.readout = torch.linalg.pinv(states) @ target
+        #     # self.readout = torch.linalg.pinv(states.T @ states + torch.eye(states.shape[1]) * 1e-5) @ (states.T @ target)
+ 
+        # return states @ self.readout
+        readout = nn.Linear(self.n_hid, self.n_hid, bias=False)
+        return readout(states)
     
     ##################### 
     '''
@@ -163,7 +168,7 @@ class LiquidRON(nn.Module):
     '''
     ##################### 
 
-    def forward(self, x: torch.Tensor, y: torch.Tensor):
+    def forward(self, x: torch.Tensor): #, y: torch.Tensor):
         """Forward pass on a given input time-series.
 
         Args:
@@ -173,16 +178,22 @@ class LiquidRON(nn.Module):
             torch.Tensor: Hidden states of the network shaped as (batch, time, n_hid).
             list: List containing the last hidden state of the network.
         """
-        hy_list, hz_list, u_list, spike_list = [], [], [], []
+        # hy_list, hz_list, 
+        u_list, spike_list = [], []
         # hy = torch.zeros(x.size(0), self.n_hid).to(self.device) #x.size(0)
         # hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
+        # print('LSM PARAMS \nwin_e:', win_e, 'win_i:', win_i, 'w_e:', w_e, 'w_i:', w_i, 'Ne:', Ne, 'Ni:', Ni)
         u = torch.zeros(x.size(0), self.n_hid).to(self.device)
         for t in range(x.size(1)):
             u, spk = self.LIFcell(x[:, t], u)
             u_list.append(u)
             spike_list.append(spk)
+        
         u_list, spike_list = torch.stack(u_list, dim=1), torch.stack(spike_list, dim=1)
-        # print(u_list, spike_list)
-        readout = self.readout_layer(spike_list[:, -1, :],  # Shape: (batch_size, n_hid)
-                                     torch.tensor(y, dtype=torch.float32) )
-        return readout, u_list, spike_list
+        # print(u_list.size(), spike_list.size())
+        
+        readout = self.readout_layer(u_list[:, -1, :])  # Shape: (batch_size, n_hid)
+                                    #  torch.tensor(y, dtype=torch.float32))
+        
+        
+        return torch.tensor(readout, dtype=torch.float32), u_list, spike_list 

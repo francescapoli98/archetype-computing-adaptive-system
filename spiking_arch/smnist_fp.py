@@ -44,19 +44,19 @@ parser.add_argument(
 parser.add_argument(
     "--epsilon",
     type=float,
-    default=4.7,
+    default=0.51,
     help="z controle parameter <epsilon> of the coRNN",
 )
 parser.add_argument(
     "--gamma_range",
     type=float,
-    default=2.7,
+    default=1,
     help="y controle parameter <gamma> of the coRNN",
 )
 parser.add_argument(
     "--epsilon_range",
     type=float,
-    default=4.7,
+    default=0.5,
     help="z controle parameter <epsilon> of the coRNN",
 )
 parser.add_argument("--cpu", action="store_true")
@@ -69,7 +69,7 @@ parser.add_argument("--sron", action="store_true")
 parser.add_argument("--liquidron", action="store_true")
 
 parser.add_argument("--inp_scaling", type=float, default=1.0, help="ESN input scaling")
-parser.add_argument("--rho", type=float, default=0.99, help="ESN spectral radius")
+parser.add_argument("--rho", type=float, default=9, help="ESN spectral radius")
 parser.add_argument("--leaky", type=float, default=1.0, help="ESN spectral radius")
 parser.add_argument("--use_test", action="store_true")
 parser.add_argument(
@@ -92,10 +92,11 @@ parser.add_argument(
     help="Scaler in case of ring/band/toeplitz reservoir",
 )
 
-parser.add_argument("--threshold", type=float, default=0.008, help="threshold")
-parser.add_argument("--resistance", type=float, default=7.0, help="resistance")
-parser.add_argument("--capacitance", type=float, default=0.005, help="capacitance")
-parser.add_argument("--reset", type=float, default=0.004, help="reset")
+parser.add_argument("--threshold", type=float, default=1.0, help="threshold")
+parser.add_argument("--resistance", type=float, default=5.0, help="resistance")
+parser.add_argument("--capacitance", type=float, default=3.0, help="capacitance")
+parser.add_argument("--reset", type=float, default=-1.0, help="reset")
+parser.add_argument("--rc", type=float, default=-1.0, help="resistance x capacitance")
 
 
 args = parser.parse_args()
@@ -120,7 +121,10 @@ def test(data_loader, classifier, scaler):
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
         output = model(images)[0][-1]
-        activations.append(output)
+        if args.liquidron is None:
+            activations.append(output[-1])
+        else:
+            activations.append(output)
         ys.append(labels)
     activations = torch.cat(activations, dim=0).numpy()
     activations = scaler.transform(activations)
@@ -202,8 +206,9 @@ for i in range(args.trials):
             args.inp_scaling,
             # spiking
             args.threshold,
-            args.resistance,
-            args.capacitance,
+            # args.resistance,
+            # args.capacitance,
+            args.rc,
             args.reset,
             topology=args.topology,
             sparsity=args.sparsity,
@@ -225,10 +230,10 @@ for i in range(args.trials):
             args.resistance,
             args.capacitance,
             args.reset,
-            win_e=2,
-            win_i=1,
-            w_e=0.5,
-            w_i=0.2,
+            win_e=2.5,
+            win_i=1.5,
+            w_e=1,
+            w_i=0.5,
             Ne=200,
             Ni=56,
             topology=args.topology,
@@ -236,7 +241,6 @@ for i in range(args.trials):
             reservoir_scaler=args.reservoir_scaler,
             device=device
         ).to(device)
-
     else:
         raise ValueError("Wrong model choice.")
     
@@ -248,41 +252,35 @@ for i in range(args.trials):
     for images, labels in tqdm(train_loader):
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
+        ys.append(labels) 
         if args.liquidron:
-            output, u, spk = model(images, labels)
+            output, u, spk = model(images)
+            activations.append(output)
+            # print(output)
         else:
             output, velocity, u, spk = model(images)
-        print(output[-1])
-        activations.append(output[-1])
-        ys.append(labels) 
-        
-
+            activations.append(output[-1])
+            
+    # if args.liquidron is None:
     output=torch.from_numpy(np.array(output, dtype=np.float32))
-    # if velocity:
     u=torch.from_numpy(np.array(u, dtype=np.float32))   
-    # print('torch mem pot 1: ', u[:,0,0],'\ntorch mem pot 2: ', u[0,:,0], '\ntorch mem pot 3: ', u[0,0,:] ) 
     spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
-    # print('activations shape: ', activations.shape, '\nvel_p shape: ', vel_p.shape, '\nmem_p shape: ', mem_p.shape, '\nspk_p shape: ', spk_p.shape)
-    # print('datatypes and shapes: \n velocity: ', type(velocity), velocity,size(), '\n membrane potential: ', type(u), u.size(), '\n spikes: ', type(spk), spk.size())
-    if not args.liquidron:
-        velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))  
-        plot_dynamics(output, velocity, u, spk, images, args.resultroot) 
+    velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))  
+    plot_dynamics(output, velocity, u, spk, images, args.resultroot)
     activations = torch.cat(activations, dim=0).numpy()
-    print('activations:', activations.shape, type(activations))
+    print('activations:', activations.shape)
     ys = torch.cat(ys, dim=0).squeeze().numpy()
     # print('activations shape: ', activations.shape,'activations items shape: ', activations[-1].size(), '\nys shape: ', ys.shape, 'ys items shape: ', ys[-1].size())
     scaler = preprocessing.StandardScaler().fit(activations)
     activations = scaler.transform(activations) 
     classifier = LogisticRegression(max_iter=5000).fit(activations, ys)
-    train_acc = test(train_loader, classifier, scaler)
-    valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
+    # train_acc = test(train_loader, classifier, scaler)
+    # valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
     test_acc = test(test_loader, classifier, scaler) #if args.use_test else 0.0
-    train_accs.append(train_acc)
-    valid_accs.append(valid_acc)
+    # train_accs.append(train_acc)
+    # valid_accs.append(valid_acc)
     test_accs.append(test_acc)
-# print(f'membrane potential: {u[:, 0, 0]}')
-# print(f'membrane potential shape: {u.size()}')
-simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
+# simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
 
 
 if args.ron:
@@ -305,11 +303,11 @@ ar = ""
 for k, v in vars(args).items():
     ar += f"{str(k)}: {str(v)}, "
 ar += (
-    f"train: {[str(round(train_acc, 2)) for train_acc in train_accs]} "
-    f"valid: {[str(round(valid_acc, 2)) for valid_acc in valid_accs]} "
+    # f"train: {[str(round(train_acc, 2)) for train_acc in train_accs]} "
+    # f"valid: {[str(round(valid_acc, 2)) for valid_acc in valid_accs]} "
     f"test: {[str(round(test_acc, 2)) for test_acc in test_accs]}"
-    f"mean/std train: {np.mean(train_accs), np.std(train_accs)} "
-    f"mean/std valid: {np.mean(valid_accs), np.std(valid_accs)} "
+    # f"mean/std train: {np.mean(train_accs), np.std(train_accs)} "
+    # f"mean/std valid: {np.mean(valid_accs), np.std(valid_accs)} "
     f"mean/std test: {np.mean(test_accs), np.std(test_accs)}"
 )
 f.write(ar + "\n")

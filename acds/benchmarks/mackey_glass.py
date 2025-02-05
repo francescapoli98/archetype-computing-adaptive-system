@@ -20,6 +20,7 @@ def get_mackey_glass(csvfolder: os.PathLike, lag=84, washout=200):
 
     # 10k steps
     dataset = torch.tensor([float(el) for el in data_lines.split(",")]).float()
+    # print('MG dataset dim: ', dataset.size())
 
     end_train = int(dataset.shape[0] / 2)
     end_val = end_train + int(dataset.shape[0] / 4)

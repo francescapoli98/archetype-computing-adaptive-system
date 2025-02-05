@@ -121,8 +121,89 @@ def plot_dynamics(
     plt.show()
 
 
+def plot_dynam_mg(
+    activations: torch.Tensor = None,
+    # velocity: torch.Tensor = None,
+    # times: int,
+    membrane_potential: torch.Tensor = None,
+    spikes: torch.Tensor = None,
+    # x: torch.Tensor = None,
+    resultroot: str = None,
+):
+    print('Plotting dynamics of membrane potential and spikes.')
 
-def acc_table(param_combinations, accuracies, resultroot):
+    # Ensure the input tensors are in numpy format
+    activations = activations.detach().cpu().numpy() if isinstance(activations, torch.Tensor) else activations
+    # velocity = velocity.detach().cpu().numpy() if isinstance(velocity, torch.Tensor) else velocity
+    membrane_potential = membrane_potential.detach().cpu().numpy() if isinstance(membrane_potential, torch.Tensor) else membrane_potential
+    spikes = spikes.detach().cpu().numpy() if isinstance(spikes, torch.Tensor) else spikes
+    # print('activations: ', activations.size(), ' velocity: ', velocity.size(), ' u: ', membrane_potential.size(), ' spikes: ', spikes.size())
+    # Get the time steps (assuming they are aligned with the tensor shapes)
+    time_steps = np.arange(len(activations))#.shape[1])  # Number of time steps (length of time axis)
+    print('Time steps shape: ', time_steps.shape)
+
+    # Create a plot
+    plt.figure(figsize=(8, 10))
+    
+    # Plot the images (x) 
+    plt.subplot(2, 1, 1)
+   
+    plt.title('Membrane Potential (u)')
+    # Plot the first hidden unit of the first channel
+    plt.plot(time_steps, membrane_potential[:, 0, 0], label="Membrane Potential (u)", color="green", linestyle='-', linewidth=1)
+    plt.xlabel('Time Step')
+    plt.ylabel('Value')
+
+    # Plot the spikes (as vertical lines at spike times) - Selecting the first channel (layer) and first unit
+    plt.subplot(2, 1, 2)
+    plt.title('Spiking times')
+    # Filter time steps where spikes == 1
+    spike_times = time_steps[spikes[:, 0, 0] == 1]  # Time steps where spikes occur
+    spike_values = spikes[spikes[:, 0, 0] == 1, 0, 0]  # Spike values (should be all 1s)
+
+    # Scatter plot only the spikes == 1
+    plt.scatter(spike_times,spike_values, color="red", label="Spikes", zorder=5, s=30)
+    plt.xlim(0, len(time_steps))    
+    plt.ylabel('Spike')
+    plt.legend()
+
+
+    # Finalize the plot
+    plt.tight_layout()
+    plt.savefig(f"{resultroot}/dynamics_plot.png")
+    plt.close()
+    plt.show()
+
+
+
+def mg_results(target, predictions, std, resultroot, filename):    
+    """
+    Plots the target data vs. the predicted data.
+    
+    :param target: The ground truth target values (numpy array).
+    :param predictions: The predicted values (numpy array).
+    :param resultroot: Path to save the plot.
+    :param filename: Name of the output file.
+    """
+    plt.figure(figsize=(10, 5))
+    plt.plot(target, label="Target Data", color='blue', linewidth=0.7)
+    plt.plot(predictions, label="Predicted Data", color='red', linewidth=0.7)
+    plt.xlabel("Time Steps")
+    plt.ylabel("Value")
+    plt.title("Target vs Predicted Data")
+    text = f"Mean Squared Error: {'%.3f'%std}"
+    plt.text(0.05, 0.95, text, transform=plt.gca().transAxes, fontsize=10, verticalalignment='top', bbox=dict(boxstyle="round,pad=0.3", edgecolor='black', facecolor='white'))
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(os.path.join(resultroot, filename))
+    plt.show()
+
+
+# Example usage:
+# plot_results(train_mse, test_mse, args.resultroot)
+
+
+def acc_table(param_names, param_combinations, accuracies, resultroot):
     """
     Create a table to visualize parameter combinations and their corresponding accuracies.
 
@@ -131,7 +212,7 @@ def acc_table(param_combinations, accuracies, resultroot):
         accuracies (list of float): List of accuracies corresponding to the parameter combinations.
     """
     # Create a DataFrame from parameter combinations and accuracies
-    param_names = ["dt", "threshold", "resistance", "capacitance", "reset"] #"rho", "inp_scaling",
+    # param_names = ["dt", "threshold", "resistance", "capacitance", "reset"] #"rho", "inp_scaling",
     data = [list(comb) + [acc] for comb, acc in zip(param_combinations, accuracies)]
     df = pd.DataFrame(data, columns=param_names + ["Accuracy"])
 

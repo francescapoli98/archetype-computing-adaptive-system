@@ -35,8 +35,9 @@ class SpikingRON(nn.Module):
         rho: float,
         input_scaling: float,
         threshold: float,
-        resistance: float,
-        capacitance: float,
+        # resistance: float,
+        # capacitance: float,
+        rc: float,
         reset: float,
         #no grid search
         topology: Literal[
@@ -92,8 +93,9 @@ class SpikingRON(nn.Module):
             self.epsilon = epsilon
             
         self.threshold = threshold
-        self.R = resistance
-        self.C = capacitance
+        # self.R = resistance
+        # self.C = capacitance
+        self.rc = rc
         self.reset = reset # initial membrane potential 
         
         #### to be changed to spiking dynamics
@@ -117,6 +119,8 @@ class SpikingRON(nn.Module):
             u (torch.Tensor): Member potential 
         """
         spike, u = self.spiking_layer(x, hy, u) 
+        # if torch.any(u>0.5):
+        #     print('u: ', u)
         hz = hz + self.dt * ( 
             u 
             - self.gamma * hy 
@@ -158,7 +162,9 @@ class SpikingRON(nn.Module):
 
         # tau = R * C
         u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)) # u dot (update) 
-        u = u + (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
+        u = u + (u_dot * self.rc
+                 #(self.R*self.C)
+                 )*self.dt # multiply to tau and dt
         
         return spike, u
         # u -= spike*self.threshold # soft reset the membrane potential after spike

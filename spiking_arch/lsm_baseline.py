@@ -35,9 +35,11 @@ class LiquidRON(nn.Module):
         input_scaling: 0.0,
         #spiking dynam
         threshold: float,
-        resistance: float,
-        capacitance: float,
+        # resistance: float,
+        # capacitance: float,
+        rc: float,
         reset: float,
+        bias: float,
         #lsm
         win_e:int,
         win_i:int,
@@ -112,12 +114,16 @@ class LiquidRON(nn.Module):
         x2h = torch.tensor(x2h, dtype=torch.float32)  
         self.x2h = nn.Parameter(x2h, requires_grad=False)
         
-        self.threshold = 0.1 
-        self.R = 5.0
-        self.C = 5e-3 
-        self.reset = 0.1 # initial membrane potential ## FINE TUNE THIS
-        
+        self.threshold = threshold 
+        # self.R = 5.0
+        # self.C = 5e-3 
+        self.reset = reset # initial membrane potential ## FINE TUNE THIS
+        self.rc = rc
         self.reg = None  # Initialize regularization parameter.
+        self.bias = bias
+        
+        self.readout = nn.Linear(self.n_hid, self.n_hid, bias=False)
+        
         
         
     def LIFcell(
@@ -132,15 +138,21 @@ class LiquidRON(nn.Module):
             hz (torch.Tensor): Current hidden state derivative ----> velocity (y'=z)
             u (torch.Tensor): Membrane potential 
         """
+        print('starter u: ', u)
         spike = (u > self.threshold) * 1.0 
         # u[spike == 1] = self.reset  # Hard reset only for spikes
         
         # tau = R * C
-        u_dot = - u + (torch.matmul(u, self.h2h) + torch.matmul(x, self.x2h)) # u dot (update) 
+        u_dot = - u + (torch.matmul(u, self.h2h) + torch.matmul(x, self.x2h) + self.bias) # u dot (update) 
+        print('intermediate u: ', u_dot)
+        
         # u += (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
-        u += (self.dt / (self.R * self.C)) * u_dot
+        u += (self.dt / self.rc) * u_dot
+        print('final u:', u)
+        
+        # u += (self.dt / (self.R * self.C)) * u_dot
         u[spike == 1] = self.reset  # Hard reset only for spikes
-        # print(spike)
+        print('reset u: ', u)
         return u, spike
     
     def readout_layer(self, states): #target
@@ -151,8 +163,7 @@ class LiquidRON(nn.Module):
         #     # self.readout = torch.linalg.pinv(states.T @ states + torch.eye(states.shape[1]) * 1e-5) @ (states.T @ target)
  
         # return states @ self.readout
-        readout = nn.Linear(self.n_hid, self.n_hid, bias=False)
-        return readout(states)
+        return self.readout(states)
     
     ##################### 
     '''
@@ -188,12 +199,16 @@ class LiquidRON(nn.Module):
             u, spk = self.LIFcell(x[:, t], u)
             u_list.append(u)
             spike_list.append(spk)
-        
+        # print('u list before stack: ', u_list)
         u_list, spike_list = torch.stack(u_list, dim=1), torch.stack(spike_list, dim=1)
+        # print('u list after stack: ', u_list)
+        
+        # print('NaN in u_list', np.isnan(u_list).sum())  # Count NaNs
+        
         # print(u_list.size(), spike_list.size())
         
         readout = self.readout_layer(u_list[:, -1, :])  # Shape: (batch_size, n_hid)
                                     #  torch.tensor(y, dtype=torch.float32))
         
         
-        return torch.tensor(readout, dtype=torch.float32), u_list, spike_list 
+        return readout, u_list, spike_list #torch.tensor(readout, dtype=torch.float32)

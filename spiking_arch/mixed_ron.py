@@ -38,13 +38,13 @@ class MixedRON(nn.Module):
         resistance: float,
         capacitance: float,
         reset: float,
+        p:float,
         topology: Literal[
             "full", "lower", "orthogonal", "band", "ring", "toeplitz"
         ] = "full",
         reservoir_scaler=0.0,
         sparsity=0.0,
-        device="cpu",
-        p=float,
+        device="cpu"
     ):
         """Initialize the RON model.
 
@@ -171,7 +171,7 @@ class MixedRON(nn.Module):
         hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
         # u = torch.zeros(x.size(0), self.n_hid).to(self.device)
         
-        f = activation_layer(x, hy)
+        f = self.activation_layer(x, hy, hz)
         
         
         # Combine h2h_h and h2h_s into one parameter

@@ -16,6 +16,8 @@ from acds.benchmarks import get_mackey_glass
 
 from spiking_arch.lsm_baseline import LiquidRON
 from spiking_arch.s_ron import SpikingRON
+from spiking_arch.mixed_ron import MixedRON
+
 
 from spiking_arch.snn_utils import *
 
@@ -62,6 +64,8 @@ parser.add_argument("--mspron", action="store_true")
 
 parser.add_argument("--sron", action="store_true")
 parser.add_argument("--liquidron", action="store_true")
+parser.add_argument("--mixron", action="store_true")
+
 
 parser.add_argument("--inp_scaling", type=float, default=1.0, help="ESN input scaling")
 parser.add_argument("--rho", type=float, default=0.99, help="ESN spectral radius")
@@ -88,10 +92,11 @@ parser.add_argument(
 )
 
 parser.add_argument("--threshold", type=float, default=0.1, help="threshold")
-# parser.add_argument("--resistance", type=float, default=5.0, help="resistance")
-# parser.add_argument("--capacitance", type=float, default=3.0, help="capacitance")
+parser.add_argument("--resistance", type=float, default=5.0, help="resistance")
+parser.add_argument("--capacitance", type=float, default=3.0, help="capacitance")
 parser.add_argument("--rc", type=float, default=5.0, help="tau")
 parser.add_argument("--reset", type=float, default=0.01, help="reset")
+parser.add_argument("--perc", type=float, default=0.5, help="percentage of neurons")
 
 
 args = parser.parse_args()
@@ -208,6 +213,13 @@ for i in range(args.trials):
                 epsilon,
                 args.rho,
                 args.inp_scaling,
+                #add last things here
+                args.threshold,
+                args.resistance,
+                args.capacitance,
+                # args.rc,
+                args.reset,
+                args.perc,
                 topology=args.topology,
                 sparsity=args.sparsity,
                 reservoir_scaler=args.reservoir_scaler,

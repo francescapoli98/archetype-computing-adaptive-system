@@ -96,7 +96,8 @@ parser.add_argument("--threshold", type=float, default=1.0, help="threshold")
 parser.add_argument("--resistance", type=float, default=5.0, help="resistance")
 parser.add_argument("--capacitance", type=float, default=3.0, help="capacitance")
 parser.add_argument("--reset", type=float, default=-1.0, help="reset")
-parser.add_argument("--rc", type=float, default=-1.0, help="resistance x capacitance")
+parser.add_argument("--rc", type=float, default=1.0, help="resistance x capacitance")
+parser.add_argument("--bias", type=float, default=0.01, help="bias")
 
 
 args = parser.parse_args()
@@ -210,6 +211,7 @@ for i in range(args.trials):
             # args.capacitance,
             args.rc,
             args.reset,
+            args.bias,
             topology=args.topology,
             sparsity=args.sparsity,
             reservoir_scaler=args.reservoir_scaler,
@@ -227,9 +229,11 @@ for i in range(args.trials):
             args.inp_scaling,
             # spiking
             args.threshold,
-            args.resistance,
-            args.capacitance,
+            # args.resistance,
+            # args.capacitance,
+            args.rc,
             args.reset,
+            args.bias,
             win_e=2.5,
             win_i=1.5,
             w_e=1,
@@ -262,19 +266,21 @@ for i in range(args.trials):
             activations.append(output[-1])
             
     # if args.liquidron is None:
-    output=torch.from_numpy(np.array(output, dtype=np.float32))
-    u=torch.from_numpy(np.array(u, dtype=np.float32))   
-    spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
-    velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))  
-    plot_dynamics(output, velocity, u, spk, images, args.resultroot)
+    #     output=torch.from_numpy(np.array(output, dtype=np.float32))
+    #     u=torch.from_numpy(np.array(u, dtype=np.float32))   
+    #     spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
+    #     velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))  
+    #     plot_dynamics(output, velocity, u, spk, images, args.resultroot)
     activations = torch.cat(activations, dim=0).numpy()
     print('activations:', activations.shape)
     ys = torch.cat(ys, dim=0).squeeze().numpy()
+    # print('NaN in activations', np.isnan(activations).sum())  # Count NaNs
+
     # print('activations shape: ', activations.shape,'activations items shape: ', activations[-1].size(), '\nys shape: ', ys.shape, 'ys items shape: ', ys[-1].size())
-    scaler = preprocessing.StandardScaler().fit(activations)
-    activations = scaler.transform(activations) 
+    scaler = preprocessing.StandardScaler()#.fit(activations)
+    activations = scaler.fit_transform(activations) #scaler.transform(activations) 
     classifier = LogisticRegression(max_iter=5000).fit(activations, ys)
-    # train_acc = test(train_loader, classifier, scaler)
+    train_acc = test(train_loader, classifier, scaler)
     # valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
     test_acc = test(test_loader, classifier, scaler) #if args.use_test else 0.0
     # train_accs.append(train_acc)
@@ -293,7 +299,7 @@ elif args.esn:
     f = open(os.path.join(args.resultroot, f"sMNIST_log_ESN{args.resultsuffix}.txt"), "a")
 elif args.sron:
     f = open(os.path.join(args.resultroot, f"sMNIST_log_SRON{args.resultsuffix}.txt"), "a")
-elif args.lron:
+elif args.liquidron:
     f = open(os.path.join(args.resultroot, f"sMNIST_log_LiquidRON{args.resultsuffix}.txt"), "a")
 else:
     raise ValueError("Wrong model choice.")

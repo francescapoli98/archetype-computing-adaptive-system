@@ -13,6 +13,7 @@ from sklearn.linear_model import LogisticRegression
 from tqdm import tqdm
 
 from spiking_arch.s_ron import SpikingRON
+from spiking_arch.mixed_ron import MixedRON
 
 from acds.benchmarks import get_mnist_data
 
@@ -88,6 +89,7 @@ parser.add_argument("--threshold", type=float, default=1.0, help="spiking ron mo
 parser.add_argument("--resistance", type=float, default=5.0, help="resistance (spiking n.)")
 parser.add_argument("--capacitance", type=float, default=5.e-3, help="capacitance (spiking n.)")
 parser.add_argument("--reset", type=float, default=-1.0, help="spiking ron models reset")
+parser.add_argument("--bias", type=float, default=0.01, help="bias")
 
 
 args = parser.parse_args()
@@ -98,12 +100,13 @@ param_grid = {
     # "epsilon": [4.5, 4.9],  # Range of epsilon values
     # "rho": [0.9, 0.99],  # Spectral radius
     # "inp_scaling": [0.5, 0.8, 1.2],  # Input scaling
-    'rc':[0.5, 2, 5, 10, 50],
+    'rc':[0.005, 0.05, 0.5, 2, 3.5, 5, 7.5], #
     "threshold": [0.008, 0.01],
     # "resistance": [3.0, 5.0, 7.0],
     # "capacitance": [3e-3, 5e-3, 7e-3],
-    "reset": [0.001, 0.002, 0.004] # initial membrane potential 
-}
+    "reset": [0.001, 0.002, 0.004], # initial membrane potential 
+    "bias": [0.01, 0.1]
+    }
 
 # Convert grid to list of combinations
 param_combinations = list(product(*param_grid.values()))
@@ -173,6 +176,7 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         # args.capacitance, 
         params['rc'],       
         params["reset"], #args.reset, 
+        params['bias'],
         topology=args.topology,
         sparsity=args.sparsity,
         reservoir_scaler=args.reservoir_scaler,

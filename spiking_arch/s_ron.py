@@ -39,6 +39,7 @@ class SpikingRON(nn.Module):
         # capacitance: float,
         rc: float,
         reset: float,
+        bias: float,
         #no grid search
         topology: Literal[
             "full", "lower", "orthogonal", "band", "ring", "toeplitz"
@@ -106,6 +107,8 @@ class SpikingRON(nn.Module):
         x2h = torch.rand(n_inp, n_hid) * input_scaling
         self.x2h = nn.Parameter(x2h, requires_grad=False)
         
+        self.bias = bias
+        
 ## plot hy, hz, x, u and spikes to see the variation
     def cell(
         self, x: torch.Tensor, hy: torch.Tensor, hz: torch.Tensor, u: torch.Tensor
@@ -161,7 +164,7 @@ class SpikingRON(nn.Module):
         u[spike == 1] = self.reset  # Hard reset only for spikes
 
         # tau = R * C
-        u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)) # u dot (update) 
+        u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h) + self.bias) # u dot (update) 
         u = u + (u_dot * self.rc
                  #(self.R*self.C)
                  )*self.dt # multiply to tau and dt

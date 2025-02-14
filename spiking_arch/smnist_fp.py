@@ -27,6 +27,10 @@ from acds.benchmarks import get_mnist_data
 
 from spiking_arch.snn_utils import *
 
+print('is CUDA available: ', torch.cuda.is_available())
+print('torch version: ', torch.__version__)
+print('torch CUDA version: ', torch.version.cuda)  # Should not return None if CUDA is enabled
+
 parser = argparse.ArgumentParser(description="training parameters")
 parser.add_argument("--dataroot", type=str)
 parser.add_argument("--resultroot", type=str)

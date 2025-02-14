@@ -140,6 +140,7 @@ device = (
     else torch.device("cpu")
 )
 print("Using device ", device)
+
 n_inp = 1
 n_out = 1
 washout = 200

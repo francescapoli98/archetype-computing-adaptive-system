@@ -37,19 +37,23 @@ parser.add_argument(
 parser.add_argument(
     "--epsilon",
     type=float,
-    default=0.51,
+    ## ORIGINAL
+    default=4.7,
+    # default = 0.51,
     help="z controle parameter <epsilon> of the coRNN",
 )
 parser.add_argument(
     "--gamma_range",
     type=float,
-    default=1,
+    default=2.7,
+    # default=1.0,
     help="y controle parameter <gamma> of the coRNN",
 )
 parser.add_argument(
     "--epsilon_range",
     type=float,
-    default=0.5,
+    default=4.7,
+    # default= 0.5,
     help="z controle parameter <epsilon> of the coRNN",
 )
 parser.add_argument("--cpu", action="store_true")
@@ -62,7 +66,7 @@ parser.add_argument("--sron", action="store_true")
 parser.add_argument("--liquidron", action="store_true")
 
 parser.add_argument("--inp_scaling", type=float, default=1.0, help="ESN input scaling")
-parser.add_argument("--rho", type=float, default=9, help="ESN spectral radius")
+parser.add_argument("--rho", type=float, default=0.99, help="ESN spectral radius")
 parser.add_argument("--leaky", type=float, default=1.0, help="ESN spectral radius")
 parser.add_argument("--use_test", action="store_true")
 parser.add_argument(
@@ -123,7 +127,7 @@ device = (
     if torch.cuda.is_available() and not args.cpu
     else torch.device("cpu")
 )
-
+print("Using device ", device)
 n_inp = 1
 n_out = 10
 

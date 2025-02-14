@@ -44,19 +44,19 @@ parser.add_argument(
 parser.add_argument(
     "--epsilon",
     type=float,
-    default=0.51,
+    default=4.7,
     help="z controle parameter <epsilon> of the coRNN",
 )
 parser.add_argument(
     "--gamma_range",
     type=float,
-    default=1,
+    default=2.7,
     help="y controle parameter <gamma> of the coRNN",
 )
 parser.add_argument(
     "--epsilon_range",
     type=float,
-    default=0.5,
+    default=4.7,
     help="z controle parameter <epsilon> of the coRNN",
 )
 parser.add_argument("--cpu", action="store_true")
@@ -136,9 +136,10 @@ def test(data_loader, classifier, scaler):
 
 device = (
     torch.device("cuda")
-    if torch.cuda.is_available() and not args.cpu
-    else torch.device("cpu")
+    # if torch.cuda.is_available() and not args.cpu
+    # else torch.device("cpu")
 )
+print('Using device: ', device)
 
 n_inp = 1
 n_out = 10
@@ -265,12 +266,12 @@ for i in range(args.trials):
             output, velocity, u, spk = model(images)
             activations.append(output[-1])
             
-    # if args.liquidron is None:
-    #     output=torch.from_numpy(np.array(output, dtype=np.float32))
-    #     u=torch.from_numpy(np.array(u, dtype=np.float32))   
-    #     spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
-    #     velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))  
-    #     plot_dynamics(output, velocity, u, spk, images, args.resultroot)
+    if not args.liquidron:# is None:
+        output=torch.from_numpy(np.array(output, dtype=np.float32))
+        u=torch.from_numpy(np.array(u, dtype=np.float32))   
+        spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
+        velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))  
+        plot_dynamics(output, velocity, u, spk, images, args.resultroot)
     activations = torch.cat(activations, dim=0).numpy()
     print('activations:', activations.shape)
     ys = torch.cat(ys, dim=0).squeeze().numpy()
@@ -286,7 +287,7 @@ for i in range(args.trials):
     # train_accs.append(train_acc)
     # valid_accs.append(valid_acc)
     test_accs.append(test_acc)
-# simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
+simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
 
 
 if args.ron:

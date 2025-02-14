@@ -119,7 +119,7 @@ class LiquidRON(nn.Module):
         # self.C = 5e-3 
         self.reset = reset # initial membrane potential ## FINE TUNE THIS
         self.rc = rc
-        self.reg = None  # Initialize regularization parameter.
+        # self.reg = None  # Initialize regularization parameter.
         self.bias = bias
         
         self.readout = nn.Linear(self.n_hid, self.n_hid, bias=False)
@@ -138,21 +138,21 @@ class LiquidRON(nn.Module):
             hz (torch.Tensor): Current hidden state derivative ----> velocity (y'=z)
             u (torch.Tensor): Membrane potential 
         """
-        print('starter u: ', u)
+        print('u: ', u)
         spike = (u > self.threshold) * 1.0 
         # u[spike == 1] = self.reset  # Hard reset only for spikes
         
         # tau = R * C
         u_dot = - u + (torch.matmul(u, self.h2h) + torch.matmul(x, self.x2h) + self.bias) # u dot (update) 
-        print('intermediate u: ', u_dot)
+        # print('intermediate u: ', u_dot)
         
         # u += (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
         u += (self.dt / self.rc) * u_dot
-        print('final u:', u)
+        # print('final u:', u)
         
         # u += (self.dt / (self.R * self.C)) * u_dot
         u[spike == 1] = self.reset  # Hard reset only for spikes
-        print('reset u: ', u)
+        # print('reset u: ', u)
         return u, spike
     
     def readout_layer(self, states): #target
@@ -207,7 +207,7 @@ class LiquidRON(nn.Module):
         
         # print(u_list.size(), spike_list.size())
         
-        readout = self.readout_layer(u_list[:, -1, :])  # Shape: (batch_size, n_hid)
+        readout = self.readout(u_list[:, -1, :])  # Shape: (batch_size, n_hid)
                                     #  torch.tensor(y, dtype=torch.float32))
         
         

@@ -1,3 +1,7 @@
+'''
+BEST VALUES:
+-- inp_scaling 1.0 --rho 0.99 --leaky 1.0  --reservoir_scaler: 1.0 --threshold: 0.008 --reset: 0.004 --rc: 7.0
+'''
 from typing import (
     List,
     Literal,
@@ -164,7 +168,7 @@ class SpikingRON(nn.Module):
         u[spike == 1] = self.reset  # Hard reset only for spikes
 
         # tau = R * C
-        u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h) + self.bias) # u dot (update) 
+        u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)+ self.bias) # u dot (update) 
         u = u + (u_dot * self.rc
                  #(self.R*self.C)
                  )*self.dt # multiply to tau and dt

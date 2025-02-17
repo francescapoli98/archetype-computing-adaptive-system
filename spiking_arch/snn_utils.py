@@ -56,12 +56,12 @@ def plot_dynamics(
     print('Plotting dynamics of hidden state, derivative, membrane potential, and spikes.')
 
     # Ensure the input tensors are in numpy format
-    activations = activations.detach().cpu().numpy() if isinstance(activations, torch.Tensor) else activations
-    velocity = velocity.detach().cpu().numpy() if isinstance(velocity, torch.Tensor) else velocity
-    membrane_potential = membrane_potential.detach().cpu().numpy() if isinstance(membrane_potential, torch.Tensor) else membrane_potential
-    spikes = spikes.detach().cpu().numpy() if isinstance(spikes, torch.Tensor) else spikes
-    # print('activations: ', activations.size(), ' velocity: ', velocity.size(), ' u: ', membrane_potential.size(), ' spikes: ', spikes.size())
-    # Get the time steps (assuming they are aligned with the tensor shapes)
+    # activations = activations.detach().cpu().numpy() if isinstance(activations, torch.Tensor) else activations
+    # velocity = velocity.detach().cpu().numpy() if isinstance(velocity, torch.Tensor) else velocity
+    # membrane_potential = membrane_potential.detach().cpu().numpy() if isinstance(membrane_potential, torch.Tensor) else membrane_potential
+    # spikes = spikes.detach().cpu().numpy() if isinstance(spikes, torch.Tensor) else spikes
+    # # print('activations: ', activations.size(), ' velocity: ', velocity.size(), ' u: ', membrane_potential.size(), ' spikes: ', spikes.size())
+    # # Get the time steps (assuming they are aligned with the tensor shapes)
     time_steps = np.arange(len(activations))#.shape[1])  # Number of time steps (length of time axis)
     print('Time steps shape: ', time_steps.shape)
 

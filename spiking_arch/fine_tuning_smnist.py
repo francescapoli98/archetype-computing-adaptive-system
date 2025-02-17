@@ -104,12 +104,12 @@ param_grid = {
     # "epsilon": [4.5, 4.9],  # Range of epsilon values
     # "rho": [0.9, 0.99],  # Spectral radius
     # "inp_scaling": [0.5, 0.8, 1.2],  # Input scaling
-    'rc':[0.005, 0.05, 0.5, 2, 3.5, 5, 7.5], #
-    "threshold": [0.008, 0.01],
+    'rc':[0.005, 0.05, 0.5, 2, 3.5, 5, 7], # resistance x capacitance
+    # "threshold": [0.008, 0.01],
     # "resistance": [3.0, 5.0, 7.0],
     # "capacitance": [3e-3, 5e-3, 7e-3],
-    "reset": [0.001, 0.002, 0.004], # initial membrane potential 
-    "bias": [0.01, 0.1]
+    # "reset": [0.001, 0.002, 0.004], # initial membrane potential 
+    "bias": [0.01, 0.05, 0.1, 0.5]
     }
 
 # Convert grid to list of combinations
@@ -148,7 +148,8 @@ def test(data_loader, classifier, scaler):
         output = model(images)[0][-1]
         activations.append(output)
         ys.append(labels)
-    activations = torch.cat(activations, dim=0).numpy()
+    # activations = torch.cat(activations, dim=0).numpy()
+    activations = torch.cat(activations, dim=0).cpu().detach().numpy() 
     activations = scaler.transform(activations)
     ys = torch.cat(ys, dim=0).numpy()
     return classifier.score(activations, ys)
@@ -172,14 +173,15 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         ##do not 
         args.rho,
         args.inp_scaling,
-        params["threshold"],
-        # args.threshold,
+        # params["threshold"],
+        args.threshold,
         # params["resistance"],
         # params["capacitance"], 
         # args.resistance,
         # args.capacitance, 
         params['rc'],       
-        params["reset"], #args.reset, 
+        # params["reset"], 
+        args.reset, 
         params['bias'],
         topology=args.topology,
         sparsity=args.sparsity,
@@ -199,7 +201,8 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         ys.append(labels)
 
     # activations = [torch.tensor(a) if not isinstance(a, torch.Tensor) else a for a in activations]
-    activations = torch.cat(activations, dim=0).numpy()
+    # activations = torch.cat(activations, dim=0).numpy()
+    activations = torch.cat(activations, dim=0).cpu().detach().numpy() 
     scaler = preprocessing.StandardScaler().fit(activations)
     activations = scaler.transform(activations)
     ys = torch.cat(ys, dim=0).numpy()

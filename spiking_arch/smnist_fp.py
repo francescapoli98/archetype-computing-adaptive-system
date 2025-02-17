@@ -74,7 +74,7 @@ parser.add_argument("--sron", action="store_true")
 parser.add_argument("--liquidron", action="store_true")
 
 parser.add_argument("--inp_scaling", type=float, default=1.0, help="ESN input scaling")
-parser.add_argument("--rho", type=float, default=9, help="ESN spectral radius")
+parser.add_argument("--rho", type=float, default=0.99, help="ESN spectral radius")
 parser.add_argument("--leaky", type=float, default=1.0, help="ESN spectral radius")
 parser.add_argument("--use_test", action="store_true")
 parser.add_argument(
@@ -132,7 +132,7 @@ def test(data_loader, classifier, scaler):
         else:
             activations.append(output)
         ys.append(labels)
-    activations = torch.cat(activations, dim=0).numpy()
+    activations = torch.cat(activations, dim=0).cpu().detach().numpy() # activations = torch.cat(activations, dim=0).numpy()
     activations = scaler.transform(activations)
     ys = torch.cat(ys, dim=0).numpy()
     return classifier.score(activations, ys)
@@ -258,6 +258,9 @@ for i in range(args.trials):
         args.dataroot, args.batch, args.batch
     )
     
+    #adjust to have the training set as train + valid
+    train_loader = torch.cat(train_loader, valid_loader)
+    
     activations, ys = [], []
     for images, labels in tqdm(train_loader):
         images = images.to(device)
@@ -266,18 +269,27 @@ for i in range(args.trials):
         if args.liquidron:
             output, u, spk = model(images)
             activations.append(output)
-            # print(output)
         else:
             output, velocity, u, spk = model(images)
             activations.append(output[-1])
             
+            
     if not args.liquidron:# is None:
-        output=torch.from_numpy(np.array(output, dtype=np.float32))
-        u=torch.from_numpy(np.array(u, dtype=np.float32))   
-        spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
-        velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))  
-        plot_dynamics(output, velocity, u, spk, images, args.resultroot)
-    activations = torch.cat(activations, dim=0).numpy()
+        # If 'device' is your GPU 
+        output = torch.cat(output, dim=0).cpu().detach().numpy()
+        u = torch.cat(u, dim=0).cpu().detach().numpy()
+        spk = torch.cat(spk, dim=0).cpu().detach().numpy()
+        velocity = torch.cat(velocity, dim=0).cpu().detach().numpy()
+
+    #     # u = torch.from_numpy(u.cpu().numpy()).to(device)  
+    #     # spk = torch.from_numpy(spk.cpu().numpy()).to(device)   
+    #     # velocity = torch.from_numpy(velocity.cpu().numpy()).to(device)  
+    #     # output=torch.from_numpy(np.array(output, dtype=np.float32))
+    #     # u=torch.from_numpy(np.array(u, dtype=np.float32))   
+    #     # spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
+    #     # velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))  
+    #     plot_dynamics(output, velocity, u, spk, images, args.resultroot)
+    activations = torch.cat(activations, dim=0).cpu().detach().numpy() # activations = torch.cat(activations, dim=0).numpy()
     print('activations:', activations.shape)
     ys = torch.cat(ys, dim=0).squeeze().numpy()
     # print('NaN in activations', np.isnan(activations).sum())  # Count NaNs
@@ -287,10 +299,10 @@ for i in range(args.trials):
     activations = scaler.fit_transform(activations) #scaler.transform(activations) 
     classifier = LogisticRegression(max_iter=5000).fit(activations, ys)
     train_acc = test(train_loader, classifier, scaler)
-    # valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
+    valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
     test_acc = test(test_loader, classifier, scaler) #if args.use_test else 0.0
-    # train_accs.append(train_acc)
-    # valid_accs.append(valid_acc)
+    train_accs.append(train_acc)
+    valid_accs.append(valid_acc)
     test_accs.append(test_acc)
 simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
 

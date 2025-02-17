@@ -6,6 +6,7 @@ import os
 import warnings
 import numpy as np
 import torch
+from torch import nn
 import torch.nn.utils
 from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression

@@ -194,6 +194,7 @@ class SpikingRON(nn.Module):
         hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
         u = torch.zeros(x.size(0), self.n_hid).to(self.device)
         for t in range(x.size(1)):
+            # print(x.size())
             hy, hz, u, spk = self.cell(x[:, t], hy, hz, u)
             hy_list.append(hy)
             hz_list.append(hz)

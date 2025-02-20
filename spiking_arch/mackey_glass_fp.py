@@ -21,6 +21,8 @@ from spiking_arch.mixed_ron import MixedRON
 
 from spiking_arch.snn_utils import *
 
+torch.cuda.empty_cache()
+
 parser = argparse.ArgumentParser(description="training parameters")
 
 parser.add_argument("--dataroot", type=str,
@@ -96,6 +98,7 @@ parser.add_argument("--resistance", type=float, default=5.0, help="resistance")
 parser.add_argument("--capacitance", type=float, default=3.0, help="capacitance")
 parser.add_argument("--rc", type=float, default=5.0, help="tau")
 parser.add_argument("--reset", type=float, default=0.01, help="reset")
+parser.add_argument("--bias", type=float, default=0.01, help="bias")
 parser.add_argument("--perc", type=float, default=0.5, help="percentage of neurons")
 
 
@@ -198,6 +201,7 @@ for i in range(args.trials):
             # args.capacitance,
             args.rc,
             args.reset,
+            args.bias,
             topology=args.topology,
             sparsity=args.sparsity,
             reservoir_scaler=args.reservoir_scaler,
@@ -235,16 +239,19 @@ for i in range(args.trials):
     ) = get_mackey_glass(args.dataroot, lag=args.lag)
 
     dataset = train_dataset.reshape(1, -1, 1).to(device)
+    print(dataset.size())
     target = train_target.reshape(-1, 1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
     output, velocity, u, spk = model(dataset)
-    plot_dynamics(torch.from_numpy(np.array(output, dtype=np.float32)),
-                  torch.from_numpy(np.array(velocity, dtype=np.float32)),
-                  torch.from_numpy(np.array(u, dtype=np.float32)),
-                  torch.from_numpy(np.array(spk, dtype=np.float32)),    
-                  dataset,
-                  args.resultroot)
+    # plot_dynamics(torch.from_numpy(np.array(output, dtype=np.float32)),
+    #               torch.from_numpy(np.array(velocity, dtype=np.float32)),
+    #               torch.from_numpy(np.array(u, dtype=np.float32)),
+    #               torch.from_numpy(np.array(spk, dtype=np.float32)),    
+    #               dataset,
+    #               args.resultroot)
+    print('output dim: ', output[0].size())
     activations = torch.stack(output, dim=1)
+    print('activations size: ', activations.size())
     activations = activations[:, washout:]
     activations = activations.reshape(-1, args.n_hid)
     scaler = preprocessing.StandardScaler().fit(activations)

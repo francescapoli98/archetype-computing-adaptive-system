@@ -56,13 +56,15 @@ def plot_dynamics(
     print('Plotting dynamics of hidden state, derivative, membrane potential, and spikes.')
 
     # Ensure the input tensors are in numpy format
-    # activations = activations.detach().cpu().numpy() if isinstance(activations, torch.Tensor) else activations
-    # velocity = velocity.detach().cpu().numpy() if isinstance(velocity, torch.Tensor) else velocity
-    # membrane_potential = membrane_potential.detach().cpu().numpy() if isinstance(membrane_potential, torch.Tensor) else membrane_potential
-    # spikes = spikes.detach().cpu().numpy() if isinstance(spikes, torch.Tensor) else spikes
-    # # print('activations: ', activations.size(), ' velocity: ', velocity.size(), ' u: ', membrane_potential.size(), ' spikes: ', spikes.size())
-    # # Get the time steps (assuming they are aligned with the tensor shapes)
-    time_steps = np.arange(len(activations))#.shape[1])  # Number of time steps (length of time axis)
+    activations = activations.detach().cpu().numpy() if isinstance(activations, torch.Tensor) else activations
+    velocity = velocity.detach().cpu().numpy() if isinstance(velocity, torch.Tensor) else velocity
+    membrane_potential = membrane_potential.detach().cpu().numpy() if isinstance(membrane_potential, torch.Tensor) else membrane_potential
+    spikes = spikes.detach().cpu().numpy() if isinstance(spikes, torch.Tensor) else spikes
+    x = x.detach().cpu().numpy() if isinstance(x, torch.Tensor) else x
+    # print('activations: ', activations.size(), ' velocity: ', velocity.size(), ' u: ', membrane_potential.size(), ' spikes: ', spikes.size())
+    # Get the time steps (assuming they are aligned with the tensor shapes)
+    print('activations shape: ', activations.shape)
+    time_steps = np.arange(activations.shape[0]) #len(activations) # Number of time steps (length of time axis)
     print('Time steps shape: ', time_steps.shape)
 
     # Create a plot
@@ -72,7 +74,7 @@ def plot_dynamics(
     plt.subplot(5, 1, 1)
     plt.title('Input (x)')
     # Plot the first hidden unit over time
-    plt.plot(time_steps, x[0, :, 0], label="Input data (x)", color="purple", linestyle='-', linewidth=1)
+    plt.plot(time_steps, x[0, :, 0], label="Input data (x)", color="purple", linestyle='-', linewidth=1) #x[0, :, 0]
     plt.xlabel('Time Step')
     plt.ylabel('Value')
 

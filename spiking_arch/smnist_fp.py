@@ -28,6 +28,9 @@ from acds.benchmarks import get_mnist_data
 
 from spiking_arch.snn_utils import *
 
+torch.cuda.empty_cache()
+torch.set_grad_enabled(False)
+
 print('is CUDA available: ', torch.cuda.is_available())
 print('torch version: ', torch.__version__)
 print('torch CUDA version: ', torch.version.cuda)  # Should not return None if CUDA is enabled
@@ -113,7 +116,7 @@ if args.dataroot is None:
 if args.resultroot is None:
     warnings.warn("No resultroot provided. Using current location as default.")
     args.resultroot = os.getcwd()
-assert os.path.exists(args.resultroot), \
+assert os.path.exists(args.resultroot), 
     f"{args.resultroot} folder does not exist, please create it and run the script again."
 
 assert 1.0 > args.sparsity >= 0.0, "Sparsity in [0, 1)"
@@ -126,13 +129,15 @@ def test(data_loader, classifier, scaler):
     for images, labels in tqdm(data_loader):
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
-        output = model(images)[0][-1]
-        if args.liquidron is None:
-            activations.append(output[-1])
+        output = model(images)[0]#[-1]
+        if args.liquidron:
+            activations.append(output.cpu())
         else:
-            activations.append(output)
+            activations.append(output[-1].cpu())
         ys.append(labels)
     activations = torch.cat(activations, dim=0).cpu().detach().numpy() # activations = torch.cat(activations, dim=0).numpy()
+    # if args.liquidron:
+    #     activations = activations.reshape(-1, 1)  # Converts it to a 2D array
     activations = scaler.transform(activations)
     ys = torch.cat(ys, dim=0).numpy()
     return classifier.score(activations, ys)
@@ -141,8 +146,8 @@ def test(data_loader, classifier, scaler):
 
 device = (
     torch.device("cuda")
-    # if torch.cuda.is_available() and not args.cpu
-    # else torch.device("cpu")
+    if torch.cuda.is_available() and not args.cpu
+    else torch.device("cpu")
 )
 print('Using device: ', device)
 
@@ -155,7 +160,7 @@ epsilon = (
     args.epsilon + args.epsilon_range / 2.0,
 )
 
-train_accs, valid_accs, test_accs = [], [], []
+train_accs, valid_accs, test_accs = [], [], [] #valid_accs,
 for i in range(args.trials):
     if args.esn:
         model = DeepReservoir(
@@ -259,50 +264,50 @@ for i in range(args.trials):
     )
     
     #adjust to have the training set as train + valid
-    train_loader = torch.cat(train_loader, valid_loader)
-    
+
+#     train_loader = torch.utils.data.DataLoader(
+#         dataset=torch.utils.data.ConcatDataset([train_loader.dataset, valid_loader.dataset]),
+#         batch_size=args.batch,
+#         shuffle=False
+# )    
     activations, ys = [], []
     for images, labels in tqdm(train_loader):
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
-        ys.append(labels) 
+        ys.append(labels.cpu()) 
         if args.liquidron:
             output, u, spk = model(images)
-            activations.append(output)
+            # print('liquid ron output dim: ', output.shape)
+            activations.append(output.cpu())#output.cpu())
         else:
             output, velocity, u, spk = model(images)
-            activations.append(output[-1])
+            # print('output dim: ', output.shape)
+            activations.append(output[-1].cpu())
+        # break
             
             
-    if not args.liquidron:# is None:
-        # If 'device' is your GPU 
-        output = torch.cat(output, dim=0).cpu().detach().numpy()
-        u = torch.cat(u, dim=0).cpu().detach().numpy()
-        spk = torch.cat(spk, dim=0).cpu().detach().numpy()
-        velocity = torch.cat(velocity, dim=0).cpu().detach().numpy()
+    if not args.liquidron:
+        output = torch.stack(output)
+        u = torch.stack(u)
+        spk = torch.stack(spk)
+        velocity = torch.stack(velocity)
+        plot_dynamics(output, velocity, u, spk, images, args.resultroot)
 
-    #     # u = torch.from_numpy(u.cpu().numpy()).to(device)  
-    #     # spk = torch.from_numpy(spk.cpu().numpy()).to(device)   
-    #     # velocity = torch.from_numpy(velocity.cpu().numpy()).to(device)  
-    #     # output=torch.from_numpy(np.array(output, dtype=np.float32))
-    #     # u=torch.from_numpy(np.array(u, dtype=np.float32))   
-    #     # spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
-    #     # velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))  
-    #     plot_dynamics(output, velocity, u, spk, images, args.resultroot)
-    activations = torch.cat(activations, dim=0).cpu().detach().numpy() # activations = torch.cat(activations, dim=0).numpy()
-    print('activations:', activations.shape)
+    activations = torch.cat(activations, dim=0).numpy() # activations = torch.cat(activations, dim=0).numpy()  
     ys = torch.cat(ys, dim=0).squeeze().numpy()
-    # print('NaN in activations', np.isnan(activations).sum())  # Count NaNs
+    print("Activations shape:", activations.shape)
+    print("Labels shape:", ys.shape)  
 
-    # print('activations shape: ', activations.shape,'activations items shape: ', activations[-1].size(), '\nys shape: ', ys.shape, 'ys items shape: ', ys[-1].size())
     scaler = preprocessing.StandardScaler()#.fit(activations)
-    activations = scaler.fit_transform(activations) #scaler.transform(activations) 
+    
+    activations = scaler.fit_transform(activations) 
+    # activations = scaler.transform(activations) 
     classifier = LogisticRegression(max_iter=5000).fit(activations, ys)
     train_acc = test(train_loader, classifier, scaler)
-    valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
+    # valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
     test_acc = test(test_loader, classifier, scaler) #if args.use_test else 0.0
     train_accs.append(train_acc)
-    valid_accs.append(valid_acc)
+    # valid_accs.append(valid_acc)
     test_accs.append(test_acc)
 simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
 

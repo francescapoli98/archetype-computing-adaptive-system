@@ -52,7 +52,7 @@ class LiquidRON(nn.Module):
         ] = "full",
         reservoir_scaler=0.0,
         sparsity=0.0,
-        device="cpu",
+        device="cuda"
     ):
         """Initialize the RON model.
 
@@ -103,26 +103,25 @@ class LiquidRON(nn.Module):
         # h2h = get_hidden_topology(n_hid, topology, sparsity, reservoir_scaler)
         h2h = np.concatenate((w_e*np.random.rand(Ne+Ni, Ne), 
                               - w_i*np.random.rand(Ne+Ni, Ni)), axis=1)   
-        h2h = torch.tensor(h2h, dtype=torch.float32)  
+        h2h = torch.tensor(h2h, dtype=torch.float32, device=self.device)  
         h2h = spectral_norm_scaling(h2h, rho)
         self.h2h = nn.Parameter(h2h, requires_grad=False)  
         
         
         self.input_scaling = np.concatenate((win_e*np.ones(Ne), win_i*np.ones(Ni)))
         
-        x2h = torch.rand(n_inp, n_hid) * self.input_scaling
-        x2h = torch.tensor(x2h, dtype=torch.float32)  
+        # x2h = torch.rand(n_inp, n_hid, device=self.device) * self.input_scaling
+        x2h = torch.rand(n_inp, n_hid, device=self.device) * torch.tensor(self.input_scaling, device=self.device)
+
+        x2h = torch.tensor(x2h, dtype=torch.float32, device=self.device)  
         self.x2h = nn.Parameter(x2h, requires_grad=False)
         
         self.threshold = threshold 
-        # self.R = 5.0
-        # self.C = 5e-3 
         self.reset = reset # initial membrane potential ## FINE TUNE THIS
         self.rc = rc
         # self.reg = None  # Initialize regularization parameter.
         self.bias = bias
         
-        self.readout = nn.Linear(self.n_hid, self.n_hid, bias=False)
         
         
         
@@ -138,7 +137,7 @@ class LiquidRON(nn.Module):
             hz (torch.Tensor): Current hidden state derivative ----> velocity (y'=z)
             u (torch.Tensor): Membrane potential 
         """
-        print('u: ', u)
+        # print('u: ', u)
         spike = (u > self.threshold) * 1.0 
         # u[spike == 1] = self.reset  # Hard reset only for spikes
         
@@ -155,15 +154,15 @@ class LiquidRON(nn.Module):
         # print('reset u: ', u)
         return u, spike
     
-    def readout_layer(self, states): #target
-        # if self.reg is not None:
-        #     self.readout = torch.linalg.pinv(states.T @ states + np.eye(states.shape[1]) * self.reg) @ states.T @ target
-        # else:
-        #     self.readout = torch.linalg.pinv(states) @ target
-        #     # self.readout = torch.linalg.pinv(states.T @ states + torch.eye(states.shape[1]) * 1e-5) @ (states.T @ target)
- 
-        # return states @ self.readout
-        return self.readout(states)
+    # def readout_layer(self, states): #target
+    #     # if self.reg is not None:
+    #     #     self.readout = torch.linalg.pinv(states.T @ states + np.eye(states.shape[1]) * self.reg) @ states.T @ target
+    #     # else:
+    #     #     self.readout = torch.linalg.pinv(states) @ target
+    #     #     # self.readout = torch.linalg.pinv(states.T @ states + torch.eye(states.shape[1]) * 1e-5) @ (states.T @ target)
+        
+    #     # return states @ self.readout
+    #     return self.readout(states)
     
     ##################### 
     '''
@@ -195,20 +194,18 @@ class LiquidRON(nn.Module):
         # hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
         # print('LSM PARAMS \nwin_e:', win_e, 'win_i:', win_i, 'w_e:', w_e, 'w_i:', w_i, 'Ne:', Ne, 'Ni:', Ni)
         u = torch.zeros(x.size(0), self.n_hid).to(self.device)
+        # print('input dim: ', x.size())
         for t in range(x.size(1)):
             u, spk = self.LIFcell(x[:, t], u)
             u_list.append(u)
             spike_list.append(spk)
-        # print('u list before stack: ', u_list)
-        u_list, spike_list = torch.stack(u_list, dim=1), torch.stack(spike_list, dim=1)
-        # print('u list after stack: ', u_list)
+        # print('u list shape: ', len(u_list))
+        u_list, spike_list = torch.stack(u_list, dim=1).to(self.device), torch.stack(spike_list, dim=1).to(self.device)
+        # u_list, spike_list = torch.cat(u_list, dim=1).to(self.device), torch.cat(spike_list, dim=1).to(self.device)
+        # print('u list dim: ', u_list.size())
         
-        # print('NaN in u_list', np.isnan(u_list).sum())  # Count NaNs
-        
-        # print(u_list.size(), spike_list.size())
-        
-        readout = self.readout(u_list[:, -1, :])  # Shape: (batch_size, n_hid)
-                                    #  torch.tensor(y, dtype=torch.float32))
+        self.readout = nn.Linear(self.n_hid, self.n_hid, bias=False).to(self.device)
+        readout = self.readout(u_list[:, -1])  # Shape: (batch_size, n_hid)
         
         
-        return readout, u_list, spike_list #torch.tensor(readout, dtype=torch.float32)
+        return readout, u_list, spike_list 

@@ -12,6 +12,7 @@ from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression
 from tqdm import tqdm
 
+from spiking_arch.lsm_baseline import LiquidRON
 from spiking_arch.s_ron import SpikingRON
 from spiking_arch.mixed_ron import MixedRON
 
@@ -19,6 +20,7 @@ from acds.benchmarks import get_mnist_data
 
 from spiking_arch.snn_utils import *
 
+torch.cuda.empty_cache()
 
 parser = argparse.ArgumentParser(description="training parameters")
 parser.add_argument("--dataroot", type=str)
@@ -64,6 +66,7 @@ parser.add_argument("--mspron", action="store_true")
 
 parser.add_argument("--sron", action="store_true")
 parser.add_argument("--liquidron", action="store_true")
+parser.add_argument("--mixedron", action="store_true")
 
 parser.add_argument("--inp_scaling", type=float, default=1.0, help="ESN input scaling")
 parser.add_argument("--rho", type=float, default=0.99, help="ESN spectral radius")
@@ -105,11 +108,11 @@ param_grid = {
     # "rho": [0.9, 0.99],  # Spectral radius
     # "inp_scaling": [0.5, 0.8, 1.2],  # Input scaling
     'rc':[0.005, 0.05, 0.5, 2, 3.5, 5, 7], # resistance x capacitance
-    # "threshold": [0.008, 0.01],
+    "threshold": [1, 0.9, 0.5],
     # "resistance": [3.0, 5.0, 7.0],
     # "capacitance": [3e-3, 5e-3, 7e-3],
-    # "reset": [0.001, 0.002, 0.004], # initial membrane potential 
-    "bias": [0.01, 0.05, 0.1, 0.5]
+    "reset": [-1, 0.001, 0.005], # initial membrane potential 
+    "bias": [0.005, 0.01, 0.1, 0.25]
     }
 
 # Convert grid to list of combinations
@@ -154,14 +157,14 @@ def test(data_loader, classifier, scaler):
     ys = torch.cat(ys, dim=0).numpy()
     return classifier.score(activations, ys)
 
-
+# @torch.no_grad()
 for param_set in tqdm(param_combinations, desc="Grid Search"):
     # Unpack parameters
     params = dict(zip(param_names, param_set))
     print(f"Testing parameters: {params}")
-
-    # Create the model with current parameters
-    model = SpikingRON(
+    
+    if args.sron:
+        model = SpikingRON(
         n_inp,
         args.n_hid,
         args.dt,
@@ -188,7 +191,40 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         reservoir_scaler=args.reservoir_scaler,
         device=device
     ).to(device)
-
+        
+    elif args.liquidron:
+        model = LiquidRON(
+            n_inp,
+            args.n_hid,
+            args.dt,
+            gamma,
+            epsilon,
+            args.rho,
+            args.inp_scaling,
+            # spiking
+            args.threshold,
+            # args.resistance,
+            # args.capacitance,
+            params['rc'],       
+            #args.rc,
+            args.reset,
+            # args.bias,
+            params['bias'],
+            win_e=2.5,
+            win_i=1.5,
+            w_e=1,
+            w_i=0.5,
+            Ne=200,
+            Ni=56,
+            topology=args.topology,
+            sparsity=args.sparsity,
+            reservoir_scaler=args.reservoir_scaler,
+            device=device
+        ).to(device)
+    else:
+        raise ValueError("Wrong model choice.")
+    # Create the model with current parameters
+    
     # Train and validate the model
     train_loader, valid_loader, test_loader = get_mnist_data(args.dataroot, args.batch, args.batch)
     activations, ys = [], []

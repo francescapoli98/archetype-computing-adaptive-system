@@ -1,6 +1,10 @@
 '''
 BEST VALUES:
--- inp_scaling 1.0 --rho 0.99 --leaky 1.0  --reservoir_scaler: 1.0 --threshold: 0.008 --reset: 0.004 --rc: 7.0
+SMNIST
+--threshold: 0.008 --reset: 0.004 --rc: 7.0
+
+M-G
+--rc 5 --threshold 0.009 --reset 0.004 --bias 0.1
 '''
 from typing import (
     List,

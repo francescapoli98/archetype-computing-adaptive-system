@@ -1,3 +1,6 @@
+# $ python -m spiking_arch.finetune_mg --dataroot "acds/benchmarks/raw/" --resultroot "spiking_arch/results/tuning_sron" --sron --batch 128 
+###
+# $ nohup python3 -m spiking_arch.finetune_mg --dataroot "acds/benchmarks/raw/" --resultroot "spiking_arch/results/tuning_sron" --sron --batch 128   > out.log >&sron_mg_grid& 
 from itertools import product
 import argparse
 import warnings
@@ -101,16 +104,18 @@ args = parser.parse_args()
 
 
 param_grid = {
-    "dt": [0.02, 0.05],  # Example values for time step
+    # "dt": [0.02, 0.05],  # Example values for time step
     # "gamma": [2.5, 2.9],  # Range of gamma values
     # "epsilon": [4.5, 4.9],  # Range of epsilon values
     # "rho": [0.9, 0.99],  # Spectral radius
     # "inp_scaling": [0.5, 0.8, 1.2],  # Input scaling
-    'rc':[2, 4, 5, 7],
-    "threshold": [0.05, 0.5, 1],
+    'rc':[0.5, 2, 5, 7],
+    "threshold": [0.009, 0.05, 0.5, 1],
     # "resistance": [3.0, 5.0, 7.0],
     # "capacitance": [3e-3, 5e-3, 7e-3],
-    "reset": [0.001, 0.005, 0.01] # initial membrane potential 
+    "reset": [-1, 0.001, 0.004], # initial membrane potential 
+    "bias": [0.001, 0.005, 0.01, 0.05, 0.1, 0.25],
+    
 }
 
 
@@ -150,15 +155,17 @@ criterion_eval = torch.nn.L1Loss()
 
 @torch.no_grad()
 def test(dataset, target, classifier, scaler):
+    # dataset = dataset.reshape(1, -1).to(device)
     dataset = dataset.reshape(1, -1, 1).to(device)
-    target = target.reshape(-1, 1).numpy()
+    target = target.reshape(-1).numpy()
+    # target = target.reshape(-1, 1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
     output, velocity, u, spk = model(dataset)
-    # activations = output[:, washout:]
     activations = torch.stack(output, dim=1)[:, washout:]
-    activations = activations.reshape(-1, args.n_hid)
+    activations = activations.reshape(-1, args.n_hid).cpu()
     activations = scaler.transform(activations)
     predictions = classifier.predict(activations)
+    print('DIM prediction: ', predictions.shape, '\ntarget: ', target.shape)
     error = criterion_eval(torch.from_numpy(predictions).float(), torch.from_numpy(target).float()).item()
     return error, predictions
 
@@ -216,8 +223,8 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         model = SpikingRON(
             n_inp,
             args.n_hid,
-            # args.dt,
-            params['dt'],
+            args.dt,
+            # params['dt'],
             gamma,
             epsilon,
             args.rho,
@@ -230,6 +237,7 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
             params['rc'],
             params['reset'],
             # args.reset,
+            params['bias'],
             topology=args.topology,
             sparsity=args.sparsity,
             reservoir_scaler=args.reservoir_scaler,
@@ -259,6 +267,7 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         (test_dataset, test_target),
     ) = get_mackey_glass(args.dataroot, lag=args.lag)
 
+    # dataset = train_dataset.reshape(1, -1).to(device)
     dataset = train_dataset.reshape(1, -1, 1).to(device)
     target = train_target.reshape(-1, 1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
@@ -267,10 +276,11 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
     #               torch.from_numpy(np.array(u, dtype=np.float32)),
     #               torch.from_numpy(np.array(spk, dtype=np.float32)),    
     #               args.resultroot)
-    activations = torch.stack(output, dim=1)
-    activations = activations[:, washout:]
-    activations = activations.reshape(-1, args.n_hid)
+    activations = torch.stack(output, dim=1)#.cpu().detach().numpy()
+    activations = activations[:, washout:]#.cpu().detach().numpy()
+    activations = activations.reshape(-1, args.n_hid).cpu()#.detach().numpy()
     scaler = preprocessing.StandardScaler().fit(activations)
+    # activations = scaler.transform(activations)
     activations = scaler.transform(activations)
     classifier = Ridge(max_iter=1000).fit(activations, target)
     train_nmse, train_pred = test(train_dataset, train_target, classifier, scaler)
@@ -301,7 +311,7 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         best_test_mse = test_nmse
         best_params = params
         
-acc_table(param_names, param_combinations, all_mse, args.resultroot)
+acc_table(param_names, param_combinations, all_mse, args.resultroot, 'mg')
 
 
     

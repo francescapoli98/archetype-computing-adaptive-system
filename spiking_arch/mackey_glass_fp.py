@@ -136,9 +136,11 @@ def test(dataset, target, classifier, scaler):
     output, velocity, u, spk = model(dataset)
     # activations = output[:, washout:]
     activations = torch.stack(output, dim=1)[:, washout:]
-    activations = activations.reshape(-1, args.n_hid)
+    activations = activations.reshape(-1, args.n_hid).cpu()
     activations = scaler.transform(activations)
+    # print('activations: \n', activations)
     predictions = classifier.predict(activations)
+    # print('predictions: \n', predictions)
     error = criterion_eval(torch.from_numpy(predictions).float(), torch.from_numpy(target).float()).item()
     return error, predictions
 
@@ -253,7 +255,8 @@ for i in range(args.trials):
     activations = torch.stack(output, dim=1)
     print('activations size: ', activations.size())
     activations = activations[:, washout:]
-    activations = activations.reshape(-1, args.n_hid)
+    activations = activations.reshape(-1, args.n_hid).cpu()
+    # scaler = preprocessing.StandardScaler().fit(activations)
     scaler = preprocessing.StandardScaler().fit(activations)
     activations = scaler.transform(activations)
     classifier = Ridge(max_iter=1000).fit(activations, target)

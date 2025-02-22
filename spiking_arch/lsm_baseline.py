@@ -32,7 +32,7 @@ class LiquidRON(nn.Module):
         gamma: Union[float, Tuple[float, float]],
         epsilon: Union[float, Tuple[float, float]],
         rho: float,
-        input_scaling: 0.0,
+        input_scaling: 1.0,
         #spiking dynam
         threshold: float,
         # resistance: float,
@@ -105,7 +105,7 @@ class LiquidRON(nn.Module):
                               - w_i*np.random.rand(Ne+Ni, Ni)), axis=1)   
         h2h = torch.tensor(h2h, dtype=torch.float32, device=self.device)  
         h2h = spectral_norm_scaling(h2h, rho)
-        self.h2h = nn.Parameter(h2h, requires_grad=False)  
+        self.h2h = nn.Parameter(h2h, requires_grad=True)  
         
         
         self.input_scaling = np.concatenate((win_e*np.ones(Ne), win_i*np.ones(Ni)))
@@ -114,7 +114,7 @@ class LiquidRON(nn.Module):
         x2h = torch.rand(n_inp, n_hid, device=self.device) * torch.tensor(self.input_scaling, device=self.device)
 
         x2h = torch.tensor(x2h, dtype=torch.float32, device=self.device)  
-        self.x2h = nn.Parameter(x2h, requires_grad=False)
+        self.x2h = nn.Parameter(x2h, requires_grad=True)
         
         self.threshold = threshold 
         self.reset = reset # initial membrane potential ## FINE TUNE THIS
@@ -140,7 +140,7 @@ class LiquidRON(nn.Module):
         # print('u: ', u)
         spike = (u > self.threshold) * 1.0 
         # u[spike == 1] = self.reset  # Hard reset only for spikes
-        
+        # print(torch.any(spike > 0))
         # tau = R * C
         u_dot = - u + (torch.matmul(u, self.h2h) + torch.matmul(x, self.x2h) + self.bias) # u dot (update) 
         # print('intermediate u: ', u_dot)
@@ -190,8 +190,6 @@ class LiquidRON(nn.Module):
         """
         # hy_list, hz_list, 
         u_list, spike_list = [], []
-        # hy = torch.zeros(x.size(0), self.n_hid).to(self.device) #x.size(0)
-        # hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
         # print('LSM PARAMS \nwin_e:', win_e, 'win_i:', win_i, 'w_e:', w_e, 'w_i:', w_i, 'Ne:', Ne, 'Ni:', Ni)
         u = torch.zeros(x.size(0), self.n_hid).to(self.device)
         # print('input dim: ', x.size())
@@ -201,8 +199,6 @@ class LiquidRON(nn.Module):
             spike_list.append(spk)
         # print('u list shape: ', len(u_list))
         u_list, spike_list = torch.stack(u_list, dim=1).to(self.device), torch.stack(spike_list, dim=1).to(self.device)
-        # u_list, spike_list = torch.cat(u_list, dim=1).to(self.device), torch.cat(spike_list, dim=1).to(self.device)
-        # print('u list dim: ', u_list.size())
         
         self.readout = nn.Linear(self.n_hid, self.n_hid, bias=False).to(self.device)
         readout = self.readout(u_list[:, -1])  # Shape: (batch_size, n_hid)

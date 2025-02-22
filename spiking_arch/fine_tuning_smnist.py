@@ -1,6 +1,6 @@
 # $ python -m spiking_arch.fine_tuning_smnist --dataroot "MNIST/" --resultroot "spiking_arch/results/tuning_sron" --sron --batch **
 ###
-# nohup python3 -m spiking_arch.fine_tuning_smnist --dataroot "MNIST/" --resultroot "spiking_arch/results/tuning_sron" --sron --batch 256  > out.log >&grid&
+# $ nohup python3 -m spiking_arch.fine_tuning_smnist --dataroot "MNIST/" --resultroot "spiking_arch/results/tuning_sron" --sron --batch 256  > out.log >&grid&
 from itertools import product
 import argparse
 import os
@@ -107,12 +107,20 @@ param_grid = {
     # "epsilon": [4.5, 4.9],  # Range of epsilon values
     # "rho": [0.9, 0.99],  # Spectral radius
     # "inp_scaling": [0.5, 0.8, 1.2],  # Input scaling
-    'rc':[0.005, 0.05, 0.5, 2, 3.5, 5, 7], # resistance x capacitance
-    "threshold": [1, 0.9, 0.5],
+    'rc':[0.5, 2, 3.5, 5, 7], # resistance x capacitance
+    "threshold": [1.5, 1, 0.9, 0.09],
     # "resistance": [3.0, 5.0, 7.0],
     # "capacitance": [3e-3, 5e-3, 7e-3],
-    "reset": [-1, 0.001, 0.005], # initial membrane potential 
-    "bias": [0.005, 0.01, 0.1, 0.25]
+    "reset": [0.001, 0.004],#-1, 0.001, 0.005], # initial membrane potential 
+    "bias": [0.001, 0.005, 0.01, 0.05, 0.1, 0.25],
+    
+    # Input weights
+    "win_e": [1.0, 1.5, 2.0, 2.5, 3.0],  
+    "win_i": [0.5, 1.0, 1.5, 2.0],
+
+    # Recurrent weights
+    "w_e": [0.5, 1.0, 1.5, 2.0],  
+    "w_i": [0.2, 0.5, 0.8, 1.0],  
     }
 
 # Convert grid to list of combinations
@@ -210,10 +218,14 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
             args.reset,
             # args.bias,
             params['bias'],
-            win_e=2.5,
-            win_i=1.5,
-            w_e=1,
-            w_i=0.5,
+            params['win_e'],
+            # win_e=2.5,
+            params['win_i'],
+            # win_i=1.5,
+            params['w_e'],
+            params['w_i'], 
+            # w_e=1,
+            # w_i=0.5,
             Ne=200,
             Ni=56,
             topology=args.topology,
@@ -259,12 +271,14 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
         # best_test_acc = test_acc
         best_params = params
         
-acc_table(param_names, param_combinations, all_acc, args.resultroot)
+acc_table(param_names, param_combinations, all_acc, args.resultroot, 'smnist')
 
 if args.sron:
-    f = open(os.path.join(args.resultroot, f"sMNIST_SRON{args.resultsuffix}.txt"), "a")
+    f = open(os.path.join(args.resultroot, f"finetune_sMNIST_SRON{args.resultsuffix}.txt"), "a")
+elif args.liquidron:
+    f = open(os.path.join(args.resultroot, f"finetune_sMNIST_LiquidRON{args.resultsuffix}.txt"), "a")
 elif args.mixedron:
-    f = open(os.path.join(args.resultroot, f"sMNIST_MixedRON{args.resultsuffix}.txt"), "a")
+    f = open(os.path.join(args.resultroot, f"finetune_sMNIST_MixedRON{args.resultsuffix}.txt"), "a")
 else:
     raise ValueError("Wrong model choice.")
 

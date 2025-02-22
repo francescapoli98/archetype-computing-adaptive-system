@@ -205,7 +205,7 @@ def mg_results(target, predictions, std, resultroot, filename):
 # plot_results(train_mse, test_mse, args.resultroot)
 
 
-def acc_table(param_names, param_combinations, accuracies, resultroot):
+def acc_table(param_names, param_combinations, accuracies, resultroot, dataset):
     """
     Create a table to visualize parameter combinations and their corresponding accuracies.
 
@@ -215,11 +215,14 @@ def acc_table(param_names, param_combinations, accuracies, resultroot):
     """
     # Create a DataFrame from parameter combinations and accuracies
     # param_names = ["dt", "threshold", "resistance", "capacitance", "reset"] #"rho", "inp_scaling",
-    data = [list(comb) + [acc] for comb, acc in zip(param_combinations, accuracies)]
-    df = pd.DataFrame(data, columns=param_names + ["Accuracy"])
-
-    # Sort the DataFrame by accuracy (optional)
-    df = df.sort_values(by="Accuracy", ascending=False)
+    if dataset == 'mg':
+        data = [list(comb) + [acc] for comb, acc in zip(param_combinations, accuracies)]
+        df = pd.DataFrame(data, columns=param_names + ["MSE"])
+        df = df.sort_values(by="MSE", ascending=True)
+    else:    
+        data = [list(comb) + [acc] for comb, acc in zip(param_combinations, accuracies)]
+        df = pd.DataFrame(data, columns=param_names + ["Accuracy"])
+        df = df.sort_values(by="Accuracy", ascending=False)
 
     # Create a table plot
     fig, ax = plt.subplots(figsize=(12, min(1 + len(df) * 0.3, 20)))  # Adjust height for the number of rows
@@ -248,7 +251,8 @@ def acc_table(param_names, param_combinations, accuracies, resultroot):
 
     # Adjust layout
     fig.tight_layout()
-    plt.savefig(f"{resultroot}/accuracies_gridsearch.png")
+    # plt.savefig(f"{resultroot}/gridsearch_.png")
+    plt.savefig("{}/gridsearch_{}.png".format(resultroot, dataset))
     plt.show()
 
 def plot_hy(activations: torch.Tensor, x: torch.Tensor, resultroot: str):

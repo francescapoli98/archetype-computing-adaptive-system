@@ -116,7 +116,7 @@ if args.dataroot is None:
 if args.resultroot is None:
     warnings.warn("No resultroot provided. Using current location as default.")
     args.resultroot = os.getcwd()
-assert os.path.exists(args.resultroot), 
+assert os.path.exists(args.resultroot), \
     f"{args.resultroot} folder does not exist, please create it and run the script again."
 
 assert 1.0 > args.sparsity >= 0.0, "Sparsity in [0, 1)"
@@ -240,13 +240,11 @@ for i in range(args.trials):
             args.inp_scaling,
             # spiking
             args.threshold,
-            # args.resistance,
-            # args.capacitance,
             args.rc,
             args.reset,
             args.bias,
-            win_e=2.5,
-            win_i=1.5,
+            win_e=1,
+            win_i=0.5,
             w_e=1,
             w_i=0.5,
             Ne=200,
@@ -309,6 +307,7 @@ for i in range(args.trials):
     train_accs.append(train_acc)
     # valid_accs.append(valid_acc)
     test_accs.append(test_acc)
+    print('Train accuracy: ', train_acc, '\nTest accuracy: ', test_acc)
 simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
 
 

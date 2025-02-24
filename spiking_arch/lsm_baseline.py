@@ -27,7 +27,7 @@ class LiquidRON(nn.Module):
     def __init__(
         self,
         n_inp: int,
-        n_hid: int,
+        n_hid: 256,
         dt: float,
         gamma: Union[float, Tuple[float, float]],
         epsilon: Union[float, Tuple[float, float]],
@@ -109,8 +109,10 @@ class LiquidRON(nn.Module):
         
         
         self.input_scaling = np.concatenate((win_e*np.ones(Ne), win_i*np.ones(Ni)))
+        print('INPUT SCALING DIM: ', self.input_scaling.shape)
         
         # x2h = torch.rand(n_inp, n_hid, device=self.device) * self.input_scaling
+        print('TENSORS FOR X2H: ', torch.rand(n_inp, n_hid).size(), torch.tensor(self.input_scaling).size())
         x2h = torch.rand(n_inp, n_hid, device=self.device) * torch.tensor(self.input_scaling, device=self.device)
 
         x2h = torch.tensor(x2h, dtype=torch.float32, device=self.device)  

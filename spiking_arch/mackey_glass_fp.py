@@ -30,7 +30,7 @@ parser.add_argument("--dataroot", type=str,
 parser.add_argument("--resultroot", type=str)
 parser.add_argument("--resultsuffix", type=str, default="", help="suffix to append to the result file name")
 parser.add_argument(
-    "--n_hid", type=int, default=100, help="hidden size of recurrent net"
+    "--n_hid", type=int, default=256, help="hidden size of recurrent net"
 )
 parser.add_argument("--batch", type=int, default=30, help="batch size")
 parser.add_argument("--lag", type=int, default=1, help="prediction lag")
@@ -93,12 +93,12 @@ parser.add_argument(
     help="Scaler in case of ring/band/toeplitz reservoir",
 )
 
-parser.add_argument("--threshold", type=float, default=0.1, help="threshold")
-parser.add_argument("--resistance", type=float, default=5.0, help="resistance")
-parser.add_argument("--capacitance", type=float, default=3.0, help="capacitance")
+parser.add_argument("--threshold", type=float, default=1, help="threshold")
+# parser.add_argument("--resistance", type=float, default=5.0, help="resistance")
+# parser.add_argument("--capacitance", type=float, default=3.0, help="capacitance")
 parser.add_argument("--rc", type=float, default=5.0, help="tau")
 parser.add_argument("--reset", type=float, default=0.01, help="reset")
-parser.add_argument("--bias", type=float, default=0.01, help="bias")
+parser.add_argument("--bias", type=float, default=0.0, help="bias")
 parser.add_argument("--perc", type=float, default=0.5, help="percentage of neurons")
 
 
@@ -177,16 +177,21 @@ for i in range(args.trials):
             epsilon,
             args.rho,
             args.inp_scaling,
+            # spiking
+            args.threshold,
+            args.rc,
+            args.reset,
+            args.bias,
+            win_e=1,
+            win_i=0.5,
+            w_e=1,
+            w_i=0.5,
+            Ne=200,
+            Ni=56,
             topology=args.topology,
             sparsity=args.sparsity,
             reservoir_scaler=args.reservoir_scaler,
-            device=device,
-            ### FINE TUNE THESE (test to see if it works)
-            win_e=2,
-            win_i=1,
-            w_e=0.5,
-            w_i=0.2,
-            reg=None,
+            device=device
         ).to(device)
     elif args.sron:
         model = SpikingRON(
@@ -221,10 +226,11 @@ for i in range(args.trials):
                 args.inp_scaling,
                 #add last things here
                 args.threshold,
-                args.resistance,
-                args.capacitance,
-                # args.rc,
+                # args.resistance,
+                # args.capacitance,
+                args.rc,
                 args.reset,
+                args.bias,
                 args.perc,
                 topology=args.topology,
                 sparsity=args.sparsity,

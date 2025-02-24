@@ -1,13 +1,13 @@
 nohup: ignoring input
 Using device  cuda
-Grid Search:   0%|          | 0/288 [00:00<?, ?it/s]Grid Search:   0%|          | 1/288 [00:01<06:58,  1.46s/it]Grid Search:   1%|          | 2/288 [00:02<06:07,  1.29s/it]Grid Search:   1%|          | 3/288 [00:03<05:44,  1.21s/it]Grid Search:   1%|▏         | 4/288 [00:04<05:38,  1.19s/it]Grid Search:   2%|▏         | 5/288 [00:06<05:29,  1.17s/it]Grid Search:   2%|▏         | 6/288 [00:07<05:29,  1.17s/it]Grid Search:   2%|▏         | 7/288 [00:08<05:23,  1.15s/it]Grid Search:   3%|▎         | 8/288 [00:09<05:24,  1.16s/it]Grid Search:   3%|▎         | 9/288 [00:10<05:20,  1.15s/it]Grid Search:   3%|▎         | 10/288 [00:11<05:16,  1.14s/it]Grid Search:   4%|▍         | 11/288 [00:12<05:18,  1.15s/it]Grid Search:   4%|▍         | 12/288 [00:14<05:15,  1.14s/it]Grid Search:   5%|▍         | 13/288 [00:15<05:17,  1.15s/it]Grid Search:   5%|▍         | 14/288 [00:16<05:13,  1.14s/it]Grid Search:   5%|▌         | 15/288 [00:17<05:15,  1.16s/it]Grid Search:   6%|▌         | 16/288 [00:18<05:11,  1.15s/it]Grid Search:   6%|▌         | 17/288 [00:19<05:13,  1.16s/it]Grid Search:   6%|▋         | 18/288 [00:20<05:10,  1.15s/it]Grid Search:   7%|▋         | 19/288 [00:22<05:11,  1.16s/it]Grid Search:   7%|▋         | 20/288 [00:23<05:08,  1.15s/it]Grid Search:   7%|▋         | 21/288 [00:24<05:10,  1.16s/it]Grid Search:   8%|▊         | 22/288 [00:25<05:06,  1.15s/it]Grid Search:   8%|▊         | 23/288 [00:26<05:08,  1.16s/it]Grid Search:   8%|▊         | 24/288 [00:27<05:04,  1.16s/it]Grid Search:   9%|▊         | 25/288 [00:29<05:06,  1.17s/it]Grid Search:   9%|▉         | 26/288 [00:30<05:07,  1.18s/it]Grid Search:   9%|▉         | 27/288 [00:31<05:03,  1.16s/it]Grid Search:  10%|▉         | 28/288 [00:32<05:00,  1.15s/it]Grid Search:  10%|█         | 29/288 [00:33<05:01,  1.17s/it]Grid Search:  10%|█         | 30/288 [00:34<04:58,  1.16s/it]Grid Search:  11%|█         | 31/288 [00:36<05:00,  1.17s/it]Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': -1, 'bias': 0.001}
+Grid Search:   0%|          | 0/288 [00:00<?, ?it/s]Grid Search:   0%|          | 1/288 [00:01<07:17,  1.53s/it]Grid Search:   1%|          | 2/288 [00:02<06:23,  1.34s/it]Grid Search:   1%|          | 3/288 [00:03<05:55,  1.25s/it]Grid Search:   1%|▏         | 4/288 [00:05<05:50,  1.23s/it]Grid Search:   2%|▏         | 5/288 [00:06<05:39,  1.20s/it]Grid Search:   2%|▏         | 6/288 [00:07<05:37,  1.20s/it]Grid Search:   2%|▏         | 7/288 [00:08<05:30,  1.18s/it]Grid Search:   3%|▎         | 8/288 [00:09<05:30,  1.18s/it]Grid Search:   3%|▎         | 9/288 [00:10<05:24,  1.16s/it]Grid Search:   3%|▎         | 10/288 [00:11<05:20,  1.15s/it]Grid Search:   4%|▍         | 11/288 [00:13<05:22,  1.16s/it]Grid Search:   4%|▍         | 12/288 [00:14<05:18,  1.15s/it]Grid Search:   5%|▍         | 13/288 [00:15<05:20,  1.16s/it]Grid Search:   5%|▍         | 14/288 [00:16<05:16,  1.16s/it]Grid Search:   5%|▌         | 15/288 [00:17<05:18,  1.17s/it]Grid Search:   6%|▌         | 16/288 [00:18<05:14,  1.16s/it]Grid Search:   6%|▌         | 17/288 [00:20<05:16,  1.17s/it]Grid Search:   6%|▋         | 18/288 [00:21<05:12,  1.16s/it]Grid Search:   7%|▋         | 19/288 [00:22<05:14,  1.17s/it]Grid Search:   7%|▋         | 20/288 [00:23<05:10,  1.16s/it]Grid Search:   7%|▋         | 21/288 [00:24<05:12,  1.17s/it]Grid Search:   8%|▊         | 22/288 [00:25<05:09,  1.16s/it]Grid Search:   8%|▊         | 23/288 [00:27<05:10,  1.17s/it]Grid Search:   8%|▊         | 24/288 [00:28<05:07,  1.16s/it]Grid Search:   9%|▊         | 25/288 [00:29<05:08,  1.17s/it]Grid Search:   9%|▉         | 26/288 [00:30<05:09,  1.18s/it]Grid Search:   9%|▉         | 27/288 [00:31<05:05,  1.17s/it]Grid Search:  10%|▉         | 28/288 [00:32<05:01,  1.16s/it]Grid Search:  10%|█         | 29/288 [00:34<05:03,  1.17s/it]Grid Search:  10%|█         | 30/288 [00:35<05:00,  1.17s/it]Grid Search:  11%|█         | 31/288 [00:36<05:02,  1.18s/it]Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': -1, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
 DIM prediction:  (2299,) 
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.09, Valid MSE: 0.45, Test MSE: 0.45
+Train MSE: 0.09, Valid MSE: 0.50, Test MSE: 0.42
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': -1, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -15,7 +15,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.09, Valid MSE: 0.40, Test MSE: 0.40
+Train MSE: 0.10, Valid MSE: 0.35, Test MSE: 0.36
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': -1, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -23,7 +23,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.10, Valid MSE: 0.42, Test MSE: 0.60
+Train MSE: 0.10, Valid MSE: 0.34, Test MSE: 0.24
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': -1, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -31,7 +31,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.10, Valid MSE: 0.40, Test MSE: 0.35
+Train MSE: 0.09, Valid MSE: 0.21, Test MSE: 0.23
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': -1, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -39,7 +39,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.12, Valid MSE: 0.27, Test MSE: 0.24
+Train MSE: 0.09, Valid MSE: 0.32, Test MSE: 0.39
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': -1, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -47,7 +47,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.11, Valid MSE: 0.16, Test MSE: 0.17
+Train MSE: 0.13, Valid MSE: 0.67, Test MSE: 0.22
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -55,7 +55,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.11, Test MSE: 0.12
+Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.12
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -63,7 +63,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.07
+Train MSE: 0.05, Valid MSE: 0.10, Test MSE: 0.11
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -71,7 +71,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.11, Test MSE: 0.09
+Train MSE: 0.05, Valid MSE: 0.12, Test MSE: 0.15
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -79,7 +79,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.15, Test MSE: 0.12
+Train MSE: 0.05, Valid MSE: 0.11, Test MSE: 0.10
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -87,7 +87,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.17, Test MSE: 0.19
+Train MSE: 0.06, Valid MSE: 0.16, Test MSE: 0.16
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -95,7 +95,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.03, Valid MSE: 0.06, Test MSE: 0.05
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -103,7 +103,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.10, Test MSE: 0.09
+Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.08
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -111,7 +111,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.09
+Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.11
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -119,7 +119,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.11, Test MSE: 0.08
+Train MSE: 0.05, Valid MSE: 0.11, Test MSE: 0.12
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -127,7 +127,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.08, Test MSE: 0.08
+Train MSE: 0.04, Valid MSE: 0.14, Test MSE: 0.15
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -135,7 +135,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.14, Test MSE: 0.12
+Train MSE: 0.05, Valid MSE: 0.13, Test MSE: 0.11
 Testing parameters: {'rc': 0.5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -143,7 +143,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.11, Test MSE: 0.09
+Train MSE: 0.04, Valid MSE: 0.08, Test MSE: 0.10
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': -1, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -151,7 +151,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.07, Valid MSE: 0.53, Test MSE: 0.21
+Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': -1, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -159,7 +159,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.08, Valid MSE: 0.91, Test MSE: 1.09
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': -1, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -167,7 +167,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.08, Valid MSE: 0.34, Test MSE: 0.80
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': -1, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -175,7 +175,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.10, Valid MSE: 0.43, Test MSE: 0.52
+Train MSE: 0.10, Valid MSE: 0.40, Test MSE: 0.59
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': -1, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -183,7 +183,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.10, Valid MSE: 0.25, Test MSE: 0.21
+Train MSE: 0.09, Valid MSE: 0.51, Test MSE: 0.28
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': -1, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -191,7 +191,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.12, Valid MSE: 0.31, Test MSE: 0.22
+Train MSE: 0.11, Valid MSE: 0.20, Test MSE: 0.16
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -207,7 +207,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -223,7 +223,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.19, Test MSE: 0.23
+Train MSE: 0.05, Valid MSE: 0.29, Test MSE: 0.29
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -231,7 +231,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.24, Test MSE: 0.25
+Train MSE: 0.05, Valid MSE: 0.20, Test MSE: 0.17
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -239,7 +239,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.12, Valid MSE: 0.21, Test MSE: 0.21
+Train MSE: 0.13, Valid MSE: 0.24, Test MSE: 0.19
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -253,9 +253,9 @@ DIM prediction:  (4799,)
 target:  (4799,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Grid Search:  11%|█         | 32/288 [00:37<04:56,  1.16s/it]Grid Search:  11%|█▏        | 33/288 [00:38<04:58,  1.17s/it]Grid Search:  12%|█▏        | 34/288 [00:39<04:55,  1.16s/it]Grid Search:  12%|█▏        | 35/288 [00:40<04:51,  1.15s/it]Grid Search:  12%|█▎        | 36/288 [00:41<04:54,  1.17s/it]Grid Search:  13%|█▎        | 37/288 [00:43<04:50,  1.16s/it]Grid Search:  13%|█▎        | 38/288 [00:44<04:52,  1.17s/it]Grid Search:  14%|█▎        | 39/288 [00:45<04:49,  1.16s/it]Grid Search:  14%|█▍        | 40/288 [00:46<04:50,  1.17s/it]Grid Search:  14%|█▍        | 41/288 [00:47<04:47,  1.16s/it]Grid Search:  15%|█▍        | 42/288 [00:48<04:48,  1.17s/it]Grid Search:  15%|█▍        | 43/288 [00:50<04:45,  1.16s/it]Grid Search:  15%|█▌        | 44/288 [00:51<04:46,  1.17s/it]Grid Search:  16%|█▌        | 45/288 [00:52<04:43,  1.17s/it]Grid Search:  16%|█▌        | 46/288 [00:53<04:44,  1.18s/it]Grid Search:  16%|█▋        | 47/288 [00:54<04:41,  1.17s/it]Grid Search:  17%|█▋        | 48/288 [00:55<04:43,  1.18s/it]Grid Search:  17%|█▋        | 49/288 [00:57<04:39,  1.17s/it]Grid Search:  17%|█▋        | 50/288 [00:58<04:40,  1.18s/it]Grid Search:  18%|█▊        | 51/288 [00:59<04:41,  1.19s/it]Grid Search:  18%|█▊        | 52/288 [01:00<04:36,  1.17s/it]Grid Search:  18%|█▊        | 53/288 [01:01<04:33,  1.16s/it]Grid Search:  19%|█▉        | 54/288 [01:03<04:35,  1.18s/it]Grid Search:  19%|█▉        | 55/288 [01:04<04:32,  1.17s/it]Grid Search:  19%|█▉        | 56/288 [01:05<04:33,  1.18s/it]Grid Search:  20%|█▉        | 57/288 [01:06<04:29,  1.17s/it]Grid Search:  20%|██        | 58/288 [01:07<04:30,  1.18s/it]Grid Search:  20%|██        | 59/288 [01:08<04:27,  1.17s/it]Grid Search:  21%|██        | 60/288 [01:09<04:24,  1.16s/it]Grid Search:  21%|██        | 61/288 [01:11<04:26,  1.17s/it]Grid Search:  22%|██▏       | 62/288 [01:12<04:22,  1.16s/it]Grid Search:  22%|██▏       | 63/288 [01:13<04:24,  1.17s/it]DIM prediction:  (2299,) 
+Grid Search:  11%|█         | 32/288 [00:37<04:59,  1.17s/it]Grid Search:  11%|█▏        | 33/288 [00:38<05:00,  1.18s/it]Grid Search:  12%|█▏        | 34/288 [00:40<04:57,  1.17s/it]Grid Search:  12%|█▏        | 35/288 [00:41<04:54,  1.16s/it]Grid Search:  12%|█▎        | 36/288 [00:42<04:56,  1.18s/it]Grid Search:  13%|█▎        | 37/288 [00:43<04:53,  1.17s/it]Grid Search:  13%|█▎        | 38/288 [00:44<04:55,  1.18s/it]Grid Search:  14%|█▎        | 39/288 [00:45<04:51,  1.17s/it]Grid Search:  14%|█▍        | 40/288 [00:47<04:53,  1.19s/it]Grid Search:  14%|█▍        | 41/288 [00:48<04:50,  1.17s/it]Grid Search:  15%|█▍        | 42/288 [00:49<04:51,  1.18s/it]Grid Search:  15%|█▍        | 43/288 [00:50<04:47,  1.17s/it]Grid Search:  15%|█▌        | 44/288 [00:51<04:48,  1.18s/it]Grid Search:  16%|█▌        | 45/288 [00:52<04:45,  1.17s/it]Grid Search:  16%|█▌        | 46/288 [00:54<04:46,  1.18s/it]Grid Search:  16%|█▋        | 47/288 [00:55<04:43,  1.17s/it]Grid Search:  17%|█▋        | 48/288 [00:56<04:44,  1.18s/it]Grid Search:  17%|█▋        | 49/288 [00:57<04:40,  1.17s/it]Grid Search:  17%|█▋        | 50/288 [00:58<04:42,  1.19s/it]Grid Search:  18%|█▊        | 51/288 [01:00<04:42,  1.19s/it]Grid Search:  18%|█▊        | 52/288 [01:01<04:38,  1.18s/it]Grid Search:  18%|█▊        | 53/288 [01:02<04:35,  1.17s/it]Grid Search:  19%|█▉        | 54/288 [01:03<04:36,  1.18s/it]Grid Search:  19%|█▉        | 55/288 [01:04<04:34,  1.18s/it]Grid Search:  19%|█▉        | 56/288 [01:06<04:35,  1.19s/it]Grid Search:  20%|█▉        | 57/288 [01:07<04:32,  1.18s/it]Grid Search:  20%|██        | 58/288 [01:08<04:34,  1.19s/it]Grid Search:  20%|██        | 59/288 [01:09<04:31,  1.19s/it]Grid Search:  21%|██        | 60/288 [01:10<04:29,  1.18s/it]Grid Search:  21%|██        | 61/288 [01:11<04:30,  1.19s/it]Grid Search:  22%|██▏       | 62/288 [01:13<04:27,  1.18s/it]Grid Search:  22%|██▏       | 63/288 [01:14<04:29,  1.20s/it]DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -263,7 +263,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -271,7 +271,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.29, Test MSE: 0.23
+Train MSE: 0.05, Valid MSE: 0.31, Test MSE: 0.23
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -279,7 +279,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.15, Test MSE: 0.15
+Train MSE: 0.06, Valid MSE: 0.15, Test MSE: 0.23
 Testing parameters: {'rc': 0.5, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -287,7 +287,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.12, Valid MSE: 0.18, Test MSE: 0.20
+Train MSE: 0.12, Valid MSE: 0.17, Test MSE: 0.22
 Testing parameters: {'rc': 0.5, 'threshold': 0.5, 'reset': -1, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -303,7 +303,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.06, Valid MSE: 0.07, Test MSE: 0.06
 Testing parameters: {'rc': 0.5, 'threshold': 0.5, 'reset': -1, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -399,7 +399,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 0.5, 'threshold': 0.5, 'reset': 0.004, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -407,7 +407,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 0.5, 'threshold': 0.5, 'reset': 0.004, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -507,7 +507,7 @@ Train MSE: 0.06, Valid MSE: 0.07, Test MSE: 0.06
 Testing parameters: {'rc': 0.5, 'threshold': 1, 'reset': 0.001, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
-DIM prediction:  (2299,) Grid Search:  22%|██▏       | 64/288 [01:14<04:21,  1.17s/it]Grid Search:  23%|██▎       | 65/288 [01:15<04:22,  1.18s/it]Grid Search:  23%|██▎       | 66/288 [01:17<04:19,  1.17s/it]Grid Search:  23%|██▎       | 67/288 [01:18<04:20,  1.18s/it]Grid Search:  24%|██▎       | 68/288 [01:19<04:17,  1.17s/it]Grid Search:  24%|██▍       | 69/288 [01:20<04:18,  1.18s/it]Grid Search:  24%|██▍       | 70/288 [01:21<04:14,  1.17s/it]Grid Search:  25%|██▍       | 71/288 [01:22<04:15,  1.18s/it]Grid Search:  25%|██▌       | 72/288 [01:24<04:12,  1.17s/it]Grid Search:  25%|██▌       | 73/288 [01:25<04:14,  1.18s/it]Grid Search:  26%|██▌       | 74/288 [01:26<04:10,  1.17s/it]Grid Search:  26%|██▌       | 75/288 [01:27<04:11,  1.18s/it]Grid Search:  26%|██▋       | 76/288 [01:28<04:12,  1.19s/it]Grid Search:  27%|██▋       | 77/288 [01:30<04:08,  1.18s/it]Grid Search:  27%|██▋       | 78/288 [01:31<04:06,  1.17s/it]Grid Search:  27%|██▋       | 79/288 [01:32<04:07,  1.18s/it]Grid Search:  28%|██▊       | 80/288 [01:33<04:03,  1.17s/it]Grid Search:  28%|██▊       | 81/288 [01:34<04:04,  1.18s/it]Grid Search:  28%|██▊       | 82/288 [01:35<04:01,  1.17s/it]Grid Search:  29%|██▉       | 83/288 [01:37<04:02,  1.18s/it]Grid Search:  29%|██▉       | 84/288 [01:38<03:59,  1.17s/it]Grid Search:  30%|██▉       | 85/288 [01:39<03:56,  1.16s/it]Grid Search:  30%|██▉       | 86/288 [01:40<03:57,  1.18s/it]Grid Search:  30%|███       | 87/288 [01:41<03:54,  1.17s/it]Grid Search:  31%|███       | 88/288 [01:42<03:56,  1.18s/it]Grid Search:  31%|███       | 89/288 [01:44<03:52,  1.17s/it]Grid Search:  31%|███▏      | 90/288 [01:45<03:53,  1.18s/it]Grid Search:  32%|███▏      | 91/288 [01:46<03:50,  1.17s/it]Grid Search:  32%|███▏      | 92/288 [01:47<03:51,  1.18s/it]Grid Search:  32%|███▏      | 93/288 [01:48<03:48,  1.17s/it]Grid Search:  33%|███▎      | 94/288 [01:50<03:49,  1.18s/it]Grid Search:  33%|███▎      | 95/288 [01:51<03:46,  1.17s/it]
+DIM prediction:  (2299,) Grid Search:  22%|██▏       | 64/288 [01:15<04:25,  1.19s/it]Grid Search:  23%|██▎       | 65/288 [01:16<04:26,  1.19s/it]Grid Search:  23%|██▎       | 66/288 [01:17<04:22,  1.18s/it]Grid Search:  23%|██▎       | 67/288 [01:19<04:23,  1.19s/it]Grid Search:  24%|██▎       | 68/288 [01:20<04:20,  1.18s/it]Grid Search:  24%|██▍       | 69/288 [01:21<04:20,  1.19s/it]Grid Search:  24%|██▍       | 70/288 [01:22<04:17,  1.18s/it]Grid Search:  25%|██▍       | 71/288 [01:23<04:18,  1.19s/it]Grid Search:  25%|██▌       | 72/288 [01:24<04:14,  1.18s/it]Grid Search:  25%|██▌       | 73/288 [01:26<04:16,  1.19s/it]Grid Search:  26%|██▌       | 74/288 [01:27<04:12,  1.18s/it]Grid Search:  26%|██▌       | 75/288 [01:28<04:13,  1.19s/it]Grid Search:  26%|██▋       | 76/288 [01:29<04:14,  1.20s/it]Grid Search:  27%|██▋       | 77/288 [01:30<04:10,  1.19s/it]Grid Search:  27%|██▋       | 78/288 [01:32<04:08,  1.18s/it]Grid Search:  27%|██▋       | 79/288 [01:33<04:08,  1.19s/it]Grid Search:  28%|██▊       | 80/288 [01:34<04:05,  1.18s/it]Grid Search:  28%|██▊       | 81/288 [01:35<04:06,  1.19s/it]Grid Search:  28%|██▊       | 82/288 [01:36<04:03,  1.18s/it]Grid Search:  29%|██▉       | 83/288 [01:38<04:04,  1.19s/it]Grid Search:  29%|██▉       | 84/288 [01:39<04:01,  1.18s/it]Grid Search:  30%|██▉       | 85/288 [01:40<03:58,  1.18s/it]Grid Search:  30%|██▉       | 86/288 [01:41<03:59,  1.19s/it]Grid Search:  30%|███       | 87/288 [01:42<03:56,  1.18s/it]Grid Search:  31%|███       | 88/288 [01:43<03:57,  1.19s/it]Grid Search:  31%|███       | 89/288 [01:45<03:54,  1.18s/it]Grid Search:  31%|███▏      | 90/288 [01:46<03:55,  1.19s/it]Grid Search:  32%|███▏      | 91/288 [01:47<03:52,  1.18s/it]Grid Search:  32%|███▏      | 92/288 [01:48<03:53,  1.19s/it]Grid Search:  32%|███▏      | 93/288 [01:49<03:50,  1.18s/it]Grid Search:  33%|███▎      | 94/288 [01:51<03:51,  1.19s/it]Grid Search:  33%|███▎      | 95/288 [01:52<03:48,  1.18s/it]
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
@@ -551,7 +551,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 0.5, 'threshold': 1, 'reset': 0.004, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -583,7 +583,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.09, Test MSE: 0.08
+Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.07
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': -1, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -591,7 +591,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.07
+Train MSE: 0.05, Valid MSE: 0.07, Test MSE: 0.07
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': -1, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -599,7 +599,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.07, Test MSE: 0.07
+Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.08
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': -1, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -607,7 +607,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.07, Test MSE: 0.09
+Train MSE: 0.04, Valid MSE: 0.06, Test MSE: 0.07
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': -1, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -615,7 +615,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.08
+Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.07
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': -1, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -623,7 +623,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.09, Test MSE: 0.08
+Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.08
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -631,7 +631,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.05
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -639,7 +639,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.05
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -647,7 +647,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.05
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -663,7 +663,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.08
+Train MSE: 0.04, Valid MSE: 0.08, Test MSE: 0.07
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -679,7 +679,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -695,7 +695,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -703,7 +703,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.04, Valid MSE: 0.06, Test MSE: 0.05
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -711,7 +711,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.03
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 2, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -719,7 +719,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.03
+Train MSE: 0.02, Valid MSE: 0.03, Test MSE: 0.03
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': -1, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -727,7 +727,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.06, Test MSE: 0.08
+Train MSE: 0.04, Valid MSE: 0.09, Test MSE: 0.10
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': -1, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -735,7 +735,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.11
+Train MSE: 0.06, Valid MSE: 0.09, Test MSE: 0.11
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': -1, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -743,7 +743,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.12, Test MSE: 0.11
+Train MSE: 0.04, Valid MSE: 0.12, Test MSE: 0.13
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': -1, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -751,7 +751,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.07, Valid MSE: 0.10, Test MSE: 0.10
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': -1, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -759,15 +759,15 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.06, Valid MSE: 0.08, Test MSE: 0.09
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': -1, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
-Grid Search:  33%|███▎      | 96/288 [01:52<03:47,  1.18s/it]Grid Search:  34%|███▎      | 97/288 [01:53<03:44,  1.17s/it]Grid Search:  34%|███▍      | 98/288 [01:54<03:44,  1.18s/it]Grid Search:  34%|███▍      | 99/288 [01:55<03:42,  1.17s/it]Grid Search:  35%|███▍      | 100/288 [01:57<03:42,  1.18s/it]Grid Search:  35%|███▌      | 101/288 [01:58<03:42,  1.19s/it]Grid Search:  35%|███▌      | 102/288 [01:59<03:39,  1.18s/it]Grid Search:  36%|███▌      | 103/288 [02:00<03:36,  1.17s/it]Grid Search:  36%|███▌      | 104/288 [02:01<03:37,  1.18s/it]Grid Search:  36%|███▋      | 105/288 [02:02<03:34,  1.17s/it]Grid Search:  37%|███▋      | 106/288 [02:04<03:35,  1.18s/it]Grid Search:  37%|███▋      | 107/288 [02:05<03:32,  1.18s/it]Grid Search:  38%|███▊      | 108/288 [02:06<03:33,  1.19s/it]Grid Search:  38%|███▊      | 109/288 [02:07<03:30,  1.18s/it]Grid Search:  38%|███▊      | 110/288 [02:08<03:28,  1.17s/it]Grid Search:  39%|███▊      | 111/288 [02:10<03:29,  1.18s/it]Grid Search:  39%|███▉      | 112/288 [02:11<03:26,  1.17s/it]Grid Search:  39%|███▉      | 113/288 [02:12<03:26,  1.18s/it]Grid Search:  40%|███▉      | 114/288 [02:13<03:24,  1.17s/it]Grid Search:  40%|███▉      | 115/288 [02:14<03:24,  1.18s/it]Grid Search:  40%|████      | 116/288 [02:15<03:22,  1.17s/it]Grid Search:  41%|████      | 117/288 [02:17<03:22,  1.19s/it]Grid Search:  41%|████      | 118/288 [02:18<03:19,  1.17s/it]Grid Search:  41%|████▏     | 119/288 [02:19<03:20,  1.18s/it]Grid Search:  42%|████▏     | 120/288 [02:20<03:17,  1.17s/it]Grid Search:  42%|████▏     | 121/288 [02:21<03:17,  1.18s/it]Grid Search:  42%|████▏     | 122/288 [02:22<03:14,  1.17s/it]Grid Search:  43%|████▎     | 123/288 [02:24<03:15,  1.18s/it]Grid Search:  43%|████▎     | 124/288 [02:25<03:12,  1.17s/it]Grid Search:  43%|████▎     | 125/288 [02:26<03:13,  1.18s/it]Grid Search:  44%|████▍     | 126/288 [02:27<03:13,  1.19s/it]Grid Search:  44%|████▍     | 127/288 [02:28<03:10,  1.18s/it]DIM prediction:  (2299,) 
+Grid Search:  33%|███▎      | 96/288 [01:53<03:48,  1.19s/it]Grid Search:  34%|███▎      | 97/288 [01:54<03:46,  1.18s/it]Grid Search:  34%|███▍      | 98/288 [01:55<03:47,  1.20s/it]Grid Search:  34%|███▍      | 99/288 [01:57<03:43,  1.18s/it]Grid Search:  35%|███▍      | 100/288 [01:58<03:44,  1.19s/it]Grid Search:  35%|███▌      | 101/288 [01:59<03:44,  1.20s/it]Grid Search:  35%|███▌      | 102/288 [02:00<03:40,  1.19s/it]Grid Search:  36%|███▌      | 103/288 [02:01<03:38,  1.18s/it]Grid Search:  36%|███▌      | 104/288 [02:03<03:39,  1.19s/it]Grid Search:  36%|███▋      | 105/288 [02:04<03:36,  1.18s/it]Grid Search:  37%|███▋      | 106/288 [02:05<03:37,  1.20s/it]Grid Search:  37%|███▋      | 107/288 [02:06<03:34,  1.19s/it]Grid Search:  38%|███▊      | 108/288 [02:07<03:35,  1.20s/it]Grid Search:  38%|███▊      | 109/288 [02:08<03:32,  1.19s/it]Grid Search:  38%|███▊      | 110/288 [02:10<03:30,  1.18s/it]Grid Search:  39%|███▊      | 111/288 [02:11<03:30,  1.19s/it]Grid Search:  39%|███▉      | 112/288 [02:12<03:27,  1.18s/it]Grid Search:  39%|███▉      | 113/288 [02:13<03:28,  1.19s/it]Grid Search:  40%|███▉      | 114/288 [02:14<03:25,  1.18s/it]Grid Search:  40%|███▉      | 115/288 [02:16<03:26,  1.19s/it]Grid Search:  40%|████      | 116/288 [02:17<03:23,  1.19s/it]Grid Search:  41%|████      | 117/288 [02:18<03:24,  1.20s/it]Grid Search:  41%|████      | 118/288 [02:19<03:21,  1.18s/it]Grid Search:  41%|████▏     | 119/288 [02:20<03:22,  1.20s/it]Grid Search:  42%|████▏     | 120/288 [02:22<03:19,  1.19s/it]Grid Search:  42%|████▏     | 121/288 [02:23<03:19,  1.20s/it]Grid Search:  42%|████▏     | 122/288 [02:24<03:16,  1.18s/it]Grid Search:  43%|████▎     | 123/288 [02:25<03:16,  1.19s/it]Grid Search:  43%|████▎     | 124/288 [02:26<03:14,  1.18s/it]Grid Search:  43%|████▎     | 125/288 [02:27<03:14,  1.19s/it]Grid Search:  44%|████▍     | 126/288 [02:29<03:14,  1.20s/it]Grid Search:  44%|████▍     | 127/288 [02:30<03:11,  1.19s/it]DIM prediction:  (2299,) 
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.08, Test MSE: 0.09
+Train MSE: 0.05, Valid MSE: 0.07, Test MSE: 0.08
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -775,7 +775,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.07
+Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.08
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -783,7 +783,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.08, Test MSE: 0.07
+Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.07
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -799,7 +799,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.11, Test MSE: 0.12
+Train MSE: 0.05, Valid MSE: 0.13, Test MSE: 0.13
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -807,7 +807,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.07, Valid MSE: 0.15, Test MSE: 0.13
+Train MSE: 0.06, Valid MSE: 0.17, Test MSE: 0.15
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -815,7 +815,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.10, Test MSE: 0.08
+Train MSE: 0.05, Valid MSE: 0.12, Test MSE: 0.14
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -823,7 +823,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.08, Test MSE: 0.08
+Train MSE: 0.04, Valid MSE: 0.09, Test MSE: 0.07
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -831,7 +831,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.08, Test MSE: 0.08
+Train MSE: 0.04, Valid MSE: 0.08, Test MSE: 0.07
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -847,7 +847,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.11, Test MSE: 0.12
+Train MSE: 0.05, Valid MSE: 0.16, Test MSE: 0.16
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -855,7 +855,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.16, Test MSE: 0.18
+Train MSE: 0.07, Valid MSE: 0.15, Test MSE: 0.14
 Testing parameters: {'rc': 2, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -863,7 +863,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.09
+Train MSE: 0.05, Valid MSE: 0.07, Test MSE: 0.07
 Testing parameters: {'rc': 2, 'threshold': 0.5, 'reset': -1, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -911,7 +911,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.05, Valid MSE: 0.05, Test MSE: 0.05
 Testing parameters: {'rc': 2, 'threshold': 0.5, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1007,7 +1007,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.05
+Train MSE: 0.05, Valid MSE: 0.10, Test MSE: 0.11
 Testing parameters: {'rc': 2, 'threshold': 1, 'reset': -1, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1019,7 +1019,7 @@ Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 2, 'threshold': 1, 'reset': -1, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
-Grid Search:  44%|████▍     | 128/288 [02:30<03:07,  1.17s/it]Grid Search:  45%|████▍     | 129/288 [02:31<03:08,  1.18s/it]Grid Search:  45%|████▌     | 130/288 [02:32<03:05,  1.17s/it]Grid Search:  45%|████▌     | 131/288 [02:33<03:05,  1.18s/it]Grid Search:  46%|████▌     | 132/288 [02:34<03:02,  1.17s/it]Grid Search:  46%|████▌     | 133/288 [02:35<03:03,  1.18s/it]Grid Search:  47%|████▋     | 134/288 [02:37<03:00,  1.17s/it]Grid Search:  47%|████▋     | 135/288 [02:38<02:58,  1.17s/it]Grid Search:  47%|████▋     | 136/288 [02:39<02:59,  1.18s/it]Grid Search:  48%|████▊     | 137/288 [02:40<02:56,  1.17s/it]Grid Search:  48%|████▊     | 138/288 [02:41<02:57,  1.18s/it]Grid Search:  48%|████▊     | 139/288 [02:42<02:54,  1.17s/it]Grid Search:  49%|████▊     | 140/288 [02:44<02:54,  1.18s/it]Grid Search:  49%|████▉     | 141/288 [02:45<02:52,  1.17s/it]Grid Search:  49%|████▉     | 142/288 [02:46<02:52,  1.18s/it]Grid Search:  50%|████▉     | 143/288 [02:47<02:50,  1.17s/it]Grid Search:  50%|█████     | 144/288 [02:48<02:50,  1.18s/it]Grid Search:  50%|█████     | 145/288 [02:50<02:48,  1.18s/it]Grid Search:  51%|█████     | 146/288 [02:51<02:48,  1.18s/it]Grid Search:  51%|█████     | 147/288 [02:52<02:45,  1.18s/it]Grid Search:  51%|█████▏    | 148/288 [02:53<02:45,  1.19s/it]Grid Search:  52%|█████▏    | 149/288 [02:54<02:43,  1.18s/it]Grid Search:  52%|█████▏    | 150/288 [02:56<02:43,  1.19s/it]Grid Search:  52%|█████▏    | 151/288 [02:57<02:43,  1.19s/it]Grid Search:  53%|█████▎    | 152/288 [02:58<02:40,  1.18s/it]Grid Search:  53%|█████▎    | 153/288 [02:59<02:38,  1.17s/it]Grid Search:  53%|█████▎    | 154/288 [03:00<02:38,  1.18s/it]Grid Search:  54%|█████▍    | 155/288 [03:01<02:35,  1.17s/it]Grid Search:  54%|█████▍    | 156/288 [03:03<02:36,  1.18s/it]Grid Search:  55%|█████▍    | 157/288 [03:04<02:33,  1.17s/it]Grid Search:  55%|█████▍    | 158/288 [03:05<02:33,  1.18s/it]Grid Search:  55%|█████▌    | 159/288 [03:06<02:31,  1.17s/it]DIM prediction:  (2299,) 
+Grid Search:  44%|████▍     | 128/288 [02:31<03:08,  1.18s/it]Grid Search:  45%|████▍     | 129/288 [02:32<03:09,  1.19s/it]Grid Search:  45%|████▌     | 130/288 [02:33<03:07,  1.19s/it]Grid Search:  45%|████▌     | 131/288 [02:35<03:07,  1.20s/it]Grid Search:  46%|████▌     | 132/288 [02:36<03:05,  1.19s/it]Grid Search:  46%|████▌     | 133/288 [02:37<03:05,  1.20s/it]Grid Search:  47%|████▋     | 134/288 [02:38<03:02,  1.19s/it]Grid Search:  47%|████▋     | 135/288 [02:39<03:00,  1.18s/it]Grid Search:  47%|████▋     | 136/288 [02:41<03:00,  1.19s/it]Grid Search:  48%|████▊     | 137/288 [02:42<02:58,  1.18s/it]Grid Search:  48%|████▊     | 138/288 [02:43<02:58,  1.19s/it]Grid Search:  48%|████▊     | 139/288 [02:44<02:56,  1.18s/it]Grid Search:  49%|████▊     | 140/288 [02:45<02:56,  1.19s/it]Grid Search:  49%|████▉     | 141/288 [02:46<02:53,  1.18s/it]Grid Search:  49%|████▉     | 142/288 [02:48<02:54,  1.19s/it]Grid Search:  50%|████▉     | 143/288 [02:49<02:51,  1.18s/it]Grid Search:  50%|█████     | 144/288 [02:50<02:51,  1.19s/it]Grid Search:  50%|█████     | 145/288 [02:51<02:49,  1.18s/it]Grid Search:  51%|█████     | 146/288 [02:52<02:49,  1.19s/it]Grid Search:  51%|█████     | 147/288 [02:54<02:46,  1.18s/it]Grid Search:  51%|█████▏    | 148/288 [02:55<02:47,  1.20s/it]Grid Search:  52%|█████▏    | 149/288 [02:56<02:44,  1.19s/it]Grid Search:  52%|█████▏    | 150/288 [02:57<02:45,  1.20s/it]Grid Search:  52%|█████▏    | 151/288 [02:58<02:45,  1.21s/it]Grid Search:  53%|█████▎    | 152/288 [03:00<02:42,  1.19s/it]Grid Search:  53%|█████▎    | 153/288 [03:01<02:39,  1.18s/it]Grid Search:  53%|█████▎    | 154/288 [03:02<02:40,  1.19s/it]Grid Search:  54%|█████▍    | 155/288 [03:03<02:37,  1.18s/it]Grid Search:  54%|█████▍    | 156/288 [03:04<02:37,  1.20s/it]Grid Search:  55%|█████▍    | 157/288 [03:06<02:35,  1.19s/it]Grid Search:  55%|█████▍    | 158/288 [03:07<02:36,  1.20s/it]Grid Search:  55%|█████▌    | 159/288 [03:08<02:33,  1.19s/it]DIM prediction:  (2299,) 
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
@@ -1159,7 +1159,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.10, Test MSE: 0.12
+Train MSE: 0.05, Valid MSE: 0.13, Test MSE: 0.10
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': -1, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1167,7 +1167,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.11
+Train MSE: 0.05, Valid MSE: 0.10, Test MSE: 0.11
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': -1, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1175,7 +1175,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.12, Test MSE: 0.11
+Train MSE: 0.05, Valid MSE: 0.12, Test MSE: 0.14
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': -1, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1183,7 +1183,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.11, Test MSE: 0.09
+Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.07
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': -1, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1191,7 +1191,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.11, Test MSE: 0.12
+Train MSE: 0.08, Valid MSE: 0.15, Test MSE: 0.17
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': -1, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1199,7 +1199,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.08, Valid MSE: 0.12, Test MSE: 0.14
+Train MSE: 0.09, Valid MSE: 0.13, Test MSE: 0.14
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1207,7 +1207,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.04
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1215,7 +1215,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1223,7 +1223,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.03
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1231,7 +1231,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.06
+Train MSE: 0.04, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1255,7 +1255,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.02, Valid MSE: 0.03, Test MSE: 0.03
+Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.03
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1263,7 +1263,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.03
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1271,15 +1271,15 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.03
+Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.04
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
-DIM prediction:  (2299,) Grid Search:  56%|█████▌    | 160/288 [03:07<02:29,  1.17s/it]Grid Search:  56%|█████▌    | 161/288 [03:08<02:29,  1.18s/it]Grid Search:  56%|█████▋    | 162/288 [03:10<02:27,  1.17s/it]Grid Search:  57%|█████▋    | 163/288 [03:11<02:27,  1.18s/it]Grid Search:  57%|█████▋    | 164/288 [03:12<02:25,  1.17s/it]Grid Search:  57%|█████▋    | 165/288 [03:13<02:25,  1.18s/it]Grid Search:  58%|█████▊    | 166/288 [03:14<02:23,  1.17s/it]Grid Search:  58%|█████▊    | 167/288 [03:16<02:23,  1.19s/it]Grid Search:  58%|█████▊    | 168/288 [03:17<02:21,  1.18s/it]Grid Search:  59%|█████▊    | 169/288 [03:18<02:21,  1.19s/it]Grid Search:  59%|█████▉    | 170/288 [03:19<02:18,  1.18s/it]Grid Search:  59%|█████▉    | 171/288 [03:20<02:18,  1.19s/it]Grid Search:  60%|█████▉    | 172/288 [03:21<02:16,  1.18s/it]Grid Search:  60%|██████    | 173/288 [03:23<02:16,  1.19s/it]Grid Search:  60%|██████    | 174/288 [03:24<02:13,  1.17s/it]Grid Search:  61%|██████    | 175/288 [03:25<02:13,  1.18s/it]Grid Search:  61%|██████    | 176/288 [03:26<02:13,  1.19s/it]Grid Search:  61%|██████▏   | 177/288 [03:27<02:11,  1.18s/it]Grid Search:  62%|██████▏   | 178/288 [03:28<02:08,  1.17s/it]Grid Search:  62%|██████▏   | 179/288 [03:30<02:08,  1.18s/it]Grid Search:  62%|██████▎   | 180/288 [03:31<02:06,  1.17s/it]Grid Search:  63%|██████▎   | 181/288 [03:32<02:06,  1.18s/it]Grid Search:  63%|██████▎   | 182/288 [03:33<02:04,  1.17s/it]Grid Search:  64%|██████▎   | 183/288 [03:34<02:04,  1.18s/it]Grid Search:  64%|██████▍   | 184/288 [03:36<02:02,  1.17s/it]Grid Search:  64%|██████▍   | 185/288 [03:37<02:00,  1.17s/it]Grid Search:  65%|██████▍   | 186/288 [03:38<02:00,  1.18s/it]Grid Search:  65%|██████▍   | 187/288 [03:39<01:58,  1.17s/it]Grid Search:  65%|██████▌   | 188/288 [03:40<01:58,  1.18s/it]Grid Search:  66%|██████▌   | 189/288 [03:41<01:55,  1.17s/it]Grid Search:  66%|██████▌   | 190/288 [03:43<01:55,  1.18s/it]Grid Search:  66%|██████▋   | 191/288 [03:44<01:53,  1.17s/it]
+DIM prediction:  (2299,) Grid Search:  56%|█████▌    | 160/288 [03:09<02:31,  1.18s/it]Grid Search:  56%|█████▌    | 161/288 [03:10<02:31,  1.19s/it]Grid Search:  56%|█████▋    | 162/288 [03:11<02:29,  1.19s/it]Grid Search:  57%|█████▋    | 163/288 [03:13<02:29,  1.20s/it]Grid Search:  57%|█████▋    | 164/288 [03:14<02:27,  1.19s/it]Grid Search:  57%|█████▋    | 165/288 [03:15<02:27,  1.20s/it]Grid Search:  58%|█████▊    | 166/288 [03:16<02:25,  1.19s/it]Grid Search:  58%|█████▊    | 167/288 [03:18<02:26,  1.21s/it]Grid Search:  58%|█████▊    | 168/288 [03:19<02:24,  1.20s/it]Grid Search:  59%|█████▊    | 169/288 [03:20<02:23,  1.21s/it]Grid Search:  59%|█████▉    | 170/288 [03:21<02:21,  1.20s/it]Grid Search:  59%|█████▉    | 171/288 [03:22<02:20,  1.20s/it]Grid Search:  60%|█████▉    | 172/288 [03:23<02:18,  1.19s/it]Grid Search:  60%|██████    | 173/288 [03:25<02:18,  1.21s/it]Grid Search:  60%|██████    | 174/288 [03:26<02:16,  1.19s/it]Grid Search:  61%|██████    | 175/288 [03:27<02:16,  1.21s/it]Grid Search:  61%|██████    | 176/288 [03:28<02:15,  1.21s/it]Grid Search:  61%|██████▏   | 177/288 [03:30<02:12,  1.20s/it]Grid Search:  62%|██████▏   | 178/288 [03:31<02:10,  1.19s/it]Grid Search:  62%|██████▏   | 179/288 [03:32<02:10,  1.20s/it]Grid Search:  62%|██████▎   | 180/288 [03:33<02:08,  1.19s/it]Grid Search:  63%|██████▎   | 181/288 [03:34<02:08,  1.20s/it]Grid Search:  63%|██████▎   | 182/288 [03:35<02:05,  1.19s/it]Grid Search:  64%|██████▎   | 183/288 [03:37<02:05,  1.20s/it]Grid Search:  64%|██████▍   | 184/288 [03:38<02:03,  1.19s/it]Grid Search:  64%|██████▍   | 185/288 [03:39<02:01,  1.18s/it]Grid Search:  65%|██████▍   | 186/288 [03:40<02:01,  1.19s/it]Grid Search:  65%|██████▍   | 187/288 [03:41<01:59,  1.18s/it]Grid Search:  65%|██████▌   | 188/288 [03:43<01:59,  1.19s/it]Grid Search:  66%|██████▌   | 189/288 [03:44<01:57,  1.18s/it]Grid Search:  66%|██████▌   | 190/288 [03:45<01:57,  1.20s/it]Grid Search:  66%|██████▋   | 191/288 [03:46<01:54,  1.19s/it]
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.04
+Train MSE: 0.04, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1287,7 +1287,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.02, Valid MSE: 0.03, Test MSE: 0.03
+Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.03
 Testing parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1303,7 +1303,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.07
+Train MSE: 0.05, Valid MSE: 0.11, Test MSE: 0.12
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': -1, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1311,7 +1311,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.11, Test MSE: 0.09
+Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.12
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': -1, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1319,7 +1319,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.09, Test MSE: 0.10
+Train MSE: 0.05, Valid MSE: 0.10, Test MSE: 0.07
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': -1, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1327,7 +1327,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.10, Test MSE: 0.11
+Train MSE: 0.06, Valid MSE: 0.14, Test MSE: 0.12
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': -1, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1335,7 +1335,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.12, Test MSE: 0.12
+Train MSE: 0.06, Valid MSE: 0.15, Test MSE: 0.13
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': -1, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1343,7 +1343,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.08, Valid MSE: 0.14, Test MSE: 0.14
+Train MSE: 0.08, Valid MSE: 0.13, Test MSE: 0.13
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1351,7 +1351,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.05
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1359,7 +1359,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.06
+Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.05
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1367,7 +1367,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.07
+Train MSE: 0.04, Valid MSE: 0.06, Test MSE: 0.05
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1375,7 +1375,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.07
+Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.09
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1383,7 +1383,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.10, Test MSE: 0.09
+Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.08
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1391,7 +1391,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.07
+Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.10
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1399,7 +1399,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.04, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1407,7 +1407,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.04, Test MSE: 0.05
+Train MSE: 0.04, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1423,7 +1423,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.07
+Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.10
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1431,7 +1431,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.07, Test MSE: 0.08
+Train MSE: 0.05, Valid MSE: 0.08, Test MSE: 0.08
 Testing parameters: {'rc': 5, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1439,7 +1439,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.07
 Testing parameters: {'rc': 5, 'threshold': 0.5, 'reset': -1, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1487,7 +1487,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.05
+Train MSE: 0.05, Valid MSE: 0.07, Test MSE: 0.06
 Testing parameters: {'rc': 5, 'threshold': 0.5, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1532,7 +1532,7 @@ Testing parameters: {'rc': 5, 'threshold': 0.5, 'reset': 0.001, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
 DIM prediction:  (2299,) 
-target:  Grid Search:  67%|██████▋   | 192/288 [03:45<01:53,  1.18s/it]Grid Search:  67%|██████▋   | 193/288 [03:46<01:51,  1.17s/it]Grid Search:  67%|██████▋   | 194/288 [03:47<01:51,  1.19s/it]Grid Search:  68%|██████▊   | 195/288 [03:49<01:49,  1.18s/it]Grid Search:  68%|██████▊   | 196/288 [03:50<01:49,  1.18s/it]Grid Search:  68%|██████▊   | 197/288 [03:51<01:46,  1.17s/it]Grid Search:  69%|██████▉   | 198/288 [03:52<01:46,  1.18s/it]Grid Search:  69%|██████▉   | 199/288 [03:53<01:44,  1.17s/it]Grid Search:  69%|██████▉   | 200/288 [03:54<01:44,  1.19s/it]Grid Search:  70%|██████▉   | 201/288 [03:56<01:43,  1.19s/it]Grid Search:  70%|███████   | 202/288 [03:57<01:41,  1.18s/it]Grid Search:  70%|███████   | 203/288 [03:58<01:39,  1.17s/it]Grid Search:  71%|███████   | 204/288 [03:59<01:39,  1.18s/it]Grid Search:  71%|███████   | 205/288 [04:00<01:37,  1.17s/it]Grid Search:  72%|███████▏  | 206/288 [04:02<01:36,  1.18s/it]Grid Search:  72%|███████▏  | 207/288 [04:03<01:34,  1.17s/it]Grid Search:  72%|███████▏  | 208/288 [04:04<01:34,  1.18s/it]Grid Search:  73%|███████▎  | 209/288 [04:05<01:32,  1.17s/it]Grid Search:  73%|███████▎  | 210/288 [04:06<01:31,  1.17s/it]Grid Search:  73%|███████▎  | 211/288 [04:07<01:30,  1.18s/it]Grid Search:  74%|███████▎  | 212/288 [04:09<01:29,  1.17s/it]Grid Search:  74%|███████▍  | 213/288 [04:10<01:28,  1.18s/it]Grid Search:  74%|███████▍  | 214/288 [04:11<01:26,  1.17s/it]Grid Search:  75%|███████▍  | 215/288 [04:12<01:26,  1.18s/it]Grid Search:  75%|███████▌  | 216/288 [04:13<01:24,  1.17s/it]Grid Search:  75%|███████▌  | 217/288 [04:14<01:23,  1.18s/it]Grid Search:  76%|███████▌  | 218/288 [04:16<01:22,  1.17s/it]Grid Search:  76%|███████▌  | 219/288 [04:17<01:21,  1.18s/it]Grid Search:  76%|███████▋  | 220/288 [04:18<01:19,  1.17s/it]Grid Search:  77%|███████▋  | 221/288 [04:19<01:19,  1.18s/it]Grid Search:  77%|███████▋  | 222/288 [04:20<01:17,  1.17s/it]Grid Search:  77%|███████▋  | 223/288 [04:22<01:16,  1.18s/it](2299,)
+target:  Grid Search:  67%|██████▋   | 192/288 [03:47<01:54,  1.20s/it]Grid Search:  67%|██████▋   | 193/288 [03:49<01:52,  1.19s/it]Grid Search:  67%|██████▋   | 194/288 [03:50<01:52,  1.20s/it]Grid Search:  68%|██████▊   | 195/288 [03:51<01:50,  1.19s/it]Grid Search:  68%|██████▊   | 196/288 [03:52<01:50,  1.20s/it]Grid Search:  68%|██████▊   | 197/288 [03:53<01:48,  1.19s/it]Grid Search:  69%|██████▉   | 198/288 [03:55<01:48,  1.20s/it]Grid Search:  69%|██████▉   | 199/288 [03:56<01:46,  1.19s/it]Grid Search:  69%|██████▉   | 200/288 [03:57<01:45,  1.20s/it]Grid Search:  70%|██████▉   | 201/288 [03:58<01:45,  1.21s/it]Grid Search:  70%|███████   | 202/288 [03:59<01:42,  1.19s/it]Grid Search:  70%|███████   | 203/288 [04:00<01:40,  1.19s/it]Grid Search:  71%|███████   | 204/288 [04:02<01:40,  1.20s/it]Grid Search:  71%|███████   | 205/288 [04:03<01:39,  1.20s/it]Grid Search:  72%|███████▏  | 206/288 [04:04<01:40,  1.22s/it]Grid Search:  72%|███████▏  | 207/288 [04:05<01:37,  1.21s/it]Grid Search:  72%|███████▏  | 208/288 [04:07<01:37,  1.21s/it]Grid Search:  73%|███████▎  | 209/288 [04:08<01:34,  1.20s/it]Grid Search:  73%|███████▎  | 210/288 [04:09<01:32,  1.19s/it]Grid Search:  73%|███████▎  | 211/288 [04:10<01:32,  1.20s/it]Grid Search:  74%|███████▎  | 212/288 [04:11<01:30,  1.19s/it]Grid Search:  74%|███████▍  | 213/288 [04:13<01:30,  1.20s/it]Grid Search:  74%|███████▍  | 214/288 [04:14<01:28,  1.20s/it]Grid Search:  75%|███████▍  | 215/288 [04:15<01:28,  1.21s/it]Grid Search:  75%|███████▌  | 216/288 [04:16<01:26,  1.20s/it]Grid Search:  75%|███████▌  | 217/288 [04:17<01:25,  1.21s/it]Grid Search:  76%|███████▌  | 218/288 [04:19<01:23,  1.20s/it]Grid Search:  76%|███████▌  | 219/288 [04:20<01:23,  1.21s/it]Grid Search:  76%|███████▋  | 220/288 [04:21<01:21,  1.20s/it]Grid Search:  77%|███████▋  | 221/288 [04:22<01:20,  1.21s/it]Grid Search:  77%|███████▋  | 222/288 [04:23<01:19,  1.20s/it]Grid Search:  77%|███████▋  | 223/288 [04:25<01:18,  1.21s/it](2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
 Train MSE: 0.05, Valid MSE: 0.05, Test MSE: 0.05
@@ -1583,7 +1583,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.05
 Testing parameters: {'rc': 5, 'threshold': 1, 'reset': -1, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1735,7 +1735,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.15, Test MSE: 0.14
+Train MSE: 0.06, Valid MSE: 0.14, Test MSE: 0.12
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': -1, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1743,7 +1743,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.09
+Train MSE: 0.06, Valid MSE: 0.11, Test MSE: 0.13
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': -1, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1751,7 +1751,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.15, Test MSE: 0.11
+Train MSE: 0.05, Valid MSE: 0.09, Test MSE: 0.09
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': -1, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1759,7 +1759,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.07, Valid MSE: 0.11, Test MSE: 0.14
+Train MSE: 0.06, Valid MSE: 0.14, Test MSE: 0.15
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': -1, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1767,7 +1767,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.07, Valid MSE: 0.12, Test MSE: 0.14
+Train MSE: 0.07, Valid MSE: 0.13, Test MSE: 0.11
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': -1, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1775,7 +1775,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.08, Valid MSE: 0.15, Test MSE: 0.16
+Train MSE: 0.08, Valid MSE: 0.12, Test MSE: 0.12
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1783,15 +1783,15 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.03
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
 DIM prediction:  (2299,) 
 target:  (2299,)
 DIM prediction:  (2299,) 
-target:  Grid Search:  78%|███████▊  | 224/288 [04:23<01:15,  1.17s/it]Grid Search:  78%|███████▊  | 225/288 [04:24<01:14,  1.18s/it]Grid Search:  78%|███████▊  | 226/288 [04:25<01:13,  1.19s/it]Grid Search:  79%|███████▉  | 227/288 [04:26<01:11,  1.18s/it]Grid Search:  79%|███████▉  | 228/288 [04:27<01:10,  1.17s/it]Grid Search:  80%|███████▉  | 229/288 [04:29<01:09,  1.18s/it]Grid Search:  80%|███████▉  | 230/288 [04:30<01:07,  1.17s/it]Grid Search:  80%|████████  | 231/288 [04:31<01:07,  1.18s/it]Grid Search:  81%|████████  | 232/288 [04:32<01:05,  1.17s/it]Grid Search:  81%|████████  | 233/288 [04:33<01:05,  1.18s/it]Grid Search:  81%|████████▏ | 234/288 [04:34<01:03,  1.17s/it]Grid Search:  82%|████████▏ | 235/288 [04:36<01:01,  1.17s/it]Grid Search:  82%|████████▏ | 236/288 [04:37<01:01,  1.18s/it]Grid Search:  82%|████████▏ | 237/288 [04:38<00:59,  1.17s/it]Grid Search:  83%|████████▎ | 238/288 [04:39<00:59,  1.18s/it]Grid Search:  83%|████████▎ | 239/288 [04:40<00:57,  1.17s/it]Grid Search:  83%|████████▎ | 240/288 [04:42<00:56,  1.18s/it]Grid Search:  84%|████████▎ | 241/288 [04:43<00:55,  1.17s/it]Grid Search:  84%|████████▍ | 242/288 [04:44<00:54,  1.18s/it]Grid Search:  84%|████████▍ | 243/288 [04:45<00:52,  1.17s/it]Grid Search:  85%|████████▍ | 244/288 [04:46<00:52,  1.18s/it]Grid Search:  85%|████████▌ | 245/288 [04:47<00:50,  1.17s/it]Grid Search:  85%|████████▌ | 246/288 [04:49<00:49,  1.18s/it]Grid Search:  86%|████████▌ | 247/288 [04:50<00:48,  1.17s/it]Grid Search:  86%|████████▌ | 248/288 [04:51<00:47,  1.18s/it]Grid Search:  86%|████████▋ | 249/288 [04:52<00:45,  1.17s/it]Grid Search:  87%|████████▋ | 250/288 [04:53<00:44,  1.18s/it]Grid Search:  87%|████████▋ | 251/288 [04:55<00:44,  1.19s/it]Grid Search:  88%|████████▊ | 252/288 [04:56<00:42,  1.18s/it]Grid Search:  88%|████████▊ | 253/288 [04:57<00:40,  1.17s/it]Grid Search:  88%|████████▊ | 254/288 [04:58<00:40,  1.18s/it]Grid Search:  89%|████████▊ | 255/288 [04:59<00:38,  1.17s/it](2299,)
-Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
+target:  Grid Search:  78%|███████▊  | 224/288 [04:26<01:16,  1.20s/it]Grid Search:  78%|███████▊  | 225/288 [04:27<01:16,  1.21s/it]Grid Search:  78%|███████▊  | 226/288 [04:28<01:15,  1.22s/it]Grid Search:  79%|███████▉  | 227/288 [04:29<01:13,  1.21s/it]Grid Search:  79%|███████▉  | 228/288 [04:31<01:12,  1.20s/it]Grid Search:  80%|███████▉  | 229/288 [04:32<01:11,  1.22s/it]Grid Search:  80%|███████▉  | 230/288 [04:33<01:09,  1.20s/it]Grid Search:  80%|████████  | 231/288 [04:34<01:09,  1.22s/it]Grid Search:  81%|████████  | 232/288 [04:35<01:07,  1.20s/it]Grid Search:  81%|████████  | 233/288 [04:37<01:09,  1.26s/it]Grid Search:  81%|████████▏ | 234/288 [04:38<01:12,  1.35s/it]Grid Search:  82%|████████▏ | 235/288 [04:41<01:24,  1.59s/it]Grid Search:  82%|████████▏ | 236/288 [04:46<02:26,  2.81s/it]Grid Search:  82%|████████▏ | 237/288 [04:52<03:04,  3.62s/it]Grid Search:  83%|████████▎ | 238/288 [04:54<02:38,  3.17s/it]Grid Search:  83%|████████▎ | 239/288 [04:55<02:06,  2.57s/it]Grid Search:  83%|████████▎ | 240/288 [04:56<01:44,  2.18s/it]Grid Search:  84%|████████▎ | 241/288 [04:57<01:28,  1.88s/it]Grid Search:  84%|████████▍ | 242/288 [04:59<01:17,  1.69s/it]Grid Search:  84%|████████▍ | 243/288 [05:00<01:09,  1.54s/it]Grid Search:  85%|████████▍ | 244/288 [05:01<01:03,  1.45s/it]Grid Search:  85%|████████▌ | 245/288 [05:02<00:58,  1.37s/it]Grid Search:  85%|████████▌ | 246/288 [05:04<00:55,  1.33s/it]Grid Search:  86%|████████▌ | 247/288 [05:05<00:52,  1.28s/it]Grid Search:  86%|████████▌ | 248/288 [05:06<00:50,  1.27s/it]Grid Search:  86%|████████▋ | 249/288 [05:07<00:48,  1.24s/it]Grid Search:  87%|████████▋ | 250/288 [05:08<00:47,  1.24s/it]Grid Search:  87%|████████▋ | 251/288 [05:10<00:45,  1.24s/it]Grid Search:  88%|████████▊ | 252/288 [05:11<00:43,  1.22s/it]Grid Search:  88%|████████▊ | 253/288 [05:12<00:42,  1.21s/it]Grid Search:  88%|████████▊ | 254/288 [05:13<00:41,  1.22s/it]Grid Search:  89%|████████▊ | 255/288 [05:14<00:39,  1.20s/it](2299,)
+Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.03
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1799,7 +1799,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.03
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1807,7 +1807,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': 0.001, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1847,7 +1847,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.03, Test MSE: 0.03
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1855,7 +1855,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 7, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1887,7 +1887,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.13, Test MSE: 0.12
+Train MSE: 0.05, Valid MSE: 0.16, Test MSE: 0.13
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': -1, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1895,7 +1895,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.12, Test MSE: 0.09
+Train MSE: 0.05, Valid MSE: 0.10, Test MSE: 0.11
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': -1, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1903,7 +1903,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.14, Test MSE: 0.13
+Train MSE: 0.05, Valid MSE: 0.11, Test MSE: 0.11
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': -1, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1919,7 +1919,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.07, Valid MSE: 0.13, Test MSE: 0.12
+Train MSE: 0.09, Valid MSE: 0.16, Test MSE: 0.14
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1927,7 +1927,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.04
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1935,7 +1935,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.05
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1943,7 +1943,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.05
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1951,7 +1951,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.07
+Train MSE: 0.05, Valid MSE: 0.07, Test MSE: 0.07
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1959,7 +1959,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.06
+Train MSE: 0.05, Valid MSE: 0.07, Test MSE: 0.07
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.001, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1967,7 +1967,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.05
+Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.05
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1975,7 +1975,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.05
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1983,7 +1983,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.06
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.01}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1991,7 +1991,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.03, Valid MSE: 0.05, Test MSE: 0.04
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -1999,7 +1999,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.07, Test MSE: 0.07
+Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.07
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2007,7 +2007,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.06, Test MSE: 0.07
+Train MSE: 0.04, Valid MSE: 0.07, Test MSE: 0.07
 Testing parameters: {'rc': 7, 'threshold': 0.05, 'reset': 0.004, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2015,7 +2015,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.04
+Train MSE: 0.03, Valid MSE: 0.04, Test MSE: 0.03
 Testing parameters: {'rc': 7, 'threshold': 0.5, 'reset': -1, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2045,9 +2045,9 @@ DIM prediction:  (4799,)
 target:  (4799,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-DIM prediction:  Grid Search:  89%|████████▉ | 256/288 [05:00<00:37,  1.18s/it]Grid Search:  89%|████████▉ | 257/288 [05:02<00:36,  1.17s/it]Grid Search:  90%|████████▉ | 258/288 [05:03<00:35,  1.18s/it]Grid Search:  90%|████████▉ | 259/288 [05:04<00:34,  1.17s/it]Grid Search:  90%|█████████ | 260/288 [05:05<00:32,  1.17s/it]Grid Search:  91%|█████████ | 261/288 [05:06<00:31,  1.18s/it]Grid Search:  91%|█████████ | 262/288 [05:07<00:30,  1.17s/it]Grid Search:  91%|█████████▏| 263/288 [05:09<00:29,  1.18s/it]Grid Search:  92%|█████████▏| 264/288 [05:10<00:28,  1.17s/it]Grid Search:  92%|█████████▏| 265/288 [05:11<00:27,  1.18s/it]Grid Search:  92%|█████████▏| 266/288 [05:12<00:25,  1.17s/it]Grid Search:  93%|█████████▎| 267/288 [05:13<00:24,  1.18s/it]Grid Search:  93%|█████████▎| 268/288 [05:14<00:23,  1.17s/it]Grid Search:  93%|█████████▎| 269/288 [05:16<00:22,  1.18s/it]Grid Search:  94%|█████████▍| 270/288 [05:17<00:21,  1.17s/it]Grid Search:  94%|█████████▍| 271/288 [05:18<00:20,  1.18s/it]Grid Search:  94%|█████████▍| 272/288 [05:19<00:18,  1.17s/it]Grid Search:  95%|█████████▍| 273/288 [05:20<00:17,  1.18s/it]Grid Search:  95%|█████████▌| 274/288 [05:22<00:16,  1.17s/it]Grid Search:  95%|█████████▌| 275/288 [05:23<00:15,  1.18s/it]Grid Search:  96%|█████████▌| 276/288 [05:24<00:14,  1.19s/it]Grid Search:  96%|█████████▌| 277/288 [05:25<00:12,  1.18s/it]Grid Search:  97%|█████████▋| 278/288 [05:26<00:11,  1.17s/it]Grid Search:  97%|█████████▋| 279/288 [05:27<00:10,  1.18s/it]Grid Search:  97%|█████████▋| 280/288 [05:29<00:09,  1.17s/it]Grid Search:  98%|█████████▊| 281/288 [05:30<00:08,  1.18s/it]Grid Search:  98%|█████████▊| 282/288 [05:31<00:07,  1.17s/it]Grid Search:  98%|█████████▊| 283/288 [05:32<00:05,  1.18s/it]Grid Search:  99%|█████████▊| 284/288 [05:33<00:04,  1.17s/it]Grid Search:  99%|█████████▉| 285/288 [05:34<00:03,  1.16s/it]Grid Search:  99%|█████████▉| 286/288 [05:36<00:02,  1.18s/it]Grid Search: 100%|█████████▉| 287/288 [05:37<00:01,  1.17s/it](2299,) 
+DIM prediction:  Grid Search:  89%|████████▉ | 256/288 [05:16<00:38,  1.21s/it]Grid Search:  89%|████████▉ | 257/288 [05:17<00:37,  1.20s/it]Grid Search:  90%|████████▉ | 258/288 [05:18<00:36,  1.21s/it]Grid Search:  90%|████████▉ | 259/288 [05:19<00:34,  1.20s/it]Grid Search:  90%|█████████ | 260/288 [05:20<00:33,  1.19s/it]Grid Search:  91%|█████████ | 261/288 [05:22<00:32,  1.21s/it]Grid Search:  91%|█████████ | 262/288 [05:23<00:31,  1.20s/it]Grid Search:  91%|█████████▏| 263/288 [05:24<00:30,  1.21s/it]Grid Search:  92%|█████████▏| 264/288 [05:25<00:28,  1.20s/it]Grid Search:  92%|█████████▏| 265/288 [05:26<00:27,  1.21s/it]Grid Search:  92%|█████████▏| 266/288 [05:28<00:26,  1.21s/it]Grid Search:  93%|█████████▎| 267/288 [05:29<00:27,  1.33s/it]Grid Search:  93%|█████████▎| 268/288 [05:31<00:27,  1.39s/it]Grid Search:  93%|█████████▎| 269/288 [05:32<00:27,  1.44s/it]Grid Search:  94%|█████████▍| 270/288 [05:34<00:26,  1.48s/it]Grid Search:  94%|█████████▍| 271/288 [05:36<00:25,  1.51s/it]Grid Search:  94%|█████████▍| 272/288 [05:40<00:37,  2.32s/it]Grid Search:  95%|█████████▍| 273/288 [05:44<00:45,  3.02s/it]Grid Search:  95%|█████████▌| 274/288 [05:46<00:34,  2.47s/it]Grid Search:  95%|█████████▌| 275/288 [05:47<00:27,  2.10s/it]Grid Search:  96%|█████████▌| 276/288 [05:48<00:22,  1.85s/it]Grid Search:  96%|█████████▌| 277/288 [05:49<00:18,  1.64s/it]Grid Search:  97%|█████████▋| 278/288 [05:50<00:15,  1.50s/it]Grid Search:  97%|█████████▋| 279/288 [05:52<00:12,  1.42s/it]Grid Search:  97%|█████████▋| 280/288 [05:53<00:10,  1.35s/it]Grid Search:  98%|█████████▊| 281/288 [05:54<00:09,  1.32s/it]Grid Search:  98%|█████████▊| 282/288 [05:55<00:07,  1.28s/it]Grid Search:  98%|█████████▊| 283/288 [05:56<00:06,  1.26s/it]Grid Search:  99%|█████████▊| 284/288 [05:58<00:04,  1.24s/it]Grid Search:  99%|█████████▉| 285/288 [05:59<00:03,  1.22s/it]Grid Search:  99%|█████████▉| 286/288 [06:00<00:02,  1.22s/it]Grid Search: 100%|█████████▉| 287/288 [06:01<00:01,  1.21s/it](2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 7, 'threshold': 0.5, 'reset': -1, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2063,7 +2063,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.04, Valid MSE: 0.04, Test MSE: 0.04
 Testing parameters: {'rc': 7, 'threshold': 0.5, 'reset': 0.001, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2071,7 +2071,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.05, Valid MSE: 0.05, Test MSE: 0.05
 Testing parameters: {'rc': 7, 'threshold': 0.5, 'reset': 0.001, 'bias': 0.005}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2111,7 +2111,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.06
 Testing parameters: {'rc': 7, 'threshold': 0.5, 'reset': 0.004, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2151,7 +2151,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.05
 Testing parameters: {'rc': 7, 'threshold': 0.5, 'reset': 0.004, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2159,7 +2159,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.04, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.04, Valid MSE: 0.04, Test MSE: 0.05
 Testing parameters: {'rc': 7, 'threshold': 1, 'reset': -1, 'bias': 0.001}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2183,7 +2183,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 7, 'threshold': 1, 'reset': -1, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2191,7 +2191,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.05
+Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 7, 'threshold': 1, 'reset': -1, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2199,7 +2199,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.05
+Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 7, 'threshold': 1, 'reset': -1, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2231,7 +2231,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.05, Test MSE: 0.05
+Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 7, 'threshold': 1, 'reset': 0.001, 'bias': 0.05}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2239,7 +2239,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.06
 Testing parameters: {'rc': 7, 'threshold': 1, 'reset': 0.001, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2247,7 +2247,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.05
 Testing parameters: {'rc': 7, 'threshold': 1, 'reset': 0.001, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2287,7 +2287,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.05
 Testing parameters: {'rc': 7, 'threshold': 1, 'reset': 0.004, 'bias': 0.1}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2295,7 +2295,7 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.06
+Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.05
 Testing parameters: {'rc': 7, 'threshold': 1, 'reset': 0.004, 'bias': 0.25}
 DIM prediction:  (4799,) 
 target:  (4799,)
@@ -2303,9 +2303,9 @@ DIM prediction:  (2299,)
 target:  (2299,)
 DIM prediction:  (2299,) 
 target:  (2299,)
-Grid Search: 100%|██████████| 288/288 [05:38<00:00,  1.18s/it]Grid Search: 100%|██████████| 288/288 [05:38<00:00,  1.18s/it]
-/home/francescapoli/archetype-computing-adaptive-system/spiking_arch/snn_utils.py:250: UserWarning: Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
+Grid Search: 100%|██████████| 288/288 [06:02<00:00,  1.22s/it]Grid Search: 100%|██████████| 288/288 [06:02<00:00,  1.26s/it]
+/home/francescapoli/archetype-computing-adaptive-system/spiking_arch/snn_utils.py:253: UserWarning: Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
   fig.tight_layout()
-Train MSE: 0.06, Valid MSE: 0.06, Test MSE: 0.06
-Best Parameters: {'rc': 5, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.1}
+Train MSE: 0.05, Valid MSE: 0.06, Test MSE: 0.06
+Best Parameters: {'rc': 7, 'threshold': 0.009, 'reset': 0.004, 'bias': 0.25}
 Best Validation MSE: 0.03

@@ -247,7 +247,7 @@ for i in range(args.trials):
     ) = get_mackey_glass(args.dataroot, lag=args.lag)
 
     dataset = train_dataset.reshape(1, -1, 1).to(device)
-    print(dataset.size())
+    # print(dataset.size())
     target = train_target.reshape(-1, 1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
     output, velocity, u, spk = model(dataset)

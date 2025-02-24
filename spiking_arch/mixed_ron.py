@@ -128,7 +128,7 @@ class MixedRON(nn.Module):
         spiking_hiddens = f[:, :, self.portion:]
         # spiking_hiddens = f[:, :, self.portion:, :]
         hy_harmonic, hz = self.harmonic_osc(harmonic_hiddens, hy, hz)
-        hy_spiking, spikes = self.spiking_osc(spiking_hiddens)
+        hy_spiking, spikes = self.spiking_osc(spiking_hiddens, hy)
         return hy_harmonic, hz, hy_spiking, spikes
     
     def spiking_osc(self, act, u):
@@ -136,20 +136,18 @@ class MixedRON(nn.Module):
         # hy was previously weighted with self.w and x was weighted with R --> now I use reservoir weight
         u[spike == 1] = self.reset  # Hard reset only for spikes
         # tau = R * C
-        u = u + (u_dot * self.rc
-                 #(self.R*self.C)
-                )*self.dt # multiply to tau and dt
-        # u = u + ((self.R*self.C)*self.dt)*(-u + act)
+        u = u + (self.rc*self.dt)*(-u + act)
         return spike, u
         # u -= spike*self.threshold # soft reset the membrane potential after spike
         ## plot membrane potential with thresholds and positive spikes
     
     def harmonic_osc(self, act, hy, hz):
         #padding act to match hz's size (not = n_hid because of portioning)
-        if act.shape[1] < hz.shape[1]:
-            pad_size = hz.shape[1] - act.shape[1]
-            act = torch.cat((act, torch.zeros(act.shape[0], pad_size, device=act.device)), dim=1)
-        
+        # if act.shape[2] < hz.shape[1]:
+        #     pad_size = hz.shape[1] - act.shape[2]
+        #     act = torch.cat((act, torch.zeros(act.shape[0], pad_size, act.shape[2], device=act.device)), dim=1)
+            # act = torch.cat((act, torch.zeros(act.shape[0], pad_size, device=act.device)), dim=0)
+        print('SOME SIZES: \nact: ', act.size(), '\ngamma: ', self.gamma.size(), '\nepsilon: ', self.epsilon.size(), '\nhy: ', hy.size(), '\nhz: ', hz.size())
         hz = hz + self.dt * act - self.gamma * hy - self.epsilon * hz
 
         hy = hy + self.dt * hz

@@ -112,7 +112,7 @@ param_grid = {
     # "resistance": [3.0, 5.0, 7.0],
     # "capacitance": [3e-3, 5e-3, 7e-3],
     "reset": [0.001, 0.004],#-1, 0.001, 0.005], # initial membrane potential 
-    "bias": [0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.25],
+    "bias": [0, 0.001, 0.005, 0.01, 0.1, 0.25],
     
     # Input weights
     "win_e": [1.0, 1.5, 2.0, 2.5, 3.0],  

@@ -131,20 +131,21 @@ criterion_eval = torch.nn.L1Loss()
 @torch.no_grad()
 def test(dataset, target, classifier, scaler):
     dataset = dataset.reshape(1, -1, 1).to(device)
-    target = target.reshape(-1).numpy()
+    target = target.reshape(-1, 1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
     if args.liquidron:
-        output, spk = model(dataset)
+        activations, spk = model(dataset)
     else:
         output, velocity, u, spk = model(dataset)
-    # activations = output[:, washout:]
-    activations = torch.stack(output, dim=1)[:, washout:]
-    activations = activations.reshape(-1, args.n_hid).cpu()
+        activations = torch.stack(output, dim=1)#[:, washout:]
+        
+    activations = activations[:, washout:]
+    activations = activations.reshape(-1, args.n_hid).cpu().cpu().detach().numpy()
     activations = scaler.transform(activations)
     # print('activations: \n', activations)
     predictions = classifier.predict(activations)
     # print('predictions: \n', predictions)
-    error = criterion_eval(torch.from_numpy(predictions).float(), torch.from_numpy(target).float()).item()
+    error = criterion_eval(torch.from_numpy(predictions).float(), torch.from_numpy(target).float().squeeze()).item()
     # print("Error:", error)
     # print("Predictions shape:", predictions.shape if hasattr(predictions, "shape") else type(predictions))
     return error, predictions
@@ -256,15 +257,17 @@ for i in range(args.trials):
     target = train_target.reshape(-1, 1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
     if args.liquidron:
-        output, spk = model(dataset)
+        activations, spk = model(dataset)
+        # activations = output.cpu().detach().numpy()#.reshape(1, 1, -1).to(device)
+        # activations = torch.stack(output, dim=1)
+        
     else:
-        output, velocity, u, spk = model(dataset)
-    # print('output dim: ', output[0].size())
-    # activations = torch.stack(output, dim=1)
-    activations = output if isinstance(output, torch.Tensor) else torch.stack(output, dim=1)
+        output, velocity, u, spk = model(dataset)        
+        activations = torch.stack(output, dim=1)
+    # activations = output.cpu().detach() if isinstance(output, torch.Tensor) else torch.stack(output, dim=1)
     # print('activations size: ', activations.size())
     activations = activations[:, washout:]
-    activations = activations.reshape(-1, args.n_hid).cpu()
+    activations = activations.reshape(-1, args.n_hid).cpu().detach().numpy()
     scaler = preprocessing.StandardScaler().fit(activations)
     activations = scaler.transform(activations)
     classifier = Ridge(max_iter=1000).fit(activations, target)
@@ -272,7 +275,6 @@ for i in range(args.trials):
    
     mg_results(train_target, train_pred, train_nmse, args.resultroot, 'MG_train_pred.png')
     train_mse.append(train_nmse)
-    print('test dataset len: ', test_dataset.size())
     test_nmse, test_pred = (
         test(test_dataset, test_target, classifier, scaler) #if args.use_test else 0.0
     )

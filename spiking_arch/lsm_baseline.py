@@ -202,8 +202,8 @@ class LiquidRON(nn.Module):
         # print('u list shape: ', len(u_list))
         u_list, spike_list = torch.stack(u_list, dim=1).to(self.device), torch.stack(spike_list, dim=1).to(self.device)
         
-        self.readout = nn.Linear(self.n_hid, self.n_hid, bias=False).to(self.device)
-        readout = self.readout(u_list[:, -1])  # Shape: (batch_size, n_hid)
+        # self.readout = nn.Linear(self.n_hid, self.n_hid, bias=False).to(self.device)
+        # readout = self.readout(u_list[:, -1])  # Shape: (batch_size, n_hid)
         
         
-        return readout, u_list, spike_list 
+        return u_list, spike_list #readout, 

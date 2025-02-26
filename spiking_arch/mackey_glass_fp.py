@@ -131,9 +131,12 @@ criterion_eval = torch.nn.L1Loss()
 @torch.no_grad()
 def test(dataset, target, classifier, scaler):
     dataset = dataset.reshape(1, -1, 1).to(device)
-    target = target.reshape(-1, 1).numpy()
+    target = target.reshape(-1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
-    output, velocity, u, spk = model(dataset)
+    if args.liquidron:
+        output, spk = model(dataset)
+    else:
+        output, velocity, u, spk = model(dataset)
     # activations = output[:, washout:]
     activations = torch.stack(output, dim=1)[:, washout:]
     activations = activations.reshape(-1, args.n_hid).cpu()
@@ -142,6 +145,8 @@ def test(dataset, target, classifier, scaler):
     predictions = classifier.predict(activations)
     # print('predictions: \n', predictions)
     error = criterion_eval(torch.from_numpy(predictions).float(), torch.from_numpy(target).float()).item()
+    # print("Error:", error)
+    # print("Predictions shape:", predictions.shape if hasattr(predictions, "shape") else type(predictions))
     return error, predictions
 
 
@@ -250,13 +255,11 @@ for i in range(args.trials):
     # print(dataset.size())
     target = train_target.reshape(-1, 1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
-    output, velocity, u, spk = model(dataset)
-    # plot_dynamics(torch.from_numpy(np.array(output, dtype=np.float32)),
-    #               torch.from_numpy(np.array(velocity, dtype=np.float32)),
-    #               torch.from_numpy(np.array(u, dtype=np.float32)),
-    #               torch.from_numpy(np.array(spk, dtype=np.float32)),    
-    #               dataset,
-    #               args.resultroot)
+    if args.liquidron:
+        output, spk = model(dataset)
+    else:
+        output, velocity, u, spk = model(dataset)
+    # output, velocity, u, spk = model(dataset)
     print('output dim: ', output[0].size())
     activations = torch.stack(output, dim=1)
     print('activations size: ', activations.size())
@@ -272,7 +275,7 @@ for i in range(args.trials):
     train_mse.append(train_nmse)
     print('test dataset len: ', test_dataset.size())
     test_nmse, test_pred = (
-        test(test_dataset, test_target, classifier, scaler) if args.use_test else 0.0
+        test(test_dataset, test_target, classifier, scaler) #if args.use_test else 0.0
     )
     mg_results(test_target, test_pred, test_nmse, args.resultroot, 'MG_test_pred.png')
     test_mse.append(test_nmse)

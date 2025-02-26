@@ -130,10 +130,10 @@ def test(data_loader, classifier, scaler):
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
         output = model(images)[0]#[-1]
-        if args.liquidron:
-            activations.append(output.cpu())
-        else:
-            activations.append(output[-1].cpu())
+        # if args.liquidron:
+        #     activations.append(output.cpu())
+        # else:
+        activations.append(output[-1].cpu())
         ys.append(labels)
     activations = torch.cat(activations, dim=0).cpu().detach().numpy() # activations = torch.cat(activations, dim=0).numpy()
     # if args.liquidron:
@@ -274,7 +274,7 @@ for i in range(args.trials):
         images = images.view(images.shape[0], -1).unsqueeze(-1)
         ys.append(labels.cpu()) 
         if args.liquidron:
-            output, u, spk = model(images)
+            output, spk = model(images)
             # print('liquid ron output dim: ', output.shape)
             activations.append(output.cpu())#output.cpu())
         else:

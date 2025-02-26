@@ -74,10 +74,13 @@ class MixedRON(nn.Module):
         self.n_hid = n_hid
         self.device = device
         self.dt = dt
+        self.p = perc ## FINE TUNE
+        self.portion = int(n_hid*perc)
         if isinstance(gamma, tuple):
             gamma_min, gamma_max = gamma
             self.gamma = (
-                torch.rand(n_hid, requires_grad=False, device=device)
+                torch.rand(self.portion, #n_hid,
+                requires_grad=False, device=device)
                 * (gamma_max - gamma_min)
                 + gamma_min
             )
@@ -86,7 +89,8 @@ class MixedRON(nn.Module):
         if isinstance(epsilon, tuple):
             eps_min, eps_max = epsilon
             self.epsilon = (
-                torch.rand(n_hid, requires_grad=False, device=device)
+                torch.rand(self.portion, #n_hid, 
+                requires_grad=False, device=device)
                 * (eps_max - eps_min)
                 + eps_min
             )
@@ -94,8 +98,7 @@ class MixedRON(nn.Module):
             self.epsilon = epsilon
             
         #### TO BE DIVIDED IN SPIKING AND HARMONIC
-        self.p = perc ## FINE TUNE
-        self.portion = int(n_hid*perc)
+       
         h2h = get_hidden_topology(n_hid, topology, sparsity, reservoir_scaler)
         h2h = spectral_norm_scaling(h2h, rho)
         self.h2h = nn.Parameter(h2h, requires_grad=False)
@@ -122,7 +125,9 @@ class MixedRON(nn.Module):
             x (torch.Tensor): Input tensor.
             hy (torch.Tensor): Current hidden state.
         """        
+        print('DIM: \nx: ', x.size(), '\nx2h: ', self.x2h.size(), '\nhy: ', hy.size(), '\nh2h: ', self.h2h.size())
         f = torch.tanh(torch.matmul(x, self.x2h) + torch.matmul(hy, self.h2h) + self.bias)
+        # f= f.unsqueeze(1)
         harmonic_hiddens = f[:, :, :self.portion]
         # harmonic_hiddens = f[:, :, :self.portion, :]
         spiking_hiddens = f[:, :, self.portion:]
@@ -136,6 +141,7 @@ class MixedRON(nn.Module):
         # hy was previously weighted with self.w and x was weighted with R --> now I use reservoir weight
         u[spike == 1] = self.reset  # Hard reset only for spikes
         # tau = R * C
+        # print('DIMENSIONS: \n u: ', u.size(), '\n act: ', act.size())
         u = u + (self.rc*self.dt)*(-u + act)
         return spike, u
         # u -= spike*self.threshold # soft reset the membrane potential after spike
@@ -147,7 +153,7 @@ class MixedRON(nn.Module):
         #     pad_size = hz.shape[1] - act.shape[2]
         #     act = torch.cat((act, torch.zeros(act.shape[0], pad_size, act.shape[2], device=act.device)), dim=1)
             # act = torch.cat((act, torch.zeros(act.shape[0], pad_size, device=act.device)), dim=0)
-        print('SOME SIZES: \nact: ', act.size(), '\ngamma: ', self.gamma.size(), '\nepsilon: ', self.epsilon.size(), '\nhy: ', hy.size(), '\nhz: ', hz.size())
+        print('SOME SIZES: \nact: ', act.size(), '\ndt: ', self.dt, '\ngamma: ', self.gamma.size(), '\nepsilon: ', self.epsilon.size(), '\nhy: ', hy.size(), '\nhz: ', hz.size())
         hz = hz + self.dt * act - self.gamma * hy - self.epsilon * hz
 
         hy = hy + self.dt * hz
@@ -169,15 +175,14 @@ class MixedRON(nn.Module):
         hy_u_list = [] #membrane potential = hy from spiking oscillators
         spike_list = [] #spikes
         
+        # hy = torch.zeros(x.size(0), self.portion).to(self.device) #x.size(0)
         hy = torch.zeros(x.size(0), self.n_hid).to(self.device) #x.size(0)
+        # hz = torch.zeros(x.size(0), self.portion).to(self.device)
         hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
         # u = torch.zeros(x.size(0), self.n_hid).to(self.device)
-        
-        f = self.activation_layer(x, hy, hz)
-        
-        
+        # f = self.activation_layer(x, hy, hz)
         # Combine h2h_h and h2h_s into one parameter
-        comb_h2h = torch.cat((self.h2h_h, self.h2h_s), dim=0)  # Adjust dim based on your desired concatenation axis
+        # comb_h2h = torch.cat((self.h2h_h, self.h2h_s), dim=0)  # Adjust dim based on your desired concatenation axis
         # self.h2h = nn.Parameter(combined_h2h, requires_grad=False)
         for t in range(x.size(1)):      
                 hy_m, hz, hy_u, spk = self.activation_layer(x[:, t], hy, hz)
@@ -185,4 +190,6 @@ class MixedRON(nn.Module):
                 hz_list.append(hz)
                 hy_u_list.append(hy_u)
                 spike_list.append(spk)
+                #hy = torch.cat((hy_m, hy_u), dim=0)
+                hy = torch.cat((hy_m, hy_u), dim=0)  # Adjust dim based on your desired concatenation axis
         return hy_m_list, hz_list, hy_u_list, spike_list 

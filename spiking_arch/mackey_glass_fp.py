@@ -259,13 +259,12 @@ for i in range(args.trials):
         output, spk = model(dataset)
     else:
         output, velocity, u, spk = model(dataset)
-    # output, velocity, u, spk = model(dataset)
-    print('output dim: ', output[0].size())
-    activations = torch.stack(output, dim=1)
-    print('activations size: ', activations.size())
+    # print('output dim: ', output[0].size())
+    # activations = torch.stack(output, dim=1)
+    activations = output if isinstance(output, torch.Tensor) else torch.stack(output, dim=1)
+    # print('activations size: ', activations.size())
     activations = activations[:, washout:]
     activations = activations.reshape(-1, args.n_hid).cpu()
-    # scaler = preprocessing.StandardScaler().fit(activations)
     scaler = preprocessing.StandardScaler().fit(activations)
     activations = scaler.transform(activations)
     classifier = Ridge(max_iter=1000).fit(activations, target)

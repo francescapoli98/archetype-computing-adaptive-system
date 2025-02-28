@@ -109,10 +109,9 @@ class LiquidRON(nn.Module):
         
         
         self.input_scaling = np.concatenate((win_e*np.ones(Ne), win_i*np.ones(Ni)))
-        print('INPUT SCALING DIM: ', self.input_scaling.shape)
-        
+        # print('INPUT SCALING DIM: ', self.input_scaling.shape)
         # x2h = torch.rand(n_inp, n_hid, device=self.device) * self.input_scaling
-        print('TENSORS FOR X2H: ', torch.rand(n_inp, n_hid).size(), torch.tensor(self.input_scaling).size())
+        # print('TENSORS FOR X2H: ', torch.rand(n_inp, n_hid).size(), torch.tensor(self.input_scaling).size())
         x2h = torch.rand(n_inp, n_hid, device=self.device) * torch.tensor(self.input_scaling, device=self.device)
 
         x2h = torch.tensor(x2h, dtype=torch.float32, device=self.device)  
@@ -122,13 +121,16 @@ class LiquidRON(nn.Module):
         self.reset = reset # initial membrane potential ## FINE TUNE THIS
         self.rc = rc
         # self.reg = None  # Initialize regularization parameter.
-        self.bias = bias
+        self.bias = bias        
+        
+        self.leaky = snn.Leaky(beta=0.9)
         
         
         
         
     def LIFcell(
-        self, x: torch.Tensor, #hy: torch.Tensor, hz: torch.Tensor, 
+        self, x: torch.Tensor, 
+        hy: torch.Tensor, #hz: torch.Tensor, 
         u: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Compute the next hidden state and its derivative.
@@ -139,22 +141,21 @@ class LiquidRON(nn.Module):
             hz (torch.Tensor): Current hidden state derivative ----> velocity (y'=z)
             u (torch.Tensor): Membrane potential 
         """
-        # print('u: ', u)
-        spike = (u > self.threshold) * 1.0 
-        # u[spike == 1] = self.reset  # Hard reset only for spikes
-        # print(torch.any(spike > 0))
-        # tau = R * C
-        u_dot = - u + (torch.matmul(u, self.h2h) + torch.matmul(x, self.x2h) + self.bias) # u dot (update) 
-        # print('intermediate u: ', u_dot)
+        # print(f"Type of u: {type(u)}, Type of threshold: {type(self.threshold)}")  # Check types
         
-        # u += (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
-        u += (self.dt / self.rc) * u_dot
-        # print('final u:', u)
-        
-        # u += (self.dt / (self.R * self.C)) * u_dot
+        spike = (u > self.threshold) * 1.0
         u[spike == 1] = self.reset  # Hard reset only for spikes
-        # print('reset u: ', u)
+        # tau = R * C
+        u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h) + self.bias) # u dot (update) 
+        # u += (u_dot * (self.R*self.C))*self.dt # multiply to tau and dt
+        u = u + (u_dot * self.rc
+                 #(self.R*self.C)
+                 )*self.dt # multiply to tau and dt   
+        # u += (self.dt / (self.R * self.C)) * u_dot
+        # u[spike == 1] = self.reset  # hard reset only for spikes
+
         return u, spike
+
     
     # def readout_layer(self, states): #target
     #     # if self.reg is not None:
@@ -180,30 +181,22 @@ class LiquidRON(nn.Module):
     '''
     ##################### 
 
-    def forward(self, x: torch.Tensor): #, y: torch.Tensor):
-        """Forward pass on a given input time-series.
-
-        Args:
-            x (torch.Tensor): Input time-series shaped as (batch, time, input_dim).
-
-        Returns:
-            torch.Tensor: Hidden states of the network shaped as (batch, time, n_hid).
-            list: List containing the last hidden state of the network.
-        """
-        # hy_list, hz_list, 
-        u_list, spike_list = [], []
+    def forward(self, x: torch.Tensor): 
+        
+        u_list, spike_list, hy_list = [], [], []
         # print('LSM PARAMS \nwin_e:', win_e, 'win_i:', win_i, 'w_e:', w_e, 'w_i:', w_i, 'Ne:', Ne, 'Ni:', Ni)
         u = torch.zeros(x.size(0), self.n_hid).to(self.device)
+        hy = torch.zeros(x.size(0), self.n_hid).to(self.device) #x.size(0)
         # print('input dim: ', x.size())
         for t in range(x.size(1)):
-            u, spk = self.LIFcell(x[:, t], u)
+            u, spk = self.LIFcell(x[:, t], u, hy)
+            # torch.any(spk_in == 1)
+            hy = self.leaky(u)[0]
+            # print('# spikes: ', (spk == 1).sum().item())
+            hy_list.append(hy)
             u_list.append(u)
             spike_list.append(spk)
-        # print('u list shape: ', len(u_list))
-        u_list, spike_list = torch.stack(u_list, dim=1).to(self.device), torch.stack(spike_list, dim=1).to(self.device)
-        
+        # u_list, spike_list = torch.stack(u_list, dim=1).to(self.device), torch.stack(spike_list, dim=1).to(self.device)
         # self.readout = nn.Linear(self.n_hid, self.n_hid, bias=False).to(self.device)
         # readout = self.readout(u_list[:, -1])  # Shape: (batch_size, n_hid)
-        
-        
-        return u_list, spike_list #readout, 
+        return u_list, spike_list 

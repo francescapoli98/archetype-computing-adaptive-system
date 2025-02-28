@@ -45,82 +45,101 @@ def simple_plot(train_accs: np.ndarray, valid_accs: np.ndarray, test_accs: np.nd
 #######################################################################################################
 #######################################################################################################
 #######################################################################################################
+import torch
+import numpy as np
+import matplotlib.pyplot as plt
+
 def plot_dynamics(
-    activations: torch.Tensor,
-    velocity: torch.Tensor,
+    # activations: torch.Tensor,
     membrane_potential: torch.Tensor,
     spikes: torch.Tensor,
     x: torch.Tensor,
-    resultroot: str
+    resultroot: str,
+    **kwargs  # Optional parameters (e.g., velocity)
 ):
-    print('Plotting dynamics of hidden state, derivative, membrane potential, and spikes.')
+    print('Plotting dynamics.')
 
-    # Ensure the input tensors are in numpy format
-    activations = activations.detach().cpu().numpy() if isinstance(activations, torch.Tensor) else activations
-    velocity = velocity.detach().cpu().numpy() if isinstance(velocity, torch.Tensor) else velocity
+    # Ensure input tensors are converted to numpy
+    # activations = activations.detach().cpu().numpy() if isinstance(activations, torch.Tensor) else activations
     membrane_potential = membrane_potential.detach().cpu().numpy() if isinstance(membrane_potential, torch.Tensor) else membrane_potential
     spikes = spikes.detach().cpu().numpy() if isinstance(spikes, torch.Tensor) else spikes
     x = x.detach().cpu().numpy() if isinstance(x, torch.Tensor) else x
-    # print('activations: ', activations.size(), ' velocity: ', velocity.size(), ' u: ', membrane_potential.size(), ' spikes: ', spikes.size())
-    # Get the time steps (assuming they are aligned with the tensor shapes)
-    print('activations shape: ', activations.shape)
-    time_steps = np.arange(activations.shape[0]) #len(activations) # Number of time steps (length of time axis)
-    print('Time steps shape: ', time_steps.shape)
-
-    # Create a plot
-    plt.figure(figsize=(8, 10))
     
-    # Plot the images (x) 
-    plt.subplot(5, 1, 1)
+    activations = kwargs.get("output", None)  # Optional parameter
+    velocity = kwargs.get("velocity", None)  # Optional parameter
+    
+    if activations is not None:
+        activations = activations.detach().cpu().numpy() if isinstance(activations, torch.Tensor) else activations
+    if velocity is not None:
+        velocity = velocity.detach().cpu().numpy() if isinstance(velocity, torch.Tensor) else velocity
+        
+    # Handle optional parameters dynamically
+    optional_params = {}
+    for key, value in kwargs.items():
+        if isinstance(value, torch.Tensor):
+            value = value.detach().cpu().numpy()
+        optional_params[key] = value
+
+    time_steps = np.arange(x.shape[1])
+    # time_steps = np.arange(activations.shape[0])
+
+    # Determine the number of subplots dynamically
+    num_plots = 3 + len(optional_params)  # 3 mandatory plots (x, activations, spikes) + optional ones
+    plt.figure(figsize=(8, 2 * num_plots))
+    i=1
+    # Plot input (x)
+    plt.subplot(num_plots, 1, i)
     plt.title('Input (x)')
-    # Plot the first hidden unit over time
-    plt.plot(time_steps, x[0, :, 0], label="Input data (x)", color="purple", linestyle='-', linewidth=1) #x[0, :, 0]
+    plt.plot(time_steps, x[0, :, 0], color="purple", linestyle='-', linewidth=1)
     plt.xlabel('Time Step')
     plt.ylabel('Value')
+    i+=1
 
-    # Plot the activations (hidden state hy) - Selecting the first unit (index 0)
-    plt.subplot(5, 1, 2)
-    plt.title('Hidden States (hy)')
-    # Plot the first hidden unit over time
-    plt.plot(time_steps, activations[:, 0, 0], label="Hidden State (hy)", color="blue", linestyle='-', linewidth=1)
-    plt.xlabel('Time Step')
-    plt.ylabel('Value')
+    # Plot activations
+    if activations is not None:
+        plt.subplot(num_plots, 1, i)
+        plt.title('Hidden States (hy)')
+        plt.plot(time_steps, activations[:, 0, 0], color="blue", linestyle='-', linewidth=1)
+        plt.xlabel('Time Step')
+        plt.ylabel('Value')
+        i+=1
+    
 
-    # Plot the velocity (hidden state derivative hz) - Selecting the first channel (layer) and first unit
-    plt.subplot(5, 1, 3)
-    plt.title('Hidden States Derivatives (hz)')
-    # Plot the first hidden unit of the first channel
-    plt.plot(time_steps, velocity[:, 0, 0], label="Hidden State Derivative (hz)", color="orange", linestyle='-', linewidth=1)
-    plt.xlabel('Time Step')
-    plt.ylabel('Value')
+    # Plot velocity if provided
+    if velocity is not None:
+        plt.subplot(num_plots, 1, i)
+        plt.title('Hidden States Derivatives (hz)')
+        plt.plot(time_steps, velocity[:, 0, 0], color="orange", linestyle='-', linewidth=1)
+        plt.xlabel('Time Step')
+        plt.ylabel('Value')
+        i+=1
+        
 
-    # Plot the membrane potential (u) - Selecting the first channel (layer) and first unit
-    plt.subplot(5, 1, 4)
+    # Plot membrane potential
+    # if membrane_potential is not None:
+    plt.subplot(num_plots, 1, i)
     plt.title('Membrane Potential (u)')
-    # Plot the first hidden unit of the first channel
-    plt.plot(time_steps, membrane_potential[:, 0, 0], label="Membrane Potential (u)", color="green", linestyle='-', linewidth=1)
+    plt.plot(time_steps, membrane_potential[:, 0, 0], color="green", linestyle='-', linewidth=1)
     plt.xlabel('Time Step')
     plt.ylabel('Value')
+    i+=1
+        
 
-    # Plot the spikes (as vertical lines at spike times) - Selecting the first channel (layer) and first unit
-    plt.subplot(5, 1, 5)
+    # Plot spikes
+    plt.subplot(num_plots, 1, i)
     plt.title('Spiking times')
-    # Filter time steps where spikes == 1
-    spike_times = time_steps[spikes[:, 0, 0] == 1]  # Time steps where spikes occur
-    spike_values = spikes[spikes[:, 0, 0] == 1, 0, 0]  # Spike values (should be all 1s)
-
-    # Scatter plot only the spikes == 1
-    plt.scatter(spike_times,spike_values, color="red", label="Spikes", zorder=5, s=30)
-    plt.xlim(0, len(time_steps))    
+    spike_times = time_steps[spikes[:, 0, 0] == 1]
+    spike_values = spikes[spikes[:, 0, 0] == 1, 0, 0]
+    plt.scatter(spike_times, spike_values, color="red", zorder=5, s=30)
+    plt.xlim(0, len(time_steps))
     plt.ylabel('Spike')
-    plt.legend()
+    
 
-
-    # Finalize the plot
     plt.tight_layout()
     plt.savefig(f"{resultroot}/dynamics_plot.png")
     plt.close()
     plt.show()
+
 
 
 def plot_dynam_mg(
@@ -132,7 +151,7 @@ def plot_dynam_mg(
     # x: torch.Tensor = None,
     resultroot: str = None,
 ):
-    print('Plotting dynamics of membrane potential and spikes.')
+    print('Plotting dynamic.')
 
     # Ensure the input tensors are in numpy format
     activations = activations.detach().cpu().numpy() if isinstance(activations, torch.Tensor) else activations

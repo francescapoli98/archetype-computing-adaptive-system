@@ -1,3 +1,11 @@
+''' 
+SPIKING RON
+$ python -m spiking_arch.smnist_fp --dataroot "MNIST/" --resultroot "spiking_arch/results/spiking_act/mackeyglass" --sron --batch 128
+MIXED RON
+$ python -m spiking_arch.mackey_glass_fp --dataroot "acds/benchmarks/raw" --resultroot "spiking_arch/results/mixed_osc" --mixron --batch 128 
+LSM
+$ python -m spiking_arch.mackey_glass_fp --dataroot "acds/benchmarks/raw" --resultroot "spiking_arch/results/baseline" --liquidron --batch 128 --rc 5 --threshold 0.009 --reset 0.004 --bias 0.1
+'''
 import argparse
 import warnings
 import os
@@ -5,6 +13,7 @@ import numpy as np
 import torch.nn.utils
 from sklearn import preprocessing
 from sklearn.linear_model import Ridge
+import random
 
 from acds.archetypes import (
     DeepReservoir,
@@ -134,13 +143,16 @@ def test(dataset, target, classifier, scaler):
     target = target.reshape(-1, 1).numpy()
     # activations = model(dataset)[0].cpu().numpy()
     if args.liquidron:
-        activations, spk = model(dataset)
+        output, spk = model(dataset)
     else:
         output, velocity, u, spk = model(dataset)
-        activations = torch.stack(output, dim=1)#[:, washout:]
-        
-    activations = activations[:, washout:]
-    activations = activations.reshape(-1, args.n_hid).cpu().cpu().detach().numpy()
+    
+    # activations = torch.cat(output, dim=0).cpu().detach().numpy() # activations = torch.cat(activations, dim=0).numpy()
+    # activations = torch.stack(output, dim=0).cpu().detach().numpy()
+    activations = torch.stack(output, dim=0).squeeze(1).cpu().detach().numpy()
+    activations = activations[washout:, :]
+    # activations = activations[:, washout:]
+    # activations = activations.reshape(-1, args.n_hid).cpu().detach().numpy()
     activations = scaler.transform(activations)
     # print('activations: \n', activations)
     predictions = classifier.predict(activations)
@@ -188,10 +200,10 @@ for i in range(args.trials):
             args.rc,
             args.reset,
             args.bias,
-            win_e=1,
-            win_i=0.5,
-            w_e=1,
-            w_i=0.5,
+            win_e=2,
+            win_i=1,
+            w_e=2,
+            w_i=1,
             Ne=200,
             Ni=56,
             topology=args.topology,
@@ -255,20 +267,34 @@ for i in range(args.trials):
     dataset = train_dataset.reshape(1, -1, 1).to(device)
     # print(dataset.size())
     target = train_target.reshape(-1, 1).numpy()
-    # activations = model(dataset)[0].cpu().numpy()
     if args.liquidron:
-        activations, spk = model(dataset)
-        # activations = output.cpu().detach().numpy()#.reshape(1, 1, -1).to(device)
-        # activations = torch.stack(output, dim=1)
-        
+        output, spk = model(dataset)
     else:
         output, velocity, u, spk = model(dataset)        
-        activations = torch.stack(output, dim=1)
-    # activations = output.cpu().detach() if isinstance(output, torch.Tensor) else torch.stack(output, dim=1)
-    # print('activations size: ', activations.size())
-    activations = activations[:, washout:]
-    activations = activations.reshape(-1, args.n_hid).cpu().detach().numpy()
-    scaler = preprocessing.StandardScaler().fit(activations)
+        
+    activations = torch.stack(output, dim=0).squeeze(1).cpu().detach().numpy()
+    
+    #plot dynamics
+    if args.liquidron:
+        u= torch.stack(output)
+        spk = torch.stack(spk)    
+        plot_dynamics(u, spk, dataset, args.resultroot)
+    else:
+        output = torch.stack(output)    
+        spk = torch.stack(spk)    
+        u = torch.stack(u)
+        velocity = torch.stack(velocity)
+        plot_dynamics(output, velocity, u, spk, dataset, args.resultroot)
+    
+    # print('activation shape before washout: ', activations.shape)
+    # activations = torch.cat(output, dim=0).cpu().detach().numpy() # activations = torch.cat(activations, dim=0).numpy()
+    activations = activations[washout:, :]
+    # print('activations size: ', activations.shape, '\ntarget shape: ', target.shape)
+    # # activations = activations.reshape(-1, args.n_hid)
+    # activations = activations.reshape(-1, args.n_hid)#.cpu().detach().numpy()
+    scaler = preprocessing.StandardScaler()
+    scaler.fit(activations)  
+    # print("Activations shape before scaling:", activations.shape)
     activations = scaler.transform(activations)
     classifier = Ridge(max_iter=1000).fit(activations, target)
     train_nmse, train_pred = test(train_dataset, train_target, classifier, scaler)
@@ -290,8 +316,8 @@ for i in range(args.trials):
     # valid_mse.append(valid_nmse)
 
     
-print('Train mse: ', [str(round(train_acc, 2)) for train_acc in train_mse],
-      '\nTest mse: ', [str(round(test_acc, 2)) for test_acc in test_mse])
+print('Train mse: ', [str(round(train_acc, 5)) for train_acc in train_mse],
+      '\nTest mse: ', [str(round(test_acc, 5)) for test_acc in test_mse])
 
 if args.ron:
     f = open(os.path.join(args.resultroot, f"MG_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")
@@ -308,9 +334,9 @@ ar = ""
 for k, v in vars(args).items():
     ar += f"{str(k)}: {str(v)}, "
 ar += (
-    f"train: {[str(round(train_acc, 2)) for train_acc in train_mse]} "
+    f"train: {[str(round(train_acc, 5)) for train_acc in train_mse]} "
     # f"valid: {[str(round(valid_acc, 2)) for valid_acc in valid_mse]} "
-    f"test: {[str(round(test_acc, 2)) for test_acc in test_mse]}"
+    f"test: {[str(round(test_acc, 5)) for test_acc in test_mse]}"
     f"mean/std train: {np.mean(train_mse), np.std(train_mse)} "
     # f"mean/std valid: {np.mean(valid_mse), np.std(valid_mse)} "
     f"mean/std test: {np.mean(test_mse), np.std(test_mse)}"

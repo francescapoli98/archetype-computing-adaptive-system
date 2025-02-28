@@ -79,8 +79,7 @@ class MixedRON(nn.Module):
         if isinstance(gamma, tuple):
             gamma_min, gamma_max = gamma
             self.gamma = (
-                torch.rand(self.portion, #n_hid,
-                requires_grad=False, device=device)
+                torch.rand(n_hid, requires_grad=False, device=device)
                 * (gamma_max - gamma_min)
                 + gamma_min
             )
@@ -89,8 +88,7 @@ class MixedRON(nn.Module):
         if isinstance(epsilon, tuple):
             eps_min, eps_max = epsilon
             self.epsilon = (
-                torch.rand(self.portion, #n_hid, 
-                requires_grad=False, device=device)
+                torch.rand(n_hid, requires_grad=False, device=device)
                 * (eps_max - eps_min)
                 + eps_min
             )
@@ -125,39 +123,50 @@ class MixedRON(nn.Module):
             x (torch.Tensor): Input tensor.
             hy (torch.Tensor): Current hidden state.
         """        
-        print('DIM: \nx: ', x.size(), '\nx2h: ', self.x2h.size(), '\nhy: ', hy.size(), '\nh2h: ', self.h2h.size())
+        # print('DIM: \nx: ', x.size(), '\nx2h: ', self.x2h.size(), '\nhy: ', hy.size(), '\nh2h: ', self.h2h.size())
         f = torch.tanh(torch.matmul(x, self.x2h) + torch.matmul(hy, self.h2h) + self.bias)
-        # f= f.unsqueeze(1)
-        harmonic_hiddens = f[:, :, :self.portion]
-        # harmonic_hiddens = f[:, :, :self.portion, :]
-        spiking_hiddens = f[:, :, self.portion:]
-        # spiking_hiddens = f[:, :, self.portion:, :]
-        hy_harmonic, hz = self.harmonic_osc(harmonic_hiddens, hy, hz)
+               
+        harmonic_hiddens = f[:, :self.portion]
+        spiking_hiddens = f[:, self.portion:]
+        
         hy_spiking, spikes = self.spiking_osc(spiking_hiddens, hy)
+        hy_harmonic, hz = self.harmonic_osc(harmonic_hiddens, hy, hz)
+        
         return hy_harmonic, hz, hy_spiking, spikes
     
     def spiking_osc(self, act, u):
-        spike = (u > self.threshold) * 1.0
-        # hy was previously weighted with self.w and x was weighted with R --> now I use reservoir weight
-        u[spike == 1] = self.reset  # Hard reset only for spikes
-        # tau = R * C
-        # print('DIMENSIONS: \n u: ', u.size(), '\n act: ', act.size())
-        u = u + (self.rc*self.dt)*(-u + act)
-        return spike, u
-        # u -= spike*self.threshold # soft reset the membrane potential after spike
-        ## plot membrane potential with thresholds and positive spikes
-    
-    def harmonic_osc(self, act, hy, hz):
-        #padding act to match hz's size (not = n_hid because of portioning)
-        # if act.shape[2] < hz.shape[1]:
-        #     pad_size = hz.shape[1] - act.shape[2]
-        #     act = torch.cat((act, torch.zeros(act.shape[0], pad_size, act.shape[2], device=act.device)), dim=1)
-            # act = torch.cat((act, torch.zeros(act.shape[0], pad_size, device=act.device)), dim=0)
-        print('SOME SIZES: \nact: ', act.size(), '\ndt: ', self.dt, '\ngamma: ', self.gamma.size(), '\nepsilon: ', self.epsilon.size(), '\nhy: ', hy.size(), '\nhz: ', hz.size())
-        hz = hz + self.dt * act - self.gamma * hy - self.epsilon * hz
+        u_spiking = u[:, self.portion:]
 
-        hy = hy + self.dt * hz
-        return hy, hz
+        spike = (u_spiking > self.threshold) * 1.0
+        u_spiking[spike == 1] = self.reset  # Hard reset only for spikes
+
+        # Apply update equation
+        u_spiking = u_spiking + (self.rc * self.dt) * (-u_spiking + act)
+        
+        # Replace updated values in the full u tensor
+        # u[:, self.portion:] = u_spiking
+        return u_spiking, spike 
+
+    def harmonic_osc(self, act, hy, hz):
+        hy_harmonic = hy[:, :self.portion]
+        hz_harmonic = hz[:, :self.portion]
+        # print('new vars\' shapes: ', hy_harmonic.shape, hz_harmonic.shape)
+        # print("gamma:", self.gamma[:self.portion])
+        # print("epsilon:", self.epsilon[:self.portion])
+
+        hz_harmonic = hz_harmonic + self.dt * act - self.gamma[:self.portion] * hy_harmonic - self.epsilon[:self.portion] * hz_harmonic
+        hy_harmonic = hy_harmonic + self.dt * hz_harmonic
+        # hz = hz + self.dt * act - self.gamma[:self.portion] * hy - self.epsilon[:self.portion] * hz_harmonic
+        # hy = hy + self.dt * hz
+
+        # Replace updated values in the full hy and hz tensors
+        # hy[:, :self.portion] = hy_harmonic
+        # hz[:, :self.portion] = hz_harmonic
+        # if(torch.any (hy, None)):
+        #     print('harmonic oscillator returns NaN')
+        # print('new shapes: ', hy.shape, hy.shape)
+        return hy_harmonic, hz_harmonic
+
 
        
     def forward(self, x: torch.Tensor):
@@ -170,14 +179,13 @@ class MixedRON(nn.Module):
             torch.Tensor: Hidden states of the network shaped as (batch, time, n_hid).
             list: List containing the last hidden state of the network.
         """
+        hy_list=[]
         hy_m_list = [] # hy from harmonic mechanical oscillators
         hz_list = [] #hz from mechanical oscillators too
         hy_u_list = [] #membrane potential = hy from spiking oscillators
         spike_list = [] #spikes
         
-        # hy = torch.zeros(x.size(0), self.portion).to(self.device) #x.size(0)
         hy = torch.zeros(x.size(0), self.n_hid).to(self.device) #x.size(0)
-        # hz = torch.zeros(x.size(0), self.portion).to(self.device)
         hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
         # u = torch.zeros(x.size(0), self.n_hid).to(self.device)
         # f = self.activation_layer(x, hy, hz)
@@ -190,6 +198,43 @@ class MixedRON(nn.Module):
                 hz_list.append(hz)
                 hy_u_list.append(hy_u)
                 spike_list.append(spk)
-                #hy = torch.cat((hy_m, hy_u), dim=0)
-                hy = torch.cat((hy_m, hy_u), dim=0)  # Adjust dim based on your desired concatenation axis
-        return hy_m_list, hz_list, hy_u_list, spike_list 
+                # print('hy sizes: ', hy_m.size(), hy_u.size())
+                hy = torch.cat((hy_m, hy_u), dim=1)  # Adjust dim based on your desired concatenation axis
+                hy_list.append(hy)
+                
+                # print('final hy dimension: ', hy.size())
+                # if torch.isnan(hy_m).any() or torch.isnan(hy_u).any():
+                #     print("NaN detected in hy_m or hy_u before updating hy")
+                # hy[:, self.portion:] = hy_u#[:, self.portion:]
+                # hy[:, :self.portion] = hy_m#[:, :self.portion]
+                # print('concatenation: hy_m: ', hy_m.size(), '\thy_u: ', hy_u.size(), '\n concatenation result: ', hy.size())
+                
+        return hy_list, hz_list, hy_u_list, spike_list #hy_m_list, hy_u_list,
+    
+    
+    
+    
+#### old version ####
+    
+    # def spiking_osc(self, act, u):
+    #     spike = (u > self.threshold) * 1.0
+    #     # hy was previously weighted with self.w and x was weighted with R --> now I use reservoir weight
+    #     u[spike == 1] = self.reset  # Hard reset only for spikes
+    #     # tau = R * C
+    #     # print('DIMENSIONS: \n u: ', u.size(), '\n act: ', act.size())
+    #     u = u + (self.rc*self.dt)*(-u + act)
+    #     return spike, u
+    #     # u -= spike*self.threshold # soft reset the membrane potential after spike
+    #     ## plot membrane potential with thresholds and positive spikes
+    
+    # def harmonic_osc(self, act, hy, hz):
+    #     #padding act to match hz's size (not = n_hid because of portioning)
+    #     # if act.shape[2] < hz.shape[1]:
+    #     #     pad_size = hz.shape[1] - act.shape[2]
+    #     #     act = torch.cat((act, torch.zeros(act.shape[0], pad_size, act.shape[2], device=act.device)), dim=1)
+    #         # act = torch.cat((act, torch.zeros(act.shape[0], pad_size, device=act.device)), dim=0)
+    #     print('SOME SIZES: \nact: ', act.size(), '\ndt: ', self.dt, '\ngamma: ', self.gamma.size(), '\nepsilon: ', self.epsilon.size(), '\nhy: ', hy.size(), '\nhz: ', hz.size())
+    #     hz = hz + self.dt * act - self.gamma * hy - self.epsilon * hz
+
+    #     hy = hy + self.dt * hz
+    #     return hy, hz

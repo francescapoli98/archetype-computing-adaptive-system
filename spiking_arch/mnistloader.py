@@ -29,9 +29,9 @@ def get_nmnist_data(
 
     transform = transforms.Compose([denoise_transform, frame_transform])
     
-    train_dataset = tonic.datasets.NMNIST(save_to="../tutorials/data", train=False, transform=transform)
+    train_dataset = tonic.datasets.NMNIST(save_to=root, train=False, transform=transform)
 
-    test_dataset = tonic.datasets.NMNIST(save_to="../tutorials/data", train=False, transform=transform)
+    test_dataset = tonic.datasets.NMNIST(save_to=root, train=False, transform=transform)
 
     valid_size = int(len(train_dataset) * (valid_perc / 100.0))
     train_size = len(train_dataset) - valid_size
@@ -44,3 +44,26 @@ def get_nmnist_data(
     test_loader = DataLoader(dataset=test_dataset, batch_size=bs_test, shuffle=False)
 
     return train_loader, valid_loader, test_loader
+
+
+def another_get_nmnist_data(
+    root: os.PathLike, bs_train: int, bs_test: int, valid_perc: int = 10
+):
+    # Load dataset
+    dataset = tonic.datasets.NMNIST(save_to=root, train=True)
+
+    # Define the transformation: Convert events to dense tensors
+    sensor_size = dataset.sensor_size  # (34, 34, 2) - (Height, Width, Polarity)
+    time_window = 10  # Number of time steps (can be adjusted)
+
+    transform = transforms.ToFrame(sensor_size=sensor_size, time_window=time_window)
+
+    # Get an example sample
+    events, label = dataset[0]
+    frames = transform(events)  # Shape: (time_window, 2, 34, 34)
+
+    # Convert to float and normalize (if needed)
+    frames = torch.tensor(frames, dtype=torch.float32)
+
+    # Flatten spatial dimensions to match SNN input expectations
+    flattened_frames = frames.view(time_window, -1)  # Shape: (time_window, 34*34*2)

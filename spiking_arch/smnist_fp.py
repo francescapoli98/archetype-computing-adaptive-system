@@ -1,6 +1,11 @@
-# $ python -m spiking_arch.smnist_fp --resultroot spiking_arch/results/ --sron
-# $ python -m spiking_arch.smnist_fp --dataroot "MNIST/" --resultroot "spiking_arch/results/spiking_act" --sron --batch 16
+''' 
+SPIKING RON
+$ python -m spiking_arch.smnist_fp --dataroot "MNIST/" --resultroot "spiking_arch/results/spiking_act/smnist" --sron --batch 128
+MIXED RON
 
+LSM
+$ python -m spiking_arch.smnist_fp --dataroot "MNIST/" --resultroot "spiking_arch/results/baseline" --liquidron --batch 128                                                              
+'''
 import argparse
 import os
 import warnings
@@ -75,6 +80,8 @@ parser.add_argument("--mspron", action="store_true")
 
 parser.add_argument("--sron", action="store_true")
 parser.add_argument("--liquidron", action="store_true")
+parser.add_argument("--mixron", action="store_true")
+
 
 parser.add_argument("--inp_scaling", type=float, default=1.0, help="ESN input scaling")
 parser.add_argument("--rho", type=float, default=0.99, help="ESN spectral radius")
@@ -104,8 +111,10 @@ parser.add_argument("--threshold", type=float, default=1.0, help="threshold")
 parser.add_argument("--resistance", type=float, default=5.0, help="resistance")
 parser.add_argument("--capacitance", type=float, default=3.0, help="capacitance")
 parser.add_argument("--reset", type=float, default=-1.0, help="reset")
-parser.add_argument("--rc", type=float, default=1.0, help="resistance x capacitance")
+parser.add_argument("--rc", type=float, default=7.0, help="resistance x capacitance")
 parser.add_argument("--bias", type=float, default=0.01, help="bias")
+parser.add_argument("--perc", type=float, default=0.5, help="percentage of neurons")
+
 
 
 args = parser.parse_args()
@@ -254,6 +263,28 @@ for i in range(args.trials):
             reservoir_scaler=args.reservoir_scaler,
             device=device
         ).to(device)
+    elif args.mixron:
+        model = MixedRON(
+                n_inp,
+                args.n_hid,
+                args.dt,
+                gamma,
+                epsilon,
+                args.rho,
+                args.inp_scaling,
+                #add last things here
+                args.threshold,
+                # args.resistance,
+                # args.capacitance,
+                args.rc,
+                args.reset,
+                args.bias,
+                args.perc,
+                topology=args.topology,
+                sparsity=args.sparsity,
+                reservoir_scaler=args.reservoir_scaler,
+                device=device,
+            ).to(device) 
     else:
         raise ValueError("Wrong model choice.")
     
@@ -276,21 +307,23 @@ for i in range(args.trials):
         if args.liquidron:
             output, spk = model(images)
             # print('liquid ron output dim: ', output.shape)
-            activations.append(output.cpu())#output.cpu())
+            # activations.append(output.cpu())#output.cpu())
         else:
             output, velocity, u, spk = model(images)
             # print('output dim: ', output.shape)
-            activations.append(output[-1].cpu())
+        activations.append(output[-1].cpu())
         # break
-            
-            
-    if not args.liquidron:
-        output = torch.stack(output)
+    
+    if args.liquidron:
+        u= torch.stack(output)
+        spk = torch.stack(spk)    
+        plot_dynamics(u, spk, images, args.resultroot)
+    else:
+        output = torch.stack(output)    
+        spk = torch.stack(spk)    
         u = torch.stack(u)
-        spk = torch.stack(spk)
         velocity = torch.stack(velocity)
         plot_dynamics(output, velocity, u, spk, images, args.resultroot)
-
     activations = torch.cat(activations, dim=0).numpy() # activations = torch.cat(activations, dim=0).numpy()  
     ys = torch.cat(ys, dim=0).squeeze().numpy()
     print("Activations shape:", activations.shape)
@@ -313,16 +346,12 @@ simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
 
 if args.ron:
     f = open(os.path.join(args.resultroot, f"sMNIST_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")
-elif args.pron:
-    f = open(os.path.join(args.resultroot, f"sMNIST_log_PRON{args.resultsuffix}.txt"), "a")
-elif args.mspron:
-    f = open(os.path.join(args.resultroot, f"sMNIST_log_MSPRON{args.resultsuffix}.txt"), "a")
-elif args.esn:
-    f = open(os.path.join(args.resultroot, f"sMNIST_log_ESN{args.resultsuffix}.txt"), "a")
 elif args.sron:
     f = open(os.path.join(args.resultroot, f"sMNIST_log_SRON{args.resultsuffix}.txt"), "a")
 elif args.liquidron:
     f = open(os.path.join(args.resultroot, f"sMNIST_log_LiquidRON{args.resultsuffix}.txt"), "a")
+elif args.mixron:
+    f = open(os.path.join(args.resultroot, f"sMNIST_log_MixedRON{args.resultsuffix}.txt"), "a")
 else:
     raise ValueError("Wrong model choice.")
 

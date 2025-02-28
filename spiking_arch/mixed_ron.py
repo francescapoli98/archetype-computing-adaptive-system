@@ -154,7 +154,7 @@ class MixedRON(nn.Module):
         # print("gamma:", self.gamma[:self.portion])
         # print("epsilon:", self.epsilon[:self.portion])
 
-        hz_harmonic = hz_harmonic + self.dt * act - self.gamma[:self.portion] * hy_harmonic - self.epsilon[:self.portion] * hz_harmonic
+        hz_harmonic = hz_harmonic + self.dt * (act - self.gamma[:self.portion] * hy_harmonic - self.epsilon[:self.portion] * hz_harmonic)
         hy_harmonic = hy_harmonic + self.dt * hz_harmonic
         # hz = hz + self.dt * act - self.gamma[:self.portion] * hy - self.epsilon[:self.portion] * hz_harmonic
         # hy = hy + self.dt * hz
@@ -191,7 +191,8 @@ class MixedRON(nn.Module):
         # f = self.activation_layer(x, hy, hz)
         # Combine h2h_h and h2h_s into one parameter
         # comb_h2h = torch.cat((self.h2h_h, self.h2h_s), dim=0)  # Adjust dim based on your desired concatenation axis
-        # self.h2h = nn.Parameter(combined_h2h, requires_grad=False)
+        # self.h2h = nn.P
+        # parameter(combined_h2h, requires_grad=False)
         for t in range(x.size(1)):      
                 hy_m, hz, hy_u, spk = self.activation_layer(x[:, t], hy, hz)
                 hy_m_list.append(hy_m)
@@ -201,15 +202,13 @@ class MixedRON(nn.Module):
                 # print('hy sizes: ', hy_m.size(), hy_u.size())
                 hy = torch.cat((hy_m, hy_u), dim=1)  # Adjust dim based on your desired concatenation axis
                 hy_list.append(hy)
-                
                 # print('final hy dimension: ', hy.size())
                 # if torch.isnan(hy_m).any() or torch.isnan(hy_u).any():
                 #     print("NaN detected in hy_m or hy_u before updating hy")
                 # hy[:, self.portion:] = hy_u#[:, self.portion:]
                 # hy[:, :self.portion] = hy_m#[:, :self.portion]
                 # print('concatenation: hy_m: ', hy_m.size(), '\thy_u: ', hy_u.size(), '\n concatenation result: ', hy.size())
-                
-        return hy_list, hz_list, hy_u_list, spike_list #hy_m_list, hy_u_list,
+        return hy_list, hz_list, hy_u_list, spike_list #hy_m_list
     
     
     

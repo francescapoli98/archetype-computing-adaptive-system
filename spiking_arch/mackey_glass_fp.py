@@ -284,7 +284,7 @@ for i in range(args.trials):
         spk = torch.stack(spk)    
         u = torch.stack(u)
         velocity = torch.stack(velocity)
-        plot_dynamics(output, velocity, u, spk, dataset, args.resultroot)
+        # plot_dynamics(u, spk,  dataset, args.resultroot, output, velocity)
     
     # print('activation shape before washout: ', activations.shape)
     # activations = torch.cat(output, dim=0).cpu().detach().numpy() # activations = torch.cat(activations, dim=0).numpy()

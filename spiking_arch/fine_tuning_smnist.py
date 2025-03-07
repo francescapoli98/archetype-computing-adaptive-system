@@ -66,7 +66,7 @@ parser.add_argument("--mspron", action="store_true")
 
 parser.add_argument("--sron", action="store_true")
 parser.add_argument("--liquidron", action="store_true")
-parser.add_argument("--mixedron", action="store_true")
+parser.add_argument("--mixron", action="store_true")
 
 parser.add_argument("--inp_scaling", type=float, default=1.0, help="ESN input scaling")
 parser.add_argument("--rho", type=float, default=0.99, help="ESN spectral radius")
@@ -97,6 +97,7 @@ parser.add_argument("--resistance", type=float, default=5.0, help="resistance (s
 parser.add_argument("--capacitance", type=float, default=5.e-3, help="capacitance (spiking n.)")
 parser.add_argument("--reset", type=float, default=-1.0, help="spiking ron models reset")
 parser.add_argument("--bias", type=float, default=0.01, help="bias")
+parser.add_argument("--perc", type=float, default=0.5, help="percentage of neurons")
 
 
 args = parser.parse_args()
@@ -107,20 +108,20 @@ param_grid = {
     # "epsilon": [4.5, 4.9],  # Range of epsilon values
     # "rho": [0.9, 0.99],  # Spectral radius
     # "inp_scaling": [0.5, 0.8, 1.2],  # Input scaling
-    'rc':[0.5, 2, 3.5, 5, 7], # resistance x capacitance
-    "threshold": [1.5, 1, 0.9, 0.09],
+    'rc':[0.5, 2, 5, 7], # resistance x capacitance
+    "threshold": [0.1, 0.09, 0.05],
     # "resistance": [3.0, 5.0, 7.0],
     # "capacitance": [3e-3, 5e-3, 7e-3],
     "reset": [0.001, 0.004],#-1, 0.001, 0.005], # initial membrane potential 
     "bias": [0, 0.001, 0.005, 0.01, 0.1, 0.25],
     
     # Input weights
-    "win_e": [1.0, 1.5, 2.0, 2.5, 3.0],  
-    "win_i": [0.5, 1.0, 1.5, 2.0],
+    # "win_e": [1.0, 1.5, 2.0, 2.5, 3.0],  
+    # "win_i": [0.5, 1.0, 1.5, 2.0],
 
-    # Recurrent weights
-    "w_e": [0.5, 1.0, 1.5, 2.0],  
-    "w_i": [0.2, 0.5, 0.8, 1.0],  
+    # # Recurrent weights
+    # "w_e": [0.5, 1.0, 1.5, 2.0],  
+    # "w_i": [0.2, 0.5, 0.8, 1.0]
     }
 
 # Convert grid to list of combinations
@@ -233,6 +234,33 @@ for param_set in tqdm(param_combinations, desc="Grid Search"):
             reservoir_scaler=args.reservoir_scaler,
             device=device
         ).to(device)
+        
+    elif args.mixron:
+        model = MixedRON(
+            n_inp,
+            args.n_hid,
+            args.dt,
+            gamma,
+            epsilon,
+            args.rho,
+            args.inp_scaling,
+            #add last things here
+            # args.threshold,
+            params['threshold'],        
+            # args.resistance,
+            # args.capacitance,
+            params['rc'],       
+            # args.rc,
+            params['reset'],       
+            # args.reset,
+            params['bias'],       
+            # args.bias,
+            args.perc,
+            topology=args.topology,
+            sparsity=args.sparsity,
+            reservoir_scaler=args.reservoir_scaler,
+            device=device,
+        ).to(device) 
     else:
         raise ValueError("Wrong model choice.")
     # Create the model with current parameters
@@ -277,7 +305,7 @@ if args.sron:
     f = open(os.path.join(args.resultroot, f"finetune_sMNIST_SRON{args.resultsuffix}.txt"), "a")
 elif args.liquidron:
     f = open(os.path.join(args.resultroot, f"finetune_sMNIST_LiquidRON{args.resultsuffix}.txt"), "a")
-elif args.mixedron:
+elif args.mixron:
     f = open(os.path.join(args.resultroot, f"finetune_sMNIST_MixedRON{args.resultsuffix}.txt"), "a")
 else:
     raise ValueError("Wrong model choice.")

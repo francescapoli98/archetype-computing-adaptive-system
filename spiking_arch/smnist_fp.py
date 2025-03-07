@@ -323,7 +323,7 @@ for i in range(args.trials):
         spk = torch.stack(spk)    
         u = torch.stack(u)
         velocity = torch.stack(velocity)
-        plot_dynamics(output, velocity, u, spk, images, args.resultroot)
+        plot_dynamics(u, spk, images, args.resultroot, output=output, velocity=velocity)
     activations = torch.cat(activations, dim=0).numpy() # activations = torch.cat(activations, dim=0).numpy()  
     ys = torch.cat(ys, dim=0).squeeze().numpy()
     print("Activations shape:", activations.shape)

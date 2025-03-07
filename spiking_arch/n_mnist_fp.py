@@ -250,19 +250,29 @@ for i in range(args.trials):
         images, labels = batch[0], batch[1]  # Access only the first two items
         images = images.to(device)
         images = images.view(images.shape[0], -1).unsqueeze(-1)
+        ys.append(labels.cpu()) 
+        print('images type: ', type(images))
         if args.liquidron:
-            output, velocity, u, spk = model(images, labels)
+            output, spk = model(images)
+            # print('liquid ron output dim: ', output.shape)
+            # activations.append(output.cpu())#output.cpu())
         else:
             output, velocity, u, spk = model(images)
         activations.append(output[-1])
-        ys.append(labels) 
+        # ys.append(labels) 
         
 
-    output=torch.from_numpy(np.array(output, dtype=np.float32))    
-    velocity=torch.from_numpy(np.array(velocity, dtype=np.float32))    
-    u=torch.from_numpy(np.array(u, dtype=np.float32))   
-    spk=torch.from_numpy(np.array(spk, dtype=np.float32)) 
-    plot_dynamics(output, velocity, u, spk, images, args.resultroot) 
+    if args.liquidron:
+        u= torch.stack(output)
+        spk = torch.stack(spk)    
+        plot_dynamics(u, spk, images, args.resultroot)
+    else:
+        output = torch.stack(output)    
+        spk = torch.stack(spk)    
+        u = torch.stack(u)
+        velocity = torch.stack(velocity)
+        plot_dynamics(u, spk, images, args.resultroot, output=output, velocity=velocity)
+        
     activations = torch.cat(activations, dim=0).numpy()
     print('activations:', activations.shape, type(activations))
     ys = torch.cat(ys, dim=0).squeeze().numpy()

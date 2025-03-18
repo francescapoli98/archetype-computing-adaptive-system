@@ -24,7 +24,7 @@ from spiking_arch.s_ron import SpikingRON
 from spiking_arch.mixed_ron import MixedRON
 
 from spiking_arch.snn_utils import *
-from spiking_arch.mnistloader import *
+from spiking_arch.nmnist_loader import *
 
 
 
@@ -94,9 +94,12 @@ parser.add_argument(
 )
 
 parser.add_argument("--threshold", type=float, default=0.008, help="threshold")
-parser.add_argument("--resistance", type=float, default=7.0, help="resistance")
-parser.add_argument("--capacitance", type=float, default=0.005, help="capacitance")
-parser.add_argument("--reset", type=float, default=0.004, help="reset")
+# parser.add_argument("--resistance", type=float, default=7.0, help="resistance")
+# parser.add_argument("--capacitance", type=float, default=0.005, help="capacitance")
+parser.add_argument("--rc", type=float, default=5.0, help="tau")
+parser.add_argument("--reset", type=float, default=0.01, help="reset")
+parser.add_argument("--bias", type=float, default=0.0, help="bias")
+parser.add_argument("--perc", type=float, default=0.5, help="percentage of neurons")
 
 
 args = parser.parse_args()
@@ -117,13 +120,13 @@ assert 1.0 > args.sparsity >= 0.0, "Sparsity in [0, 1)"
 @torch.no_grad()
 def test(data_loader, classifier, scaler):
     activations, ys = [], []
-    for images, labels in tqdm(data_loader):
-        images = images.to(device)
-        images = images.view(images.shape[0], -1).unsqueeze(-1)
-        output = model(images)[0][-1]
-        activations.append(output)
-        ys.append(labels)
-    activations = torch.cat(activations, dim=0).numpy()
+    for images, labels in data_loader:
+        images = images.float().to(device)
+        images = torch.flatten(images, start_dim=2)
+        ys.append(labels.cpu()) 
+        output = model(images)[0]
+        activations.append(output[-1].cpu())
+    activations = torch.cat(activations, dim=0).cpu().detach().numpy() # activations = torch.cat(activations, dim=0).numpy()
     activations = scaler.transform(activations)
     ys = torch.cat(ys, dim=0).numpy()
     return classifier.score(activations, ys)
@@ -136,8 +139,8 @@ device = (
     else torch.device("cpu")
 )
 
-n_inp = 1
-n_out = 10
+n_inp = 1568
+# n_out = 10
 
 gamma = (args.gamma - args.gamma_range / 2.0, args.gamma + args.gamma_range / 2.0)
 epsilon = (
@@ -191,7 +194,6 @@ for i in range(args.trials):
             args.inp_scaling,
             device=device
         ).to(device)
-        
     elif args.sron:
         model = SpikingRON(
             n_inp,
@@ -203,9 +205,11 @@ for i in range(args.trials):
             args.inp_scaling,
             # spiking
             args.threshold,
-            args.resistance,
-            args.capacitance,
+            # args.resistance,
+            # args.capacitance,
+            args.rc,
             args.reset,
+            args.bias,
             topology=args.topology,
             sparsity=args.sparsity,
             reservoir_scaler=args.reservoir_scaler,
@@ -223,13 +227,13 @@ for i in range(args.trials):
             args.inp_scaling,
             # spiking
             args.threshold,
-            args.resistance,
-            args.capacitance,
+            args.rc,
             args.reset,
-            win_e=2,
-            win_i=1,
-            w_e=0.5,
-            w_i=0.2,
+            args.bias,
+            win_e=1,
+            win_i=0.5,
+            w_e=1,
+            w_i=0.5,
             Ne=200,
             Ni=56,
             topology=args.topology,
@@ -237,31 +241,60 @@ for i in range(args.trials):
             reservoir_scaler=args.reservoir_scaler,
             device=device
         ).to(device)
-
+    elif args.mixron:
+        model = MixedRON(
+            n_inp,
+            args.n_hid,
+            args.dt,
+            gamma,
+            epsilon,
+            args.rho,
+            args.inp_scaling,
+            #add last things here
+            args.threshold,
+            # args.resistance,
+            # args.capacitance,
+            args.rc,
+            args.reset,
+            args.bias,
+            args.perc,
+            topology=args.topology,
+            sparsity=args.sparsity,
+            reservoir_scaler=args.reservoir_scaler,
+            device=device,
+        ).to(device) 
     else:
         raise ValueError("Wrong model choice.")
     
     train_loader, valid_loader, test_loader = get_nmnist_data(
         args.dataroot, args.batch, args.batch
     )
+
     
     activations, ys = [], []
-    for batch in next(iter(train_loader)):
-        images, labels = batch[0], batch[1]  # Access only the first two items
-        images = images.to(device)
-        images = images.view(images.shape[0], -1).unsqueeze(-1)
+    
+    # for batch in next(iter(train_loader)):
+    #     images, labels = batch[0].float(), batch[1].float() # Access only the first two items
+    for images, labels in train_loader:
+        images = images.float().to(device)
+        # print('images: ', images.shape, '\nlabels: ', labels.shape)
+        # images, labels = batch[0].float(), batch[1].float()
+        # images = images.view(images.shape[0], -1).unsqueeze(-1)
+        images = torch.flatten(images, start_dim=2)
+        # print('new images shape: ', images.shape)
+        
         ys.append(labels.cpu()) 
-        print('images type: ', type(images))
+        
+        # print('images type: ', type(images))
         if args.liquidron:
             output, spk = model(images)
-            # print('liquid ron output dim: ', output.shape)
-            # activations.append(output.cpu())#output.cpu())
         else:
-            output, velocity, u, spk = model(images)
-        activations.append(output[-1])
-        # ys.append(labels) 
+            ## for N-MNIST dataset, make sure images[128, 20, 2, 28, 28] and flatten last 3 dim
+            output, velocity, u, spk = model(images) 
+        activations.append(output[-1].cpu())
         
 
+    
     if args.liquidron:
         u= torch.stack(output)
         spk = torch.stack(spk)    
@@ -272,37 +305,40 @@ for i in range(args.trials):
         u = torch.stack(u)
         velocity = torch.stack(velocity)
         plot_dynamics(u, spk, images, args.resultroot, output=output, velocity=velocity)
-        
-    activations = torch.cat(activations, dim=0).numpy()
-    print('activations:', activations.shape, type(activations))
+    
+    activations = torch.cat(activations, dim=0).numpy() # activations = torch.cat(activations, dim=0).numpy()  
     ys = torch.cat(ys, dim=0).squeeze().numpy()
-    scaler = preprocessing.StandardScaler().fit(activations)
-    activations = scaler.transform(activations) 
+    # print("Activations shape:", activations.shape)
+    # print("Labels shape:", ys.shape)  
+
+    scaler = preprocessing.StandardScaler()#.fit(activations)
+    
+    activations = scaler.fit_transform(activations) 
+    # activations = scaler.transform(activations) 
     classifier = LogisticRegression(max_iter=5000).fit(activations, ys)
     train_acc = test(train_loader, classifier, scaler)
-    valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
+    # valid_acc = test(valid_loader, classifier, scaler) #if not args.use_test else 0.0
     test_acc = test(test_loader, classifier, scaler) #if args.use_test else 0.0
     train_accs.append(train_acc)
-    valid_accs.append(valid_acc)
+    # valid_accs.append(valid_acc)
     test_accs.append(test_acc)
-
+    print('Train accuracy: ', train_acc, '\nTest accuracy: ', test_acc)
 simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
 
 
+
 if args.ron:
-    f = open(os.path.join(args.resultroot, f"sMNIST_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")
-elif args.pron:
-    f = open(os.path.join(args.resultroot, f"sMNIST_log_PRON{args.resultsuffix}.txt"), "a")
-elif args.mspron:
-    f = open(os.path.join(args.resultroot, f"sMNIST_log_MSPRON{args.resultsuffix}.txt"), "a")
-elif args.esn:
-    f = open(os.path.join(args.resultroot, f"sMNIST_log_ESN{args.resultsuffix}.txt"), "a")
+    f = open(os.path.join(args.resultroot, f"nMNIST_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")
 elif args.sron:
-    f = open(os.path.join(args.resultroot, f"sMNIST_log_SRON{args.resultsuffix}.txt"), "a")
-elif args.lron:
-    f = open(os.path.join(args.resultroot, f"sMNIST_log_LiquidRON{args.resultsuffix}.txt"), "a")
+    f = open(os.path.join(args.resultroot, f"nMNIST_log_SRON{args.resultsuffix}.txt"), "a")
+elif args.liquidron:
+    f = open(os.path.join(args.resultroot, f"nMNIST_log_LiquidRON{args.resultsuffix}.txt"), "a")
+elif args.mixron:
+    f = open(os.path.join(args.resultroot, f"nMNIST_log_MixedRON{args.resultsuffix}.txt"), "a")
 else:
     raise ValueError("Wrong model choice.")
+
+
 
 
 ar = ""
@@ -310,10 +346,10 @@ for k, v in vars(args).items():
     ar += f"{str(k)}: {str(v)}, "
 ar += (
     f"train: {[str(round(train_acc, 2)) for train_acc in train_accs]} "
-    f"valid: {[str(round(valid_acc, 2)) for valid_acc in valid_accs]} "
+    # f"valid: {[str(round(valid_acc, 2)) for valid_acc in valid_accs]} "
     f"test: {[str(round(test_acc, 2)) for test_acc in test_accs]}"
     f"mean/std train: {np.mean(train_accs), np.std(train_accs)} "
-    f"mean/std valid: {np.mean(valid_accs), np.std(valid_accs)} "
+    # f"mean/std valid: {np.mean(valid_accs), np.std(valid_accs)} "
     f"mean/std test: {np.mean(test_accs), np.std(test_accs)}"
 )
 f.write(ar + "\n")

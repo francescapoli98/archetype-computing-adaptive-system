@@ -22,12 +22,14 @@ def get_nmnist_data(
             validation. Defaults to 10.
     """
     ##labels
-    sensor_size = tonic.datasets.NMNIST.sensor_size
-    frame_transform = transforms.ToFrame(sensor_size=sensor_size, n_time_bins=3)
+    sensor_size = (28, 28, 2)   #tonic.datasets.NMNIST.sensor_size = (34, 34, 2)
+    frame_transform = transforms.ToFrame(sensor_size=sensor_size, n_time_bins=20) #n_time_bins=3
     ##images
     denoise_transform = tonic.transforms.Denoise(filter_time=10000)
+    ## ADD CENTERCROP HERE
+    centercrop = tonic.transforms.CenterCrop(sensor_size=sensor_size, size=(18, 18))
 
-    transform = transforms.Compose([denoise_transform, frame_transform])
+    transform = transforms.Compose([denoise_transform, centercrop, frame_transform])
     
     train_dataset = tonic.datasets.NMNIST(save_to=root, train=False, transform=transform)
 
@@ -46,24 +48,24 @@ def get_nmnist_data(
     return train_loader, valid_loader, test_loader
 
 
-def another_get_nmnist_data(
-    root: os.PathLike, bs_train: int, bs_test: int, valid_perc: int = 10
-):
-    # Load dataset
-    dataset = tonic.datasets.NMNIST(save_to=root, train=True)
+# def another_get_nmnist_data(
+#     root: os.PathLike, bs_train: int, bs_test: int, valid_perc: int = 10
+# ):
+#     # Load dataset
+#     dataset = tonic.datasets.NMNIST(save_to=root, train=True)
 
-    # Define the transformation: Convert events to dense tensors
-    sensor_size = dataset.sensor_size  # (34, 34, 2) - (Height, Width, Polarity)
-    time_window = 10  # Number of time steps (can be adjusted)
+#     # Define the transformation: Convert events to dense tensors
+#     sensor_size = dataset.sensor_size  # (34, 34, 2) - (Height, Width, Polarity)
+#     time_window = 10  # Number of time steps (can be adjusted)
 
-    transform = transforms.ToFrame(sensor_size=sensor_size, time_window=time_window)
+#     transform = transforms.ToFrame(sensor_size=sensor_size, time_window=time_window)
 
-    # Get an example sample
-    events, label = dataset[0]
-    frames = transform(events)  # Shape: (time_window, 2, 34, 34)
+#     # Get an example sample
+#     events, label = dataset[0]
+#     frames = transform(events)  # Shape: (time_window, 2, 34, 34)
 
-    # Convert to float and normalize (if needed)
-    frames = torch.tensor(frames, dtype=torch.float32)
+#     # Convert to float and normalize (if needed)
+#     frames = torch.tensor(frames, dtype=torch.float32)
 
-    # Flatten spatial dimensions to match SNN input expectations
-    flattened_frames = frames.view(time_window, -1)  # Shape: (time_window, 34*34*2)
+#     # Flatten spatial dimensions to match SNN input expectations
+#     flattened_frames = frames.view(time_window, -1)  # Shape: (time_window, 34*34*2)

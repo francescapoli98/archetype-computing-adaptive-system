@@ -104,7 +104,7 @@ class SpikingRON(nn.Module):
         self.threshold = threshold
         # self.R = resistance
         # self.C = capacitance
-        self.rc = rc
+        self.rc = rc #resistance + capacitance
         self.reset = reset # initial membrane potential 
         
         #### to be changed to spiking dynamics
@@ -130,8 +130,7 @@ class SpikingRON(nn.Module):
             u (torch.Tensor): Member potential 
         """
         spike, u = self.spiking_layer(x, hy, u) 
-        # if torch.any(u>0.5):
-        #     print('u: ', u)
+        
         hz = hz + self.dt * ( 
             u 
             - self.gamma * hy 
@@ -171,15 +170,15 @@ class SpikingRON(nn.Module):
   
         u[spike == 1] = self.reset  # Hard reset only for spikes
 
-        # tau = R * C
-        u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h)+ self.bias) # u dot (update) 
-        u = u + (u_dot * self.rc
-                 #(self.R*self.C)
+        ## for NMNIST dataset, deal with x2h param to deal with a timestep dim of 20!
+            ## x: 1 x n   x2h: n x hid
+        # print('ACTIVATION\nx size: ', x.size(), '\nx2h size: ', self.x2h.size())
+        u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h) + self.bias) # u dot (update) 
+        u = u + (u_dot * self.rc # tau = self.rc = (self.R*self.C)
                  )*self.dt # multiply to tau and dt
         
         return spike, u
         # u -= spike*self.threshold # soft reset the membrane potential after spike
-        ## plot membrane potential with thresholds and positive spikes
         # OLD CODE: u += ((- self.w * hy) + (self.R*x))*(self.R*self.C) - spike*self.threshold  
         
     def forward(self, x: torch.Tensor):
@@ -192,13 +191,12 @@ class SpikingRON(nn.Module):
             torch.Tensor: Hidden states of the network shaped as (batch, time, n_hid).
             list: List containing the last hidden state of the network.
         """
-        # print('input dimensions:', x.size())
         hy_list, hz_list, u_list, spike_list = [], [], [], []
         hy = torch.zeros(x.size(0), self.n_hid).to(self.device) #x.size(0)
         hz = torch.zeros(x.size(0), self.n_hid).to(self.device)
         u = torch.zeros(x.size(0), self.n_hid).to(self.device)
+        # print('input x size: ', x.size(), '\ntimestep: ', x[:, 1].size())
         for t in range(x.size(1)):
-            # print(x.size())
             hy, hz, u, spk = self.cell(x[:, t], hy, hz, u)
             hy_list.append(hy)
             hz_list.append(hz)

@@ -27,6 +27,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
@@ -167,3 +168,7 @@ cython_debug/
 # Mac
 .DS_Store
 
+# FP
+MNIST/
+spiking_arch_old*
+archived*

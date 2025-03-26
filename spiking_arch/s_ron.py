@@ -172,7 +172,7 @@ class SpikingRON(nn.Module):
 
         ## for NMNIST dataset, deal with x2h param to deal with a timestep dim of 20!
             ## x: 1 x n   x2h: n x hid
-        # print('ACTIVATION\nx size: ', x.size(), '\nx2h size: ', self.x2h.size())
+        # print('ACTIVATION\nx size: ', x.size(), '\nx2h size: ', self.x2h.size()) ## make sure x and x2h is the same for RON and baseline
         u_dot = - u + (torch.matmul(hy, self.h2h) + torch.matmul(x, self.x2h) + self.bias) # u dot (update) 
         u = u + (u_dot * self.rc # tau = self.rc = (self.R*self.C)
                  )*self.dt # multiply to tau and dt

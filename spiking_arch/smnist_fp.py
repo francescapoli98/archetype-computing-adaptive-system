@@ -321,6 +321,8 @@ for i in range(args.trials):
         spk = torch.stack(spk)    
         u = torch.stack(u)
         velocity = torch.stack(velocity)
+        print('shapes of tensors: \noutput: ', output.shape, '\nspikes: ', spk.shape, '\nmembrane potential: ', u.shape, '\nvelocity: ', velocity.shape, '\nx: ', images.shape)
+        
         plot_dynamics(u, spk, images, args.resultroot, output=output, velocity=velocity)
     
     activations = torch.cat(activations, dim=0).numpy() # activations = torch.cat(activations, dim=0).numpy()  

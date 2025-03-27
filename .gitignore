@@ -169,6 +169,7 @@ cython_debug/
 .DS_Store
 
 # FP
-MNIST/
+MNIST*
+DVSGesture*
 spiking_arch_old*
 archived*

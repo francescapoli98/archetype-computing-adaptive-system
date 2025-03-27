@@ -67,6 +67,7 @@ parser.add_argument("--pron", action="store_true")
 parser.add_argument("--mspron", action="store_true")
 
 parser.add_argument("--sron", action="store_true")
+parser.add_argument("--mixron", action="store_true")
 parser.add_argument("--liquidron", action="store_true")
 
 parser.add_argument("--inp_scaling", type=float, default=1.0, help="ESN input scaling")
@@ -93,7 +94,7 @@ parser.add_argument(
     help="Scaler in case of ring/band/toeplitz reservoir",
 )
 
-parser.add_argument("--threshold", type=float, default=0.008, help="threshold")
+parser.add_argument("--threshold", type=float, default=1, help="threshold")
 # parser.add_argument("--resistance", type=float, default=7.0, help="resistance")
 # parser.add_argument("--capacitance", type=float, default=0.005, help="capacitance")
 parser.add_argument("--rc", type=float, default=5.0, help="tau")
@@ -307,7 +308,7 @@ for i in range(args.trials):
         print('shapes of tensors: \noutput: ', output.shape, '\nspikes: ', spk.shape, '\nmembrane potential: ', u.shape, '\nvelocity: ', velocity.shape, '\nx: ', images.shape)
         plot_dynamics(u, spk, images, args.resultroot, output=output, velocity=velocity)
     
-    activations = torch.cat(activations, dim=0).numpy() # activations = torch.cat(activations, dim=0).numpy()  
+    activations = torch.cat(activations, dim=0).detach().numpy() # activations = torch.cat(activations, dim=0).numpy()  
     ys = torch.cat(ys, dim=0).squeeze().numpy()
     # print("Activations shape:", activations.shape)
     # print("Labels shape:", ys.shape)  

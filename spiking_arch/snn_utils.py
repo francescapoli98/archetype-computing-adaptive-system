@@ -90,7 +90,7 @@ def plot_dynamics(
     # Plot input (x)
     plt.subplot(num_plots, 1, i)
     plt.title('Input (x)') #FOR N-MNIST: np.mean(x[0, :, :]) #also check for other datasets
-    plt.plot(time_steps, np.mean(x[0, :, :], axis=1), ##doesn't work, try something else from numpy page
+    plt.plot(time_steps, np.mean(x[0, :, :], axis=1),
              #x[0, :, 0], 
              color="purple", linestyle='-', linewidth=1)
     plt.xlabel('Time Step')

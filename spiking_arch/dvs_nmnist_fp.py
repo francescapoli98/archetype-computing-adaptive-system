@@ -102,6 +102,8 @@ parser.add_argument("--reset", type=float, default=0.01, help="reset")
 parser.add_argument("--bias", type=float, default=0.0, help="bias")
 parser.add_argument("--perc", type=float, default=0.5, help="percentage of neurons")
 
+parser.add_argument("--use_dvs", action="store_true")
+parser.add_argument("--use_nmnist", action="store_true")
 
 args = parser.parse_args()
 
@@ -267,6 +269,14 @@ for i in range(args.trials):
     else:
         raise ValueError("Wrong model choice.")
     
+
+if args.use_dvs:
+    train_loader, valid_loader, test_loader = get_dvs_data(
+        args.dataroot, args.batch, args.batch
+    )
+    # dataset = tonic.datasets.DVSGesture(save_to=extract_dir, transform=transform)
+if args.use_nmnist:
+    # dataset = tonic.datasets.NMNIST(save_to=root, train=False, transform=transform)
     train_loader, valid_loader, test_loader = get_nmnist_data(
         args.dataroot, args.batch, args.batch
     )
@@ -305,7 +315,7 @@ for i in range(args.trials):
         spk = torch.stack(spk)    
         u = torch.stack(u)
         velocity = torch.stack(velocity)
-        print('shapes of tensors: \noutput: ', output.shape, '\nspikes: ', spk.shape, '\nmembrane potential: ', u.shape, '\nvelocity: ', velocity.shape, '\nx: ', images.shape)
+        # print('shapes of tensors: \noutput: ', output.shape, '\nspikes: ', spk.shape, '\nmembrane potential: ', u.shape, '\nvelocity: ', velocity.shape, '\nx: ', images.shape)
         plot_dynamics(u, spk, images, args.resultroot, output=output, velocity=velocity)
     
     activations = torch.cat(activations, dim=0).detach().numpy() # activations = torch.cat(activations, dim=0).numpy()  
@@ -328,17 +338,29 @@ for i in range(args.trials):
 simple_plot(train_accs, valid_accs, test_accs, args.resultroot)
 
 
+if args.use_dvs:
+    if args.ron:
+        f = open(os.path.join(args.resultroot, f"DVS_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")
+    elif args.sron:
+        f = open(os.path.join(args.resultroot, f"DVS_log_SRON{args.resultsuffix}.txt"), "a")
+    elif args.liquidron:
+        f = open(os.path.join(args.resultroot, f"DVS_log_LiquidRON{args.resultsuffix}.txt"), "a")
+    elif args.mixron:
+        f = open(os.path.join(args.resultroot, f"DVS_log_MixedRON{args.resultsuffix}.txt"), "a")
+    else:
+        raise ValueError("Wrong model choice.")
+if args.use_nmnist:
+    if args.ron:
+        f = open(os.path.join(args.resultroot, f"nMNIST_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")
+    elif args.sron:
+        f = open(os.path.join(args.resultroot, f"nMNIST_log_SRON{args.resultsuffix}.txt"), "a")
+    elif args.liquidron:
+        f = open(os.path.join(args.resultroot, f"nMNIST_log_LiquidRON{args.resultsuffix}.txt"), "a")
+    elif args.mixron:
+        f = open(os.path.join(args.resultroot, f"nMNIST_log_MixedRON{args.resultsuffix}.txt"), "a")
+    else:
+        raise ValueError("Wrong model choice.")
 
-if args.ron:
-    f = open(os.path.join(args.resultroot, f"nMNIST_log_RON_{args.topology}{args.resultsuffix}.txt"), "a")
-elif args.sron:
-    f = open(os.path.join(args.resultroot, f"nMNIST_log_SRON{args.resultsuffix}.txt"), "a")
-elif args.liquidron:
-    f = open(os.path.join(args.resultroot, f"nMNIST_log_LiquidRON{args.resultsuffix}.txt"), "a")
-elif args.mixron:
-    f = open(os.path.join(args.resultroot, f"nMNIST_log_MixedRON{args.resultsuffix}.txt"), "a")
-else:
-    raise ValueError("Wrong model choice.")
 
 
 

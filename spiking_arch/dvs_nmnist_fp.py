@@ -19,12 +19,15 @@ from acds.archetypes import (
     MultistablePhysicallyImplementableRandomizedOscillatorsNetwork
 )
 
-from spiking_arch.lsm_baseline import LiquidRON
-from spiking_arch.s_ron import SpikingRON
-from spiking_arch.mixed_ron import MixedRON
+# from spiking_arch.lsm_baseline import LiquidRON
+from spiking_arch.architectures import LiquidRON
+from spiking_arch.architectures import MixedRON
+from spiking_arch.architectures import SpikingRON
+# from spiking_arch.s_ron import SpikingRON
+# from spiking_arch.mixed_ron import MixedRON
 
 from spiking_arch.snn_utils import *
-from spiking_arch.eventds_loader import *
+from spiking_arch.events_loader import *
 
 
 
@@ -270,16 +273,17 @@ for i in range(args.trials):
         raise ValueError("Wrong model choice.")
     
 
-if args.use_dvs:
-    train_loader, valid_loader, test_loader = get_dvs_data(
-        args.dataroot, args.batch, args.batch
-    )
-    # dataset = tonic.datasets.DVSGesture(save_to=extract_dir, transform=transform)
-if args.use_nmnist:
-    # dataset = tonic.datasets.NMNIST(save_to=root, train=False, transform=transform)
-    train_loader, valid_loader, test_loader = get_nmnist_data(
-        args.dataroot, args.batch, args.batch
-    )
+    if args.use_dvs:
+        train_loader, valid_loader, test_loader = get_dvs_data(
+            args.dataroot, args.batch, args.batch
+        )
+        
+        # dataset = tonic.datasets.DVSGesture(save_to=extract_dir, transform=transform)
+    if args.use_nmnist:
+        # dataset = tonic.datasets.NMNIST(save_to=root, train=False, transform=transform)
+        train_loader, valid_loader, test_loader = get_nmnist_data(
+            args.dataroot, args.batch, args.batch
+        )
 
     
     activations, ys = [], []
@@ -288,7 +292,7 @@ if args.use_nmnist:
     #     images, labels = batch[0].float(), batch[1].float() # Access only the first two items
     for images, labels in train_loader:
         images = images.float().to(device)
-        # print('images: ', images.shape, '\nlabels: ', labels.shape)
+        print('images: ', images.shape, '\nlabels: ', labels.shape)
         # images, labels = batch[0].float(), batch[1].float()
         # images = images.view(images.shape[0], -1).unsqueeze(-1)
         images = torch.flatten(images, start_dim=2)
@@ -302,6 +306,7 @@ if args.use_nmnist:
         else:
             ## for N-MNIST dataset, make sure images[128, 20, 2, 28, 28] and flatten last 3 dim
             output, velocity, u, spk = model(images) 
+            print('output dvs: ', output)
         activations.append(output[-1].cpu())
         
 
@@ -319,9 +324,7 @@ if args.use_nmnist:
         plot_dynamics(u, spk, images, args.resultroot, output=output, velocity=velocity)
     
     activations = torch.cat(activations, dim=0).detach().numpy() # activations = torch.cat(activations, dim=0).numpy()  
-    ys = torch.cat(ys, dim=0).squeeze().numpy()
-    # print("Activations shape:", activations.shape)
-    # print("Labels shape:", ys.shape)  
+    ys = torch.cat(ys, dim=0).squeeze().numpy() 
 
     scaler = preprocessing.StandardScaler()#.fit(activations)
     
